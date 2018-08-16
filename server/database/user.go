@@ -1,6 +1,8 @@
 package database
 
-import "github.com/jinzhu/gorm"
+import (
+	"github.com/jinzhu/gorm"
+)
 
 // User structure
 // Email - email of user
@@ -10,38 +12,31 @@ type User struct {
 	gorm.Model
 	email    string `gorm:"type:text;not null"`
 	password string `gorm:"type:text;not null"`
-	role     int    `gorm:"type:integer;not null"`
+	role     uint   `gorm:"type:integer;not null"`
+}
+
+// GetID function
+// Return ID of your user
+func (user *User) GetID() uint {
+	return user.Model.ID
 }
 
 // GetEmail function
-// Return email of yout user
+// Return email of your user
 func (user *User) GetEmail() string {
 	return user.email
 }
 
 // GetPassword function
-// Return password of yout user
+// Return password of your user
 func (user *User) GetPassword() string {
 	return user.password
 }
 
 // GetRole function
-// Return role of yout user
-func (user *User) GetRole() int {
+// Return role of your user
+func (user *User) GetRole() uint {
 	return user.role
-}
-
-// AddUser function
-// Add new user and add it in db
-// Return new user
-func AddUser(email, password string, role int) *User {
-	user := &User{
-		email:    email,
-		password: password,
-		role:     role,
-	}
-	db.Create(user)
-	return user
 }
 
 // SetEmail function
@@ -61,7 +56,7 @@ func (user *User) SetPassword(password string) {
 // SetRole function
 // Set role in your user
 func (user *User) SetRole(isAdmin bool) {
-	var role int
+	var role uint
 	switch isAdmin {
 	case true:
 		role = 1
@@ -70,14 +65,66 @@ func (user *User) SetRole(isAdmin bool) {
 		role = 0
 		break
 	}
-	user.role = int(role)
+	user.role = role
 	db.Save(user)
 }
 
-// DeleteUser function
+// Set function
+// Set all about user
+func (user *User) Set(email, password string, role uint) {
+	user.email = email
+	user.password = password
+	user.role = role
+	db.Save(user)
+}
+
+// Delete function
 // Delete user
-func (user *User) DeleteUser() {
+func (user *User) Delete() {
 	db.Delete(user)
+}
+
+// AddUser function
+// Add new user and add it in db
+// Return new user
+func AddUser(email, password string, isAdmin bool) *User {
+	var role uint
+	switch isAdmin {
+	case true:
+		role = 1
+		break
+	case false:
+		role = 0
+		break
+	}
+	user := &User{
+		email:    email,
+		password: password,
+		role:     role,
+	}
+	db.Create(user)
+	return GetUser(email, password)
+}
+
+// GetUser function
+// Return user from email and password or nil
+func GetUser(email, password string) *User {
+	var user *User
+	db.Where(&User{
+		email:    email,
+		password: password,
+	}).First(user)
+	return user
+}
+
+// GetUserFromEmail function
+// Return user from email or nil
+func GetUserFromEmail(email string) *User {
+	var user *User
+	db.Where(&User{
+		email: email,
+	}).First(user)
+	return user
 }
 
 // GetUsers function

@@ -17,7 +17,7 @@ var (
 func OpenConnection(nameDB string) error {
 	var err error
 	db, err = gorm.Open("postgres", "password='postgres' dbname="+nameDB+" sslmode=disable")
-	// TODO: AUTOMIGRATIONS
+	db.AutoMigrate(&User{}, &Property{}, &Application{})
 	return err
 }
 
