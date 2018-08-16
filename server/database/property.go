@@ -11,23 +11,35 @@ type Property struct {
 	value string `gorm:"type:text;not null"`
 }
 
+// GetID function
+// Return ID of your property
+func (property *Property) GetID() uint {
+	return property.Model.ID
+}
+
 // GetKey function
-// Return key of yout property
+// Return key of your property
 func (property *Property) GetKey() string {
 	return property.key
 }
 
 // GetValue function
-// Return value of yout property
+// Return value of your property
 func (property *Property) GetValue() string {
 	return property.value
 }
 
-// SetProperty function
+// SetValue function
 // Set value of the Property
-func (property *Property) SetProperty(value string) {
+func (property *Property) SetValue(value string) {
 	property.value = value
 	db.Save(property)
+}
+
+// Delete function
+// Delete property
+func (property *Property) Delete() {
+	db.Delete(property)
 }
 
 // AddProperty function
@@ -40,12 +52,6 @@ func AddProperty(key, value string) *Property {
 	}
 	db.Create(property)
 	return property
-}
-
-// DeleteProperty function
-// Delete property
-func (property *Property) DeleteProperty() {
-	db.Delete(property)
 }
 
 // GetProperties function
