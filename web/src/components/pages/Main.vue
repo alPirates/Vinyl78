@@ -11,6 +11,8 @@
           p lorem text
           v-btn(:to="'/buy-sticker'")
             | купить стикеры
+          v-btn(:to="'/form'")
+            | Заказать стикер
 
 </template>
 

@@ -13,6 +13,7 @@
   "dependencies": {
     "material-design-icons-iconfont": "^3.0.3",
     "moment": "^2.22.2",
+    "ramda": "^0.25.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vuetify": "^1.1.13",

@@ -5,12 +5,15 @@ import App from './App'
 import router from './router'
 import store from './store'
 import Api from './plugins/api'
+import * as R from 'ramda'
 
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 
 Vue.config.productionTip = false
+
+Vue.prototype.R = R
 
 Vue.use(Api, { store })
 Vue.use(Vuetify)
