@@ -11,28 +11,9 @@ type Property struct {
 	Value string `json:"value" form:"value" query:"value"`
 }
 
-// GetID function
-// Return ID of your property
-func (property *Property) GetID() uint {
-	return property.Model.ID
-}
-
-// GetKey function
-// Return key of your property
-func (property *Property) GetKey() string {
-	return property.Key
-}
-
-// GetValue function
-// Return value of your property
-func (property *Property) GetValue() string {
-	return property.Value
-}
-
-// SetValue function
-// Set value of the Property
-func (property *Property) SetValue(value string) {
-	property.Value = value
+// Update function
+// Update value of the Property
+func (property *Property) Update(value string) {
 	db.Save(property)
 }
 
@@ -42,11 +23,11 @@ func (property *Property) Delete() {
 	db.Delete(property)
 }
 
-// AddProperty function
+// Create function
 // Add new property and add it in db
 // Return new property
-func AddProperty(key, value string) *Property {
-	property := &Property{
+func (property *Property) Create(key, value string) *Property {
+	property = &Property{
 		Key:   key,
 		Value: value,
 	}

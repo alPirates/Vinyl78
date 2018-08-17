@@ -16,11 +16,11 @@ type Application struct {
 	Phone   string `json:"phone" form:"phone" query:"phone"`
 	Email   string `json:"email" form:"email" query:"email"`
 	Message string `json:"message" form:"message" query:"message"`
-	Status  uint
+	Status  uint   `json:"status" form:"status" query:"status"`
 }
 
-// Set function
-// Set all about application
+// Update function
+// Update all about application
 func (application *Application) Update() {
 	db.Save(application)
 }
@@ -31,16 +31,16 @@ func (application *Application) Delete() {
 	db.Delete(application)
 }
 
-// AddApplication function
+// Create function
 // Add new application and add it in db
 // Return new application
-func AddApplication(name, phone, email, message string, status uint) *Application {
-	application := &Application{
+func (application *Application) Create(name, phone, email, message string) *Application {
+	application = &Application{
 		Name:    name,
 		Phone:   phone,
 		Email:   email,
 		Message: message,
-		Status:  status,
+		Status:  0,
 	}
 	db.Create(application)
 	return application
@@ -48,7 +48,15 @@ func AddApplication(name, phone, email, message string, status uint) *Applicatio
 
 // GetApplications function
 // Return all applications
-func GetApplications() []*Application {
+func GetApplications(skip, limit uint) []*Application {
+	applications := []*Application{}
+	db.Offset(skip).Limit(limit).Find(&applications)
+	return applications
+}
+
+// GetAllApplications function
+// Return all applications
+func GetAllApplications() []*Application {
 	applications := []*Application{}
 	db.Find(&applications)
 	return applications
