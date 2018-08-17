@@ -33,7 +33,7 @@
             )
           v-flex(xs12)
             v-layout(justify-end)
-              v-btn(color="success") Отправить
+              v-btn(color="success" @click="sendForm") Отправить
 </template>
 
 <script>
@@ -66,9 +66,9 @@ export default {
   methods: {
     async sendForm () {
       if (this.valid) {
-        let result = await this.$api(
+        let result = await this.$api.send(
           'post',
-          '/api/application',
+          '/application',
           this.R.pick(['name', 'phone', 'email', 'message'], this.form)
         )
         if (result) {
