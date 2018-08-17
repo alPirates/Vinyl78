@@ -14,7 +14,7 @@ import (
 // Port - number of a port
 // SignedString - signed string
 const (
-	Port         = 8080
+	Port         = 3000
 	SignedString = "secret"
 )
 
