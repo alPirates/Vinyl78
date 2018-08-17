@@ -10,9 +10,9 @@ import (
 // Role - admin(1) or usual user(0)
 type User struct {
 	gorm.Model
-	email    string `gorm:"type:text;not null"`
-	password string `gorm:"type:text;not null"`
-	role     uint   `gorm:"type:integer;not null"`
+	Email    string `json:"email" form:"email" query:"email"`
+	Password string `json:"password" form:"password" query:"password"`
+	Role     uint
 }
 
 // GetID function
@@ -24,57 +24,48 @@ func (user *User) GetID() uint {
 // GetEmail function
 // Return email of your user
 func (user *User) GetEmail() string {
-	return user.email
+	return user.Email
 }
 
 // GetPassword function
 // Return password of your user
 func (user *User) GetPassword() string {
-	return user.password
+	return user.Password
 }
 
 // GetRole function
 // Return role of your user
 func (user *User) GetRole() uint {
-	return user.role
+	return user.Role
 }
 
 // SetEmail function
 // Set email in your user
 func (user *User) SetEmail(email string) {
-	user.email = email
+	user.Email = email
 	db.Save(user)
 }
 
 // SetPassword function
 // Set password in your user
 func (user *User) SetPassword(password string) {
-	user.password = password
+	user.Password = password
 	db.Save(user)
 }
 
 // SetRole function
 // Set role in your user
 func (user *User) SetRole(isAdmin bool) {
-	var role uint
-	switch isAdmin {
-	case true:
-		role = 1
-		break
-	case false:
-		role = 0
-		break
-	}
-	user.role = role
+	user.Role = boolToRole(isAdmin)
 	db.Save(user)
 }
 
 // Set function
 // Set all about user
-func (user *User) Set(email, password string, role uint) {
-	user.email = email
-	user.password = password
-	user.role = role
+func (user *User) Set(email, password string, isAdmin bool) {
+	user.Email = email
+	user.Password = password
+	user.Role = boolToRole(isAdmin)
 	db.Save(user)
 }
 
@@ -88,6 +79,72 @@ func (user *User) Delete() {
 // Add new user and add it in db
 // Return new user
 func AddUser(email, password string, isAdmin bool) *User {
+	user := &User{
+		Email:    email,
+		Password: password,
+		Role:     boolToRole(isAdmin),
+	}
+	db.Create(user)
+	return GetUser(email, password)
+}
+
+// GetUser function
+// Return user from email and password or nil
+func GetUser(email, password string) *User {
+	user := &User{}
+	db.Where(&User{
+		Email:    email,
+		Password: password,
+	}).First(user)
+	return user
+}
+
+// GetUserByID function
+// Return user from ID
+func GetUserByID(ID uint) *User {
+	user := &User{}
+	db.First(user, ID)
+	return user
+}
+
+// CheckEmailAndPassword function
+// Return true if email and Password existed
+func CheckEmailAndPassword(email, password string) bool {
+	user := &User{}
+	db.Where(&User{
+		Email:    email,
+		Password: password,
+	}).First(user)
+	if user.Email == "" {
+		return false
+	}
+	return true
+}
+
+// CheckID function
+// Return true if id existed
+func CheckID(ID uint) bool {
+	user := &User{}
+	db.Where(&User{
+		Model: gorm.Model{
+			ID: ID,
+		},
+	}).First(user)
+	if user.Email == "" {
+		return false
+	}
+	return true
+}
+
+// GetUsers function
+// Return all users
+func GetUsers() []*User {
+	users := []*User{}
+	db.Find(&users)
+	return users
+}
+
+func boolToRole(isAdmin bool) uint {
 	var role uint
 	switch isAdmin {
 	case true:
@@ -97,40 +154,5 @@ func AddUser(email, password string, isAdmin bool) *User {
 		role = 0
 		break
 	}
-	user := &User{
-		email:    email,
-		password: password,
-		role:     role,
-	}
-	db.Create(user)
-	return GetUser(email, password)
-}
-
-// GetUser function
-// Return user from email and password or nil
-func GetUser(email, password string) *User {
-	var user *User
-	db.Where(&User{
-		email:    email,
-		password: password,
-	}).First(user)
-	return user
-}
-
-// GetUserFromEmail function
-// Return user from email or nil
-func GetUserFromEmail(email string) *User {
-	var user *User
-	db.Where(&User{
-		email: email,
-	}).First(user)
-	return user
-}
-
-// GetUsers function
-// Return all users
-func GetUsers() []*User {
-	var users []*User
-	db.Find(users)
-	return users
+	return role
 }
