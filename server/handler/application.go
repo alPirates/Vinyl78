@@ -59,7 +59,7 @@ func deleteApplication(context echo.Context) error {
 	}
 
 	application := &database.Application{}
-	application.Model.ID = idApplication.ID
+	application.ID = idApplication.ID
 	application.Delete()
 
 	return context.JSON(http.StatusOK, map[string]string{
