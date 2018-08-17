@@ -31,7 +31,7 @@ type jwtUserClaims struct {
 // Set all routes
 func SetRoutes(server *echo.Echo) {
 
-	server.File("/", "../../web/index.html")
+	server.File("/", "../web/dist/index.html")
 
 	// appGroup := server.Group("/app")
 	// appGroup.GET("", nil)
@@ -42,6 +42,7 @@ func SetRoutes(server *echo.Echo) {
 
 	userGroup := server.Group("/user", middleware.JWT(middleware.JWTWithConfig(middleware.JWTConfig{
 		Claims:     &jwtUserClaims{},
+		ContextKey: "token",
 		SigningKey: []byte(SignedString),
 	})))
 	userGroup.POST("", setUser)
