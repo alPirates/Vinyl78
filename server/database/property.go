@@ -7,8 +7,8 @@ import "github.com/jinzhu/gorm"
 // Value - value of this property
 type Property struct {
 	gorm.Model
-	key   string `gorm:"type:text;not null"`
-	value string `gorm:"type:text;not null"`
+	Key   string `json:"key" form:"key" query:"key"`
+	Value string `json:"value" form:"value" query:"value"`
 }
 
 // GetID function
@@ -20,19 +20,19 @@ func (property *Property) GetID() uint {
 // GetKey function
 // Return key of your property
 func (property *Property) GetKey() string {
-	return property.key
+	return property.Key
 }
 
 // GetValue function
 // Return value of your property
 func (property *Property) GetValue() string {
-	return property.value
+	return property.Value
 }
 
 // SetValue function
 // Set value of the Property
 func (property *Property) SetValue(value string) {
-	property.value = value
+	property.Value = value
 	db.Save(property)
 }
 
@@ -47,8 +47,8 @@ func (property *Property) Delete() {
 // Return new property
 func AddProperty(key, value string) *Property {
 	property := &Property{
-		key:   key,
-		value: value,
+		Key:   key,
+		Value: value,
 	}
 	db.Create(property)
 	return property
@@ -57,7 +57,7 @@ func AddProperty(key, value string) *Property {
 // GetProperties function
 // Return all properties
 func GetProperties() []*Property {
-	var properties []*Property
-	db.Find(properties)
+	properties := []*Property{}
+	db.Find(&properties)
 	return properties
 }
