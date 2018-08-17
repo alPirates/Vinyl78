@@ -14,11 +14,11 @@ import (
 // Status - in process(0) - completed(1) - refused(2)
 type Application struct {
 	gorm.Model
-	name    string
-	phone   string
-	email   string
-	message string
-	status  uint
+	Name    string `json:"name" form:"name" query:"name"`
+	Phone   string `json:"phone" form:"phone" query:"phone"`
+	Email   string `json:"email" form:"email" query:"email"`
+	Message string `json:"message" form:"message" query:"message"`
+	Status  uint
 }
 
 // GetID function
@@ -36,76 +36,77 @@ func (application *Application) GetCreationTime() time.Time {
 // GetName function
 // Return name of your application's user
 func (application *Application) GetName() string {
-	return application.name
+	return application.Name
 }
 
 // GetPhone function
 // Return phone of your application's user
 func (application *Application) GetPhone() string {
-	return application.phone
+	return application.Phone
 }
 
 // GetEmail function
 // Return email of your application's user
 func (application *Application) GetEmail() string {
-	return application.email
+	return application.Email
 }
 
 // GetMessage function
 // Return message of your application's user
 func (application *Application) GetMessage() string {
-	return application.message
+	return application.Message
 }
 
 // GetStatus function
 // Return status of your application
+// Status - in process(0) - completed(1) - refused(2)
 func (application *Application) GetStatus() uint {
-	return application.status
+	return application.Status
 }
 
 // SetName function
 // Set name in your application's user
 func (application *Application) SetName(name string) {
-	application.name = name
+	application.Name = name
 	db.Save(application)
 }
 
 // SetPhone function
 // Set phone in your application's user
 func (application *Application) SetPhone(phone string) {
-	application.phone = phone
+	application.Phone = phone
 	db.Save(application)
 }
 
 // SetEmail function
 // Set email in your application's user
 func (application *Application) SetEmail(email string) {
-	application.email = email
+	application.Email = email
 	db.Save(application)
 }
 
 // SetMessage function
 // Set message in your application's user
 func (application *Application) SetMessage(message string) {
-	application.message = message
+	application.Message = message
 	db.Save(application)
 }
 
 // SetStatus function
 // Set status in your application's user
 func (application *Application) SetStatus(status uint) {
-	application.status = status
+	application.Status = status
 	db.Save(application)
 }
 
 // Set function
 // Set all about application
 func (application *Application) Set(name, phone, email, message string, status uint) {
-	application.name = name
-	application.phone = phone
-	application.email = email
-	application.message = message
-	application.status = status
+	application.Name = name
+	application.Phone = phone
+	application.Email = email
+	application.Message = message
+	application.Status = status
 	db.Save(application)
 }
 
@@ -120,11 +121,11 @@ func (application *Application) Delete() {
 // Return new application
 func AddApplication(name, phone, email, message string, status uint) *Application {
 	application := &Application{
-		name:    name,
-		phone:   phone,
-		email:   email,
-		message: message,
-		status:  status,
+		Name:    name,
+		Phone:   phone,
+		Email:   email,
+		Message: message,
+		Status:  status,
 	}
 	db.Create(application)
 	return application
@@ -133,7 +134,7 @@ func AddApplication(name, phone, email, message string, status uint) *Applicatio
 // GetApplications function
 // Return all applications
 func GetApplications() []*Application {
-	var applications []*Application
-	db.Find(applications)
+	applications := []*Application{}
+	db.Find(&applications)
 	return applications
 }

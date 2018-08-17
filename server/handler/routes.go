@@ -18,17 +18,20 @@ const (
 	SignedString = "secret"
 )
 
-// User structure
-type User struct {
-	Email    string `json:"email" form:"email" query:"email"`
-	Password string `json:"password" form:"password" query:"password"`
+// jwtCustomClaims are custom claims extending default ones.
+type jwtUserClaims struct {
+	jwt.StandardClaims
+	ID       string `json:"ID"`
+	Email    bool   `json:"email"`
+	Password string `json:"password"`
+	Role     uint   `json:"role"`
 }
 
 // SetRoutes function
 // Set all routes
 func SetRoutes(server *echo.Echo) {
 
-	server.GET("/", getHTML)
+	server.File("/", "../../web/index.html")
 
 	// appGroup := server.Group("/app")
 	// appGroup.GET("", nil)
@@ -37,13 +40,15 @@ func SetRoutes(server *echo.Echo) {
 	server.POST("/registration", registration)
 	server.POST("/unauthorization", unauthorization)
 
-	userGroup := server.Group("/user", middleware.JWT([]byte(SignedString)))
-	userGroup.POST("/", setUser)
-	userGroup.PUT("/", addUser)
-	userGroup.DELETE("/", deleteUser)
+	userGroup := server.Group("/user", middleware.JWT(middleware.JWTWithConfig(middleware.JWTConfig{
+		Claims:     &jwtUserClaims{},
+		SigningKey: []byte(SignedString),
+	})))
+	userGroup.POST("", setUser)
+	userGroup.DELETE("", deleteUser)
 
-	adminGroup := server.Group("/user", nil)
-	adminGroup.POST("/admin/token", setToken)
+	// adminGroup := server.Group("/user", nil)
+	// adminGroup.POST("/admin/token", setToken)
 
 	err := server.Start(":" + fmt.Sprint(Port))
 	if err != nil {
@@ -54,15 +59,14 @@ func SetRoutes(server *echo.Echo) {
 
 func registration(context echo.Context) error {
 
-	userInfo := User{}
-	err := context.Bind(userInfo)
+	userInfo := database.User{}
+	err := context.Bind(&userInfo)
 	if err != nil {
 		return sendError(context, "no user information in JSON /registration")
 	}
 
-	u := database.GetUserFromEmail(userInfo.Email)
-	if u != nil {
-		return sendError(context, "email already exist /registration")
+	if database.CheckEmailAndPassword(userInfo.Email, userInfo.Password) {
+		return sendError(context, "email already existed /registration")
 	}
 	user := database.AddUser(userInfo.Email, userInfo.Password, false)
 
@@ -87,16 +91,16 @@ func registration(context echo.Context) error {
 
 func authorization(context echo.Context) error {
 
-	userInfo := User{}
+	userInfo := database.User{}
 	err := context.Bind(&userInfo)
 	if err != nil {
 		return sendError(context, "no user information in JSON /authorization")
 	}
 
-	user := database.GetUser(userInfo.Email, userInfo.Password)
-	if user == nil {
-		return echo.ErrUnauthorized
+	if !database.CheckEmailAndPassword(userInfo.Email, userInfo.Password) {
+		return sendError(context, "no user information in DB /authorization")
 	}
+	user := database.GetUser(userInfo.Email, userInfo.Password)
 
 	token := jwt.New(jwt.SigningMethodHS256)
 
@@ -121,24 +125,61 @@ func unauthorization(context echo.Context) error {
 	return nil
 }
 
-func getHTML(context echo.Context) error {
-	return context.String(http.StatusOK, "This is index.html")
-}
-
-func getUser(context echo.Context) error {
-	return context.String(http.StatusOK, "This is user information")
-}
-
 func setUser(context echo.Context) error {
-	return context.String(http.StatusOK, "This can update user")
-}
+	tokenFromWeb := context.Get("token").(*jwt.Token)
 
-func addUser(context echo.Context) error {
-	return context.String(http.StatusOK, "This can add user")
+	claimsFromWeb := tokenFromWeb.Claims.(jwt.MapClaims)
+	ID := claimsFromWeb["ID"].(uint)
+	email := claimsFromWeb["email"].(string)
+	password := claimsFromWeb["password"].(string)
+	role := claimsFromWeb["isAdmin"].(uint)
+
+	if !database.CheckID(ID) {
+		return sendError(context, "no user information in DB /user/ POST")
+	}
+
+	user := database.GetUserByID(ID)
+	if role == 1 {
+		user.Set(email, password, true)
+	} else {
+		user.Set(email, password, false)
+	}
+
+	token := jwt.New(jwt.SigningMethodHS256)
+
+	claims := token.Claims.(jwt.MapClaims)
+	claims["ID"] = user.GetID()
+	claims["email"] = user.GetEmail()
+	claims["role"] = user.GetRole()
+	claims["expirationDate"] = time.Now().Add(time.Hour * 72).Unix()
+
+	endToken, err := token.SignedString([]byte(SignedString))
+	if err != nil {
+		return sendError(context, "token not encoded /user/ POST")
+	}
+
+	return context.JSON(http.StatusOK, map[string]string{
+		"token":  endToken,
+		"status": "success",
+	})
 }
 
 func deleteUser(context echo.Context) error {
-	return context.String(http.StatusOK, "This can delete user")
+	tokenFromWeb := context.Get("token").(*jwt.Token)
+
+	claimsFromWeb := tokenFromWeb.Claims.(jwt.MapClaims)
+	ID := claimsFromWeb["ID"].(uint)
+
+	if !database.CheckID(ID) {
+		return sendError(context, "no user information in DB /user/ DELETE")
+	}
+
+	user := database.GetUserByID(ID)
+	user.Delete()
+
+	return context.JSON(http.StatusOK, map[string]string{
+		"status": "success",
+	})
 }
 
 func getAdmin(context echo.Context) error {
@@ -151,7 +192,7 @@ func setToken(context echo.Context) error {
 
 func sendError(context echo.Context, errorName string) error {
 	return context.JSON(http.StatusOK, map[string]string{
-		"status": "failure",
-		"error":  errorName,
+		"status":  "failure",
+		"message": errorName,
 	})
 }

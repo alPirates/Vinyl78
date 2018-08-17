@@ -9,7 +9,7 @@ import (
 func main() {
 	server := echo.New()
 
-	database.OpenConnection("Vinyl78")
+	database.OpenConnection("vinyl78")
 	defer database.CloseConnection()
 
 	handler.SetRoutes(server)
