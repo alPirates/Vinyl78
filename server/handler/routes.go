@@ -88,7 +88,7 @@ func registration(context echo.Context) error {
 func authorization(context echo.Context) error {
 
 	userInfo := User{}
-	err := context.Bind(userInfo)
+	err := context.Bind(&userInfo)
 	if err != nil {
 		return sendError(context, "no user information in JSON /authorization")
 	}
