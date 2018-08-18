@@ -18,30 +18,37 @@ const (
 func SetRoutes(server *echo.Echo) {
 
 	server.File("/", "../web/dist/index.html")
-	server.Static("/static", "")
+	server.Static("/static", "../web/dist")
 
-	// appGroup := server.Group("/app")
-	// appGroup.GET("", nil)
+	token := server.Group("/token")
 
-	server.POST("/authorization", authorization)
-	server.POST("/registration", registration)
+	token.POST("/authorization", authorization)
+	token.POST("/registration", registration)
 
 	server.POST("/application", addApplication)
 
-	authorization := server.Group("/user", middleware.JWT(middleware.JWTWithConfig(middleware.JWTConfig{
-		Claims:     &jwtUserClaims{},
-		ContextKey: "token",
-		SigningKey: []byte(SignedString),
-	})))
+	server.GET("/sticker", getSticker)
+
+	authorization := server.Group("/app")
+	authorization.Use(middleware.JWTWithConfig(
+		middleware.JWTConfig{
+			Claims:     &jwtUserClaims{},
+			ContextKey: "token",
+			SigningKey: []byte(SignedString),
+		}))
 
 	authorization.POST("/unauthorization", unauthorization) // user
-	authorization.PUT("", setUser)                          // user
-	authorization.DELETE("", deleteUser)                    // user
+	authorization.PUT("/user", setUser)                     // user
+	authorization.DELETE("/user", deleteUser)               // user
+	authorization.POST("/update", updateToken)              // user
 
 	authorization.PUT("/application", setApplication)       // admin
 	authorization.GET("/application", getApplication)       // admin
 	authorization.DELETE("/application", deleteApplication) // admin
 	authorization.PUT("/token", setToken)                   // admin
+	authorization.PUT("/sticker", setSticker)               // admin
+	authorization.DELETE("/sticker", deleteSticker)         // admin
+	authorization.POST("/sticker", addSticker)              // admin
 
 	err := server.Start(":" + fmt.Sprint(Port))
 	if err != nil {

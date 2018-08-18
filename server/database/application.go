@@ -1,7 +1,8 @@
 package database
 
 import (
-	"github.com/jinzhu/gorm"
+	"fmt"
+	"time"
 )
 
 // Application structure
@@ -11,53 +12,66 @@ import (
 // Message - text to admin from user
 // Status - in process(0) - completed(1) - refused(2)
 type Application struct {
-	gorm.Model
-	Name    string `json:"name" form:"name" query:"name"`
-	Phone   string `json:"phone" form:"phone" query:"phone"`
-	Email   string `json:"email" form:"email" query:"email"`
-	Message string `json:"message" form:"message" query:"message"`
-	Status  uint   `json:"status" form:"status" query:"status"`
+	ID          uint      `json:"ID" form:"ID" query:"ID" gson:"PRIMARY_KEY"`
+	CreatedTime time.Time `json:"time" form:"time" query:"time"`
+	Name        string    `json:"name" form:"name" query:"name"`
+	Phone       string    `json:"phone" form:"phone" query:"phone"`
+	Email       string    `json:"email" form:"email" query:"email"`
+	Message     string    `json:"message" form:"message" query:"message"`
+	Status      uint      `json:"status" form:"status" query:"status"`
 }
 
 // Update function
 // Update all about application
-func (application *Application) Update() {
-	db.Save(application)
+func (application *Application) Update() error {
+	return db.Save(application).Error
 }
 
 // Delete function
 // Delete your application
-func (application *Application) Delete() {
-	db.Delete(application)
+func (application *Application) Delete() error {
+	return db.Delete(application).Error
 }
 
 // Create function
 // Add new application and add it in db
 // Return new application
-func (application *Application) Create(name, phone, email, message string) *Application {
+func (application *Application) Create(name, phone, email, message string) (*Application, error) {
 	application = &Application{
-		Name:    name,
-		Phone:   phone,
-		Email:   email,
-		Message: message,
-		Status:  0,
+		Name:        name,
+		Phone:       phone,
+		Email:       email,
+		Message:     message,
+		Status:      0,
+		CreatedTime: time.Now(),
 	}
-	db.Create(application)
-	return application
+	return application, db.Create(application).Error
 }
 
 // GetApplications function
 // Return all applications
-func GetApplications(skip, limit uint) []*Application {
+func GetApplications(skip, limit uint) ([]*Application, error) {
 	applications := []*Application{}
-	db.Offset(skip).Limit(limit).Find(&applications)
-	return applications
+	err := db.Offset(skip).Limit(limit).Find(&applications).Error
+	return applications, err
 }
 
 // GetAllApplications function
 // Return all applications
-func GetAllApplications() []*Application {
+func GetAllApplications() ([]*Application, error) {
 	applications := []*Application{}
-	db.Find(&applications)
-	return applications
+	err := db.Find(&applications).Error
+	return applications, err
+}
+
+// String function
+func (application *Application) String() string {
+	return fmt.Sprint(*application)
+}
+
+// GetApplicationsCount function
+func GetApplicationsCount() (int, error) {
+	count := 0
+	err := db.Table("applications").Count(&count).Error
+	return count, err
 }
