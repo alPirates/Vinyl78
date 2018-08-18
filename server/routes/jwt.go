@@ -1,4 +1,4 @@
-package handler
+package routes
 
 import (
 	jwt "github.com/dgrijalva/jwt-go"

@@ -17,6 +17,7 @@ var (
 // nameDB is name of your DB
 // return error if db is not open
 func OpenConnection(nameDB string) error {
+
 	var err error
 	db, err = gorm.Open("postgres", "password='postgres' dbname="+nameDB+" sslmode=disable")
 	if err != nil {
@@ -24,13 +25,13 @@ func OpenConnection(nameDB string) error {
 		return err
 	}
 
-	db.AutoMigrate(&User{}, &Property{}, &Application{}, &Sticker{})
+	db.AutoMigrate(&User{}, &Property{}, &Application{}, &Sticker{}, &Category{})
 
 	// Create admin if not existed
 	user := &User{}
 	db.Where("role = ?", 1).First(user)
 	if user.ID == 0 {
-		user, err = user.Create("admin", "admin")
+		user, err = user.Create("admin@mail.ru", "admin")
 		if err != nil {
 			fmt.Println("admin not created")
 		}

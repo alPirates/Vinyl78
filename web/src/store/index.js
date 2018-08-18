@@ -8,13 +8,16 @@ const store = new Vuex.Store({
     token: ''
   },
   actions: {
-    setToken ({commit}, token) {
-      commit('set', {type: 'token', item: token})
-    }
   },
   mutations: {
+    setToken (state, token) {
+      state.token = token
+    }
   },
   getters: {
+    getToken (state) {
+      return state.token
+    }
   }
 })
 

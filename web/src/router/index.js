@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+
 import Main from '@/components/pages/Main'
 import Form from '@/components/pages/Form'
+import Admin from '@/components/pages/Admin'
 
 Vue.use(Router)
 
@@ -16,6 +18,11 @@ export default new Router({
       path: '/form',
       name: 'Form',
       component: Form
+    },
+    {
+      path: '/admin',
+      name: 'Admin',
+      component: Admin
     }
   ]
 })

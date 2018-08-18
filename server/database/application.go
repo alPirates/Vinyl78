@@ -5,11 +5,11 @@ import (
 	"time"
 )
 
-// Application structure
+// Ap
+// Message - text to admin from userplication structure
 // Name - the name of the user
 // Phone - phone number of the user
 // Email - email of the user
-// Message - text to admin from user
 // Status - in process(0) - completed(1) - refused(2)
 type Application struct {
 	ID          uint      `json:"ID" form:"ID" query:"ID" gson:"PRIMARY_KEY"`

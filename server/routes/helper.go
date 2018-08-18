@@ -1,4 +1,4 @@
-package handler
+package routes
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 
 // Port - number of a port
 const (
-	Port = 8080
+	Port = 3000
 )
 
 // SetRoutes function
@@ -28,6 +28,8 @@ func SetRoutes(server *echo.Echo) {
 	api.POST("/application", addApplication)
 
 	api.GET("/sticker", getSticker)
+
+	api.GET("/sidebar", getCategory)
 
 	authorization := api.Group("/app")
 	authorization.Use(middleware.JWTWithConfig(
@@ -49,6 +51,8 @@ func SetRoutes(server *echo.Echo) {
 	authorization.PUT("/sticker", setSticker)               // admin
 	authorization.DELETE("/sticker", deleteSticker)         // admin
 	authorization.POST("/sticker", addSticker)              // admin
+	authorization.DELETE("/category/:id", deleteCategory)   // admin
+	authorization.POST("/category", addCategory)            // admin
 
 	err := server.Start(":" + fmt.Sprint(Port))
 	if err != nil {

@@ -12,5 +12,5 @@ func main() {
 	database.OpenConnection("vinyl78")
 	defer database.CloseConnection()
 
-	handler.SetRoutes(server)
+	routes.SetRoutes(server)
 }

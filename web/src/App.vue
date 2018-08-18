@@ -6,21 +6,7 @@
       fixed
       app
     )
-      v-list(dense subheader)
-        v-subheader Menu
-        v-list-tile
-          v-list-tile-avatar
-            v-icon add
-          v-list-tile-content
-            v-list-tile-title
-              | but stickers
-        v-divider
-        v-list-tile
-          v-list-tile-avatar
-            v-icon delete
-          v-list-tile-content
-            v-list-tile-title
-              | Category 2
+      Sidebar
     v-toolbar(
       :clipped-left="$vuetify.breakpoint.lgAndUp"
       color="primary"
@@ -32,12 +18,14 @@
         v-toolbar-side-icon(@click.stop="drawer = !drawer")
         span.hidden-sm-and-down Vinil78
     v-container(fluid full-height)
+      br
       router-view
 
 </template>
 
 <script>
 import Header from '@/components/Navigation/Header.vue'
+import Sidebar from '@/components/Navigation/Sidebar.vue'
 
 export default {
   name: 'App',
@@ -46,8 +34,16 @@ export default {
       drawer: false
     }
   },
+  mounted () {
+    const token = localStorage.getItem('token')
+    if (token) {
+      console.log(token)
+      this.COMMIT('setToken', token)
+    }
+  },
   components: {
-    Header
+    Header,
+    Sidebar
   }
 }
 </script>

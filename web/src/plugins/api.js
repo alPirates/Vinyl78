@@ -10,9 +10,9 @@ Api.install = (Vue, {store}) => {
 
     send: async (type, path, data) => {
       let headers = {
-        // 'Authorization': 'bearer ' + store.getters.getToken
+        'Authorization': 'Bearer ' + store.getters.getToken
       }
-
+      console.log('delete', headers)
       let result = {}
       try {
         if (data) {
@@ -24,7 +24,10 @@ Api.install = (Vue, {store}) => {
           result = {'error': true}
         }
       } catch (err) {
-        result = {'error': true}
+        result = {
+          'error': true,
+          'message': err
+        }
       }
 
       return result
