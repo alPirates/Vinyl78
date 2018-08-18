@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// Ap
+// Application structure
 // Message - text to admin from userplication structure
 // Name - the name of the user
 // Phone - phone number of the user

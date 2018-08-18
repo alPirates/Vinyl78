@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -24,12 +23,16 @@ func deleteSticker(context echo.Context) error {
 		return sendError(context, "not admin /sticker DELETE")
 	}
 
-	sticker := database.Sticker{} // Use ID
-	err := context.Bind(&sticker)
+	idParam := context.Param("id")
+	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
-		return sendError(context, "no user information in JSON /sticker DELETE")
+		return sendError(context, "skip is not uint /sticker DELETE")
 	}
+	idUint := uint(id)
 
+	sticker := &database.Sticker{
+		ID: idUint,
+	}
 	err = sticker.Delete()
 	if err != nil {
 		return sendError(context, "sticker not deleted /sticker DELETE")
@@ -106,19 +109,14 @@ func getSticker(context echo.Context) error {
 		return sendError(context, "sticker not returned from db /sticker GET")
 	}
 
-	stickersBytes, err := json.Marshal(stickers)
-	if err != nil {
-		return sendError(context, "not convert to json /sticker GET")
-	}
-
 	count, err := database.GetStickersCount(categoryUint)
 	if err != nil {
 		return sendError(context, "can't get count of stickers /sticker GET")
 	}
 	countStr := strconv.Itoa(count)
 
-	return context.JSON(http.StatusOK, map[string]string{
-		"result": string(stickersBytes),
+	return context.JSON(http.StatusOK, map[string]interface{}{
+		"result": stickers,
 		"status": "success",
 		"count":  countStr,
 	})

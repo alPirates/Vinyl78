@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"encoding/json"
 	"net/http"
 	"strconv"
 
@@ -62,12 +61,16 @@ func deleteApplication(context echo.Context) error {
 		return sendError(context, "not admin /application DELETE")
 	}
 
-	application := database.Application{} // Use only ID
-	err := context.Bind(&application)
+	idParam := context.Param("id")
+	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
-		return sendError(context, "no properties information in JSON /application DELETE")
+		return sendError(context, "skip is not uint /application DELETE")
 	}
+	idUint := uint(id)
 
+	application := &database.Application{
+		ID: idUint,
+	}
 	err = application.Delete()
 
 	if err != nil {
@@ -109,19 +112,14 @@ func getApplication(context echo.Context) error {
 		return sendError(context, "application not returned from db /application GET")
 	}
 
-	applicationsBytes, err := json.Marshal(applications)
-	if err != nil {
-		return sendError(context, "not convert to json /application GET")
-	}
-
 	count, err := database.GetApplicationsCount()
 	if err != nil {
 		return sendError(context, "can't get count of applications /application GET")
 	}
 	countStr := strconv.Itoa(count)
 
-	return context.JSON(http.StatusOK, map[string]string{
-		"result": string(applicationsBytes),
+	return context.JSON(http.StatusOK, map[string]interface{}{
+		"result": applications,
 		"status": "success",
 		"count":  countStr,
 	})

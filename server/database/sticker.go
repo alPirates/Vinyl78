@@ -49,7 +49,7 @@ func GetStickers(skip, limit, category uint) ([]*Sticker, error) {
 // DeleteByCategory function
 // Delete all stickers in this category
 func DeleteByCategory(category uint) error {
-	err := db.Where("category = ?", category).Delete(Category{}).Error
+	err := db.Delete(Sticker{}, "category = ?", category).Error
 	return err
 }
 

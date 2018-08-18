@@ -41,18 +41,18 @@ func SetRoutes(server *echo.Echo) {
 
 	authorization.POST("/unauthorization", unauthorization) // user
 	authorization.PUT("/user", setUser)                     // user
-	authorization.DELETE("/user", deleteUser)               // user
+	authorization.DELETE("/user", deleteUser)               // user !!!!USE TOKEN TO GET ID!!!!
 	authorization.POST("/update", updateToken)              // user
 
-	authorization.PUT("/application", setApplication)       // admin
-	authorization.GET("/application", getApplication)       // admin
-	authorization.DELETE("/application", deleteApplication) // admin
-	authorization.PUT("/token", setToken)                   // admin
-	authorization.PUT("/sticker", setSticker)               // admin
-	authorization.DELETE("/sticker", deleteSticker)         // admin
-	authorization.POST("/sticker", addSticker)              // admin
-	authorization.DELETE("/category/:id", deleteCategory)   // admin
-	authorization.POST("/category", addCategory)            // admin
+	authorization.PUT("/application", setApplication)           // admin
+	authorization.GET("/application", getApplication)           // admin
+	authorization.DELETE("/application/:id", deleteApplication) // admin
+	authorization.PUT("/token", setToken)                       // admin
+	authorization.PUT("/sticker", setSticker)                   // admin
+	authorization.DELETE("/sticker/:id", deleteSticker)         // admin
+	authorization.POST("/sticker", addSticker)                  // admin
+	authorization.DELETE("/category/:id", deleteCategory)       // admin
+	authorization.POST("/category", addCategory)                // admin
 
 	err := server.Start(":" + fmt.Sprint(Port))
 	if err != nil {

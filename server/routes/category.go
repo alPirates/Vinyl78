@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -67,16 +66,14 @@ func deleteCategory(context echo.Context) error {
 	}
 
 	idParam := context.Param("id")
-	id64, err := strconv.ParseUint(idParam, 10, 64)
-
-	fmt.Println("id ->", id64)
-
+	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
-		return sendError(context, "no user information in JSON /deleteCategory DELETE")
+		return sendError(context, "skip is not uint /deleteCategory DELETE")
 	}
-	id := uint(id64)
-	category := database.Category{
-		ID: id,
+	idUint := uint(id)
+
+	category := &database.Category{
+		ID: idUint,
 	}
 
 	err = category.Delete()
@@ -84,10 +81,10 @@ func deleteCategory(context echo.Context) error {
 		return sendError(context, "category not deleted /deleteCategory DELETE")
 	}
 
-	// err = database.DeleteByCategory(category.ID)
-	// if err != nil {
-	// 	return sendError(context, "stickers in this category not deleted /deleteCategory DELETE")
-	// }
+	err = database.DeleteByCategory(category.ID)
+	if err != nil {
+		return sendError(context, "stickers in this category not deleted /deleteCategory DELETE")
+	}
 
 	return context.JSON(http.StatusOK, map[string]string{
 		"status": "success",
