@@ -41,7 +41,16 @@ func addApplication(context echo.Context) error {
 }
 
 func setApplication(context echo.Context) error {
-	return nil
+
+	token := context.Get("token").(*jwt.Token)
+	claims := token.Claims.(*jwtUserClaims)
+
+	if claims.Role == 0 {
+		return sendError(context, "not admin /application DELETE")
+	}
+
+	return sendError(context, "not work!!!!!! not use!!!!!")
+
 }
 
 func deleteApplication(context echo.Context) error {
