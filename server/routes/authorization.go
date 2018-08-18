@@ -20,10 +20,14 @@ func registration(context echo.Context) error {
 	if database.CheckEmailAndPassword(userInfo.Email, userInfo.Password) {
 		return sendError(context, "email already existed /registration")
 	}
-	user := (&database.User{}).Create(userInfo.Email, userInfo.Password)
+	user, err := (&database.User{}).Create(userInfo.Email, userInfo.Password)
+
+	if err != nil {
+		return sendError(context, "user not created /registration")
+	}
 
 	claims := &jwtUserClaims{
-		ID:   user.Model.ID,
+		ID:   user.ID,
 		Role: user.Role,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * 72).Unix(),
@@ -54,10 +58,14 @@ func authorization(context echo.Context) error {
 	if !database.CheckEmailAndPassword(userInfo.Email, userInfo.Password) {
 		return sendError(context, "no user information in DB /authorization")
 	}
-	user := database.GetUser(userInfo.Email, userInfo.Password)
+	user, err := database.GetUser(userInfo.Email, userInfo.Password)
+
+	if err != nil {
+		return sendError(context, "can't get user from db /authorization")
+	}
 
 	claims := &jwtUserClaims{
-		ID:   user.Model.ID,
+		ID:   user.ID,
 		Role: user.Role,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * 72).Unix(),
@@ -78,5 +86,9 @@ func authorization(context echo.Context) error {
 }
 
 func unauthorization(context echo.Context) error {
+	return nil
+}
+
+func updateToken(context echo.Context) error {
 	return nil
 }

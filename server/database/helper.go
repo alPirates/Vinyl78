@@ -1,6 +1,8 @@
 package database
 
 import (
+	"fmt"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres" // we use postgres
 )
@@ -17,14 +19,28 @@ var (
 func OpenConnection(nameDB string) error {
 	var err error
 	db, err = gorm.Open("postgres", "password='postgres' dbname="+nameDB+" sslmode=disable")
-	db.AutoMigrate(&User{}, &Property{}, &Application{})
+	if err != nil {
+		fmt.Println("db not opened")
+		return err
+	}
+
+	db.AutoMigrate(&User{}, &Property{}, &Application{}, &Sticker{})
+
+	// Create admin if not existed
 	user := &User{}
 	db.Where("role = ?", 1).First(user)
 	if user.ID == 0 {
-		user = user.Create("admin", "admin")
+		user, err = user.Create("admin", "admin")
+		if err != nil {
+			fmt.Println("admin not created")
+		}
 		user.Role = 1
-		user.Update()
+		err = user.Update()
+		if err != nil {
+			fmt.Println("admin not created")
+		}
 	}
+
 	return err
 }
 

@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/alPirates/Vinyl78/server/database"
-	"github.com/alPirates/Vinyl78/server/handler"
+	"github.com/alPirates/Vinyl78/server/routes"
 	"github.com/labstack/echo"
 )
 

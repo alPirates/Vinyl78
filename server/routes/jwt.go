@@ -1,6 +1,8 @@
 package handler
 
-import jwt "github.com/dgrijalva/jwt-go"
+import (
+	jwt "github.com/dgrijalva/jwt-go"
+)
 
 // SignedString - signed string
 const (
