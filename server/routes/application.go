@@ -18,6 +18,11 @@ func addApplication(context echo.Context) error {
 		return sendError(context, "no user information in JSON /application POST")
 	}
 
+	if application.Name == "" || application.Phone == "" ||
+		application.Email == "" || application.Message == "" {
+		return sendError(context, "empty params /application POST")
+	}
+
 	_, err = application.Create(
 		application.Name,
 		application.Phone,

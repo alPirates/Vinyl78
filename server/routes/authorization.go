@@ -12,9 +12,13 @@ import (
 func registration(context echo.Context) error {
 
 	userInfo := database.User{}
-	err := context.Bind(&userInfo)
+	err := context.Bind(&userInfo) // email and password
 	if err != nil {
 		return sendError(context, "no user information in JSON /registration")
+	}
+
+	if userInfo.Email == "" || userInfo.Password == "" {
+		return sendError(context, "empty params /registration")
 	}
 
 	if database.CheckEmailAndPassword(userInfo.Email, userInfo.Password) {

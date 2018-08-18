@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -53,6 +54,12 @@ func addSticker(context echo.Context) error {
 	if err != nil {
 		return sendError(context, "no user information in JSON /sticker POST")
 	}
+
+	if sticker.Description == "" || sticker.Image == "" || sticker.Category == 0 {
+		return sendError(context, "empty params /sticker POST")
+	}
+
+	fmt.Println(sticker)
 
 	_, err = sticker.Create(
 		sticker.Description,
