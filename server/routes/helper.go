@@ -10,7 +10,7 @@ import (
 
 // Port - number of a port
 const (
-	Port = 3000
+	Port = 8080
 )
 
 // SetRoutes function
@@ -18,18 +18,18 @@ const (
 func SetRoutes(server *echo.Echo) {
 
 	server.File("/", "../web/dist/index.html")
-	server.Static("/static", "../web/dist")
+	server.Static("/static", "../web/dist/static")
 
-	token := server.Group("/token")
+	api := server.Group("/api")
 
-	token.POST("/authorization", authorization)
-	token.POST("/registration", registration)
+	api.POST("/authorization", authorization)
+	api.POST("/registration", registration)
 
-	server.POST("/application", addApplication)
+	api.POST("/application", addApplication)
 
-	server.GET("/sticker", getSticker)
+	api.GET("/sticker", getSticker)
 
-	authorization := server.Group("/app")
+	authorization := api.Group("/app")
 	authorization.Use(middleware.JWTWithConfig(
 		middleware.JWTConfig{
 			Claims:     &jwtUserClaims{},
