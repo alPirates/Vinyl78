@@ -64,7 +64,7 @@ func deleteApplication(context echo.Context) error {
 	idParam := context.Param("id")
 	id, err := strconv.ParseUint(idParam, 10, 64)
 	if err != nil {
-		return sendError(context, "skip is not uint /application DELETE")
+		return sendError(context, "id is not uint /application DELETE")
 	}
 	idUint := uint(id)
 
@@ -91,16 +91,17 @@ func getApplication(context echo.Context) error {
 		return sendError(context, "not admin /application GET")
 	}
 
-	request := context.Request()
-	skip, err := strconv.ParseUint(request.Header.Get("skip"), 10, 64)
+	skipParam := context.QueryParam("skip")
+	skip, err := strconv.ParseUint(skipParam, 10, 64)
 	if err != nil {
-		return sendError(context, "skip is not uint /application GET")
+		return sendError(context, "skip is not uint /application DELETE")
 	}
 	skipUint := uint(skip)
 
-	limit, err := strconv.ParseUint(request.Header.Get("limit"), 10, 64)
+	limitParam := context.QueryParam("limit")
+	limit, err := strconv.ParseUint(limitParam, 10, 64)
 	if err != nil {
-		return sendError(context, "limit is not uint /application GET")
+		return sendError(context, "lmit is not uint /application DELETE")
 	}
 	limitUint := uint(limit)
 
@@ -116,11 +117,10 @@ func getApplication(context echo.Context) error {
 	if err != nil {
 		return sendError(context, "can't get count of applications /application GET")
 	}
-	countStr := strconv.Itoa(count)
 
 	return context.JSON(http.StatusOK, map[string]interface{}{
 		"result": applications,
 		"status": "success",
-		"count":  countStr,
+		"count":  count,
 	})
 }

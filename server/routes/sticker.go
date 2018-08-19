@@ -52,13 +52,13 @@ func addSticker(context echo.Context) error {
 		return sendError(context, "not admin /sticker POST")
 	}
 
-	sticker := database.Sticker{} // Use description, image, category
+	sticker := database.Sticker{} // Use description, category
 	err := context.Bind(&sticker)
 	if err != nil {
 		return sendError(context, "no user information in JSON /sticker POST")
 	}
 
-	if sticker.Description == "" || sticker.Image == "" || sticker.Category == 0 {
+	if sticker.Description == "" || sticker.Category == 0 {
 		return sendError(context, "empty params /sticker POST")
 	}
 
@@ -66,7 +66,6 @@ func addSticker(context echo.Context) error {
 
 	_, err = sticker.Create(
 		sticker.Description,
-		sticker.Image,
 		sticker.Category,
 	)
 
@@ -81,22 +80,24 @@ func addSticker(context echo.Context) error {
 
 func getSticker(context echo.Context) error {
 
-	request := context.Request()
-	skip, err := strconv.ParseUint(request.Header.Get("skip"), 10, 64)
+	skipParam := context.QueryParam("skip")
+	skip, err := strconv.ParseUint(skipParam, 10, 64)
 	if err != nil {
-		return sendError(context, "skip is not uint /sticker GET")
+		return sendError(context, "skip is not uint /application DELETE")
 	}
 	skipUint := uint(skip)
 
-	limit, err := strconv.ParseUint(request.Header.Get("limit"), 10, 64)
+	limitParam := context.QueryParam("limit")
+	limit, err := strconv.ParseUint(limitParam, 10, 64)
 	if err != nil {
-		return sendError(context, "limit is not uint /sticker GET")
+		return sendError(context, "lmit is not uint /application DELETE")
 	}
 	limitUint := uint(limit)
 
-	category, err := strconv.ParseUint(request.Header.Get("category"), 10, 64)
+	categoryParam := context.QueryParam("category")
+	category, err := strconv.ParseUint(categoryParam, 10, 64)
 	if err != nil {
-		return sendError(context, "category is not uint /sticker GET")
+		return sendError(context, "category is not uint /application DELETE")
 	}
 	categoryUint := uint(category)
 
@@ -109,15 +110,22 @@ func getSticker(context echo.Context) error {
 		return sendError(context, "sticker not returned from db /sticker GET")
 	}
 
+	for _, sticker := range stickers {
+		images, errLocal := database.GetImages(int(sticker.ID))
+		if errLocal != nil {
+			return sendError(context, "can't get images of stickers /sticker GET")
+		}
+		sticker.Images = images
+	}
+
 	count, err := database.GetStickersCount(categoryUint)
 	if err != nil {
 		return sendError(context, "can't get count of stickers /sticker GET")
 	}
-	countStr := strconv.Itoa(count)
 
 	return context.JSON(http.StatusOK, map[string]interface{}{
 		"result": stickers,
 		"status": "success",
-		"count":  countStr,
+		"count":  count,
 	})
 }

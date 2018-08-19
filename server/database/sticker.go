@@ -6,10 +6,10 @@ import "fmt"
 // Description - text
 // Image - path for image
 type Sticker struct {
-	ID          uint   `json:"ID" form:"ID" query:"ID" gson:"PRIMARY_KEY"`
-	Description string `json:"description" form:"description" query:"description"`
-	Image       string `json:"image" form:"image" query:"image"`
-	Category    uint   `json:"category" form:"category" query:"category"`
+	ID          uint     `json:"ID" form:"ID" query:"ID" gson:"PRIMARY_KEY"`
+	Description string   `json:"description" form:"description" query:"description"`
+	Images      []*Image `json:"images" form:"images" query:"images" gorm:"-"`
+	Category    uint     `json:"category" form:"category" query:"category"`
 }
 
 // Update function
@@ -21,16 +21,19 @@ func (sticker *Sticker) Update() error {
 // Delete function
 // Delete property
 func (sticker *Sticker) Delete() error {
+	err := (&Image{}).DeleteBySticker(int(sticker.ID))
+	if err != nil {
+		return err
+	}
 	return db.Delete(sticker).Error
 }
 
 // Create function
 // Add new sticker and add it in db
 // Return new sticker
-func (sticker *Sticker) Create(description, image string, category uint) (*Sticker, error) {
+func (sticker *Sticker) Create(description string, category uint) (*Sticker, error) {
 	sticker = &Sticker{
 		Description: description,
-		Image:       image,
 		Category:    category,
 	}
 	err := db.Create(sticker).Error

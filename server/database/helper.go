@@ -25,7 +25,7 @@ func OpenConnection(nameDB string) error {
 		return err
 	}
 
-	db.AutoMigrate(&User{}, &Property{}, &Application{}, &Sticker{}, &Category{})
+	db.AutoMigrate(&User{}, &Property{}, &Application{}, &Sticker{}, &Category{}, &Image{})
 
 	// Create admin if not existed
 	user := &User{}
