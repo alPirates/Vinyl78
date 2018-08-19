@@ -1,6 +1,5 @@
 <template lang="pug">
-  v-container(grid-list-sm)
-    pre token is {{STATE.token}}
+  span
     Login(v-if="!STATE.token")
     AdminPanel(v-else)
 </template>

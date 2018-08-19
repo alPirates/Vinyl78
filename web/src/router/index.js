@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import Main from '@/components/pages/Main'
 import Form from '@/components/pages/Form'
 import Admin from '@/components/pages/Admin'
+import Stickers from '@/components/pages/Stickers'
 
 Vue.use(Router)
 
@@ -23,6 +24,11 @@ export default new Router({
       path: '/admin',
       name: 'Admin',
       component: Admin
+    },
+    {
+      path: '/category/:id',
+      name: 'Stickers',
+      component: Stickers
     }
   ]
 })

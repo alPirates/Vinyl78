@@ -17,7 +17,7 @@ Vue.config.productionTip = false
 
 Vue.prototype.R = R
 
-Vue.use(Api, { store })
+Vue.use(Api, { store, R })
 Vue.use(Vuetify)
 Vue.use(State)
 

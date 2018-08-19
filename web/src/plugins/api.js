@@ -4,21 +4,26 @@ import moment from 'moment'
 const Api = {}
 const api = '/api'
 
-Api.install = (Vue, {store}) => {
+Api.install = (Vue, {store, R}) => {
   Vue.prototype.moment = moment
   Vue.prototype.$api = {
 
-    send: async (type, path, data) => {
+    send: async (type, path, data, params) => {
       let headers = {
         'Authorization': 'Bearer ' + store.getters.getToken
       }
-      console.log('delete', headers)
+      if (R.isNil(data)) {
+        if (params) {
+          headers.params = params
+        }
+      }
       let result = {}
       try {
         if (data) {
           result = await axios[type](api + path, data, { headers })
         } else {
-          result = await axios[type](api + path, { headers })
+          console.log('here', headers)
+          result = await axios[type](api + path, headers)
         }
         if (result.status !== 200) {
           result = {'error': true}

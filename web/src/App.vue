@@ -1,12 +1,6 @@
 <template lang="pug">
   v-app
-    v-navigation-drawer(
-      v-model="drawer"
-      :clipped="$vuetify.breakpoint.lgAndUp"
-      fixed
-      app
-    )
-      Sidebar
+    Sidebar
     v-toolbar(
       :clipped-left="$vuetify.breakpoint.lgAndUp"
       color="primary"
@@ -15,10 +9,9 @@
       fixed
     )
       v-toolbar-title
-        v-toolbar-side-icon(@click.stop="drawer = !drawer")
+        v-toolbar-side-icon(@click.stop="changeDrawer()")
         span.hidden-sm-and-down Vinil78
-    v-container(fluid full-height)
-      br
+    v-container(fluid)
       router-view
 
 </template>
@@ -32,6 +25,11 @@ export default {
   data: () => {
     return {
       drawer: false
+    }
+  },
+  methods: {
+    changeDrawer () {
+      this.COMMIT('setDrawer', !this.STATE.drawer)
     }
   },
   mounted () {

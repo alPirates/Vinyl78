@@ -45,7 +45,7 @@ func setApplication(context echo.Context) error {
 	claims := token.Claims.(*jwtUserClaims)
 
 	if claims.Role == 0 {
-		return sendError(context, "not admin /application DELETE")
+		return sendError(context, "not admin /application PUT")
 	}
 
 	return sendError(context, "not work!!!!!! not use!!!!!")

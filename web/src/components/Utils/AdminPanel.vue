@@ -1,11 +1,11 @@
 <template lang="pug">
   v-container
-    h3 hello admin
+    br
     v-layout(row wrap)
       v-flex(xs12 lg6)
         v-card
           v-toolbar(color="success")
-            v-toolbar-title Категории
+            v-toolbar-title.white--text Категории
           v-container
             v-layout(row, wrap)
               v-flex(xs12)

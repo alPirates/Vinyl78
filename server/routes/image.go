@@ -17,7 +17,7 @@ import (
 
 // PathToImages - path where will contain images
 const (
-	PathToImages = ""
+	PathToImages = "../media/"
 )
 
 func addCaruselImage(context echo.Context) error {

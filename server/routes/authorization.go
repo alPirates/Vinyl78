@@ -47,6 +47,7 @@ func registration(context echo.Context) error {
 
 	return context.JSON(http.StatusOK, map[string]string{
 		"token":  endToken,
+		"role":   "user",
 		"status": "success",
 	})
 }
@@ -83,8 +84,16 @@ func authorization(context echo.Context) error {
 		return sendError(context, "token not encoded /authorizationa")
 	}
 
+	var roleStr string
+	if user.Role == 1 {
+		roleStr = "admin"
+	} else {
+		roleStr = "user"
+	}
+
 	return context.JSON(http.StatusOK, map[string]string{
 		"token":  endToken,
+		"role":   roleStr,
 		"status": "success",
 	})
 }
