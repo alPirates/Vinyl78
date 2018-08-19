@@ -101,7 +101,7 @@ func addImage(context echo.Context) error {
 		return sendError(context, "no information in JSON /addImage POST")
 	}
 
-	if image.StickerID == 0 || image.Number == 0 {
+	if image.StickerID == 0 {
 		return sendError(context, "empty params /addImage POST")
 	}
 
@@ -114,6 +114,8 @@ func addImage(context echo.Context) error {
 	if err != nil {
 		return sendError(context, "can't count images /addImage POST")
 	}
+
+	fmt.Println(count)
 
 	_, err = (&database.Image{}).Create(
 		name,
@@ -180,7 +182,9 @@ func upload(context echo.Context) (string, error) {
 	resolution := mas[1]
 	name := mas[0]
 
-	newName := fmt.Sprint(md5.Sum([]byte(name + fmt.Sprint(time.Now()))))
+	name += fmt.Sprint(time.Now())
+	nameBytes := md5.Sum([]byte(name))
+	newName := fmt.Sprintf("%x", nameBytes)
 	newName += "." + resolution
 
 	stream, err := os.Create(PathToImages + newName)

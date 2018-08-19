@@ -86,6 +86,6 @@ func (image *Image) String() string {
 // GetImagesCount function
 func GetImagesCount(stickerID int) (int, error) {
 	count := 0
-	err := db.Table("applications").Count(&count).Error
+	err := db.Table("images").Where("sticker_id = ?", stickerID).Count(&count).Error
 	return count, err
 }

@@ -76,3 +76,11 @@ func GetStickersCount(category uint) (int, error) {
 func (sticker *Sticker) String() string {
 	return fmt.Sprint(*sticker)
 }
+
+// GetPreStickers fucntion
+// return limit for each category
+func GetPreStickers(limit uint) ([]*Sticker, error) {
+	stickers := []*Sticker{}
+	err := db.Table("stickers").Limit(limit).Group("category").Find(&stickers).Error
+	return stickers, err
+}

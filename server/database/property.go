@@ -14,7 +14,7 @@ type Property struct {
 // Update function
 // Update value of the Property
 func (property *Property) Update() error {
-	return db.Save(property).Error
+	return db.Model(property).Where("key = ?", property.Key).Update("value", property.Value).Error
 }
 
 // Delete function
