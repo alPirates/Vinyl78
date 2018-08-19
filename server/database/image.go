@@ -22,7 +22,22 @@ func (image *Image) Update() error {
 // Delete function
 // Delete image
 func (image *Image) Delete() error {
-	return db.Delete(image).Error
+	err := db.Delete(image).Error
+	if err != nil {
+		return err
+	}
+	images, err := GetImages(image.StickerID)
+	if err != nil {
+		return err
+	}
+	for i, image := range images {
+		image.Number = uint(i + 1)
+		err = image.Update()
+		if err != nil {
+			return err
+		}
+	}
+	return err
 }
 
 // DeleteBySticker function
@@ -66,4 +81,11 @@ func GetImages(stickerID int) ([]*Image, error) {
 // String function
 func (image *Image) String() string {
 	return fmt.Sprint(*image)
+}
+
+// GetImagesCount function
+func GetImagesCount(stickerID int) (int, error) {
+	count := 0
+	err := db.Table("applications").Count(&count).Error
+	return count, err
 }
