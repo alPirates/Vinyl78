@@ -1,12 +1,14 @@
 <template lang="pug">
-  v-toolbar(fixed dark color="primary" height="70")
-    v-toolbar-side-icon
-    v-toolbar-title Vinil78
-    v-spacer
-    v-toolbar-items.hidden-sm-and-down
-      v-btn(flat) One
-      v-btn(flat) Two
-      v-btn(flat) Three
+    v-toolbar(
+      :clipped-left="$vuetify.breakpoint.lgAndUp"
+      color="primary"
+      dark
+      app
+      fixed
+    )
+      v-toolbar-title
+        v-toolbar-side-icon(@click.stop="changeDrawer()")
+        span.hidden-sm-and-down Vinil78
 </template>
 
 <script>
@@ -14,6 +16,11 @@ export default {
   name: 'Header',
   data: () => {
     return {
+    }
+  },
+  methods: {
+    changeDrawer () {
+      this.COMMIT('setDrawer', !this.STATE.drawer)
     }
   }
 }

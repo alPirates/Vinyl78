@@ -6,7 +6,6 @@
         v-toolbar-title.white--text Заказать стикер
       v-container
         v-layout(row wrap)
-        pre {{valid}}
         v-flex(xs12)
           h3 Форма
           v-form(v-model="valid")

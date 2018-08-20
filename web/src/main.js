@@ -10,6 +10,7 @@ import Api from './plugins/api'
 import State from './plugins/state'
 
 import Vuetify from 'vuetify'
+
 import 'vuetify/dist/vuetify.min.css'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 
@@ -26,6 +27,8 @@ new Vue({
   el: '#app',
   router,
   store,
-  components: { App },
+  components: {
+    App
+  },
   template: '<App/>'
 })

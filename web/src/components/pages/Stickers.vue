@@ -5,6 +5,8 @@
     pre {{count}}
     v-layout(row, wrap)
       v-flex(xs12)
+        h2 Добавить стикер
+      v-flex(xs12)
         v-layout(row, wrap, justify-end)
           v-btn(color="success", @click="dialog = !dialog") Добавить
             v-icon(right) add
@@ -22,19 +24,34 @@
         v-container
           v-layout(row, wrap)
             v-flex(xs12)
+              v-text-field(
+                label="Описание"
+              )
+            v-flex(xs12)
+              FileUpload(
+                v-model="sticker.files"
+              )
 </template>
 
 <script>
+import FileUpload from '@/components/Utils/FileUpload'
+
 export default {
   name: 'Stickers',
   data: () => {
     return {
       dialog: false,
       stickers: [],
+      sticker: {
+        files: []
+      },
       count: 0
     }
   },
   methods: {
+    selected (files) {
+      console.log(files)
+    },
     async update () {
       let result = await this.$api.send('get', '/sticker', null, {
         limit: '10',
@@ -50,6 +67,9 @@ export default {
   },
   mounted () {
     this.update()
+  },
+  components: {
+    FileUpload
   }
 }
 </script>
