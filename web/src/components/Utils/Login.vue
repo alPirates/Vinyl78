@@ -49,8 +49,11 @@ export default {
         console.log('result is,', result)
         if (result.data.status === 'success') {
           const token = result.data.token
+          const role = result.data.role
           this.$store.commit('setToken', token)
+          this.$store.commit('setRole', role)
           localStorage.setItem('token', token)
+          localStorage.setItem('role', role)
         }
       }
     }

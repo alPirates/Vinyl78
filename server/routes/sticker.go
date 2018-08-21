@@ -55,6 +55,7 @@ func addSticker(context echo.Context) error {
 	sticker := database.Sticker{} // Use description, category
 	err := context.Bind(&sticker)
 	if err != nil {
+		fmt.Println(err)
 		return sendError(context, "no user information in JSON /sticker POST")
 	}
 
@@ -90,7 +91,7 @@ func getSticker(context echo.Context) error {
 	limitParam := context.QueryParam("limit")
 	limit, err := strconv.ParseUint(limitParam, 10, 64)
 	if err != nil {
-		return sendError(context, "lmit is not uint /sticker GET")
+		return sendError(context, "limit is not uint /sticker GET")
 	}
 	limitUint := uint(limit)
 
@@ -100,6 +101,7 @@ func getSticker(context echo.Context) error {
 		return sendError(context, "category is not uint /sticker GET")
 	}
 	categoryUint := uint(category)
+	fmt.Println("category is ", category)
 
 	stickers, err := database.GetStickers(
 		skipUint,
@@ -108,14 +110,6 @@ func getSticker(context echo.Context) error {
 	)
 	if err != nil {
 		return sendError(context, "sticker not returned from db /sticker GET")
-	}
-
-	for _, sticker := range stickers {
-		images, errLocal := database.GetImages(int(sticker.ID))
-		if errLocal != nil {
-			return sendError(context, "can't get images of stickers /sticker GET")
-		}
-		sticker.Images = images
 	}
 
 	count, err := database.GetStickersCount(categoryUint)

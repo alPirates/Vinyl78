@@ -7,13 +7,13 @@
   )
     v-list(dense subheader)
     v-subheader Menu
-    v-list-tile(:to="'/'")
+    v-list-tile(:to="'/'" @click="")
         v-list-tile-avatar
           v-icon add
         v-list-tile-content
         v-list-tile-title
             | Главная
-    v-list-tile(:to="'/form'")
+    v-list-tile(:to="'/form'" @click="")
         v-list-tile-avatar
           v-icon add
         v-list-tile-content

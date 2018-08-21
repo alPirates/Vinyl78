@@ -88,20 +88,22 @@ func setCaruselImage(context echo.Context) error {
 
 func addImage(context echo.Context) error {
 
-	token := context.Get("token").(*jwt.Token)
-	claims := token.Claims.(*jwtUserClaims)
+	// check token first
+	// token := context.Get("token").(*jwt.Token)
+	// claims := token.Claims.(*jwtUserClaims)
 
-	if claims.Role == 0 {
-		return sendError(context, "not admin /addImage POST")
-	}
-
-	image := database.Image{} // Use stickerID
-	err := context.Bind(&image)
+	// if claims.Role == 0 {
+	// 	return sendError(context, "not admin /addImage POST")
+	// }
+	linked := context.FormValue("linked")
+	linkedNumber, err := strconv.Atoi(linked)
 	if err != nil {
-		return sendError(context, "no information in JSON /addImage POST")
+		return sendError(context, "linked cant convert to number")
 	}
+	image := database.Image{}
+	image.Linked = linkedNumber
 
-	if image.StickerID == 0 {
+	if image.Linked == 0 {
 		return sendError(context, "empty params /addImage POST")
 	}
 
@@ -110,24 +112,24 @@ func addImage(context echo.Context) error {
 		return sendError(context, "can't upload image /addImage POST")
 	}
 
-	count, err := database.GetImagesCount(image.StickerID)
+	count, err := database.GetImagesCount(image.Linked)
 	if err != nil {
 		return sendError(context, "can't count images /addImage POST")
 	}
 
-	fmt.Println(count)
-
-	_, err = (&database.Image{}).Create(
+	img := new(database.Image)
+	img, err = (&database.Image{}).Create(
 		name,
-		image.StickerID,
+		image.Linked,
 		uint(count+1),
 	)
 	if err != nil {
 		return sendError(context, "image not created /addImage POST")
 	}
 
-	return context.JSON(http.StatusOK, map[string]string{
+	return context.JSON(http.StatusOK, map[string]interface{}{
 		"status": "success",
+		"image":  img.ID,
 	})
 
 }
@@ -179,7 +181,7 @@ func upload(context echo.Context) (string, error) {
 	defer src.Close()
 
 	mas := strings.Split(file.Filename, ".")
-	resolution := mas[1]
+	resolution := mas[len(mas)-1]
 	name := mas[0]
 
 	name += fmt.Sprint(time.Now())

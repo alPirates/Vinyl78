@@ -21,8 +21,11 @@ export default {
   mounted () {
     const token = localStorage.getItem('token')
     if (token) {
-      console.log(token)
       this.COMMIT('setToken', token)
+    }
+    const role = localStorage.getItem('role')
+    if (role) {
+      this.COMMIT('setRole', role)
     }
   },
   components: {

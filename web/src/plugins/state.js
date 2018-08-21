@@ -14,6 +14,12 @@ const statePlugin = {
         }
       },
       methods: {
+        isAdmin () {
+          if (this.STATE.role === 'admin') {
+            return true
+          }
+          return false
+        }
       }
     })
   }

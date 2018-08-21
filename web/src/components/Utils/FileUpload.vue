@@ -9,6 +9,7 @@
           v-model="files"
           :multiple="true"
           :headers="headers"
+          :data="data"
           :extensions="getExtensions"
           :drop-directory="true"
           :drop="true"
@@ -40,7 +41,7 @@ export default {
   data: () => {
     return {
       files: [],
-      url: '/api/app/image',
+      url: '/api/image',
       headers: {
         Authorization: 'Bearer' + this.getToken
       }
@@ -49,19 +50,8 @@ export default {
   watch: {
     files: {
       handler: function (oldVal, newVal) {
-        let uploadedFiles = []
-        uploadedFiles = this.files.reduce((acc, file) => {
-          let len = file.response.data.length
-          if (file.success && len > 0) {
-            acc.push({
-              filename: file.name,
-              path: file.response.data[len - 1]
-            })
-          }
-          return acc
-        }, [])
-        uploadedFiles = uploadedFiles || []
-        this.$emit('input', uploadedFiles)
+        let files = this.R.map(el => this.R.pick(['image'], el.response), this.files)
+        this.$emit('input', files)
       },
       deep: true
     }
@@ -94,6 +84,18 @@ export default {
       type: Array,
       default: () => {
         return []
+      }
+    },
+    data: {
+      type: Object,
+      default: () => {
+        return {}
+      }
+    },
+    params: {
+      type: Object,
+      default: () => {
+        return {}
       }
     }
   },

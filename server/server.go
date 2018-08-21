@@ -8,6 +8,7 @@ import (
 
 func main() {
 	server := echo.New()
+	server.Debug = true
 
 	database.OpenConnection("vinyl78")
 	defer database.CloseConnection()

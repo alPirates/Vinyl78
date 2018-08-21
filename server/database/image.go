@@ -7,10 +7,10 @@ import "fmt"
 // Category - category of sticker, -1 - carusel
 // Number - number in show
 type Image struct {
-	ID        uint   `json:"ID" form:"ID" query:"ID" gson:"PRIMARY_KEY"`
-	Name      string `json:"name" form:"name" query:"name"`
-	StickerID int    `json:"sticker_id" form:"sticker_id" query:"sticker_id"`
-	Number    uint   `json:"number" form:"number" query:"number"`
+	ID     uint   `json:"ID" form:"ID" query:"ID" gson:"PRIMARY_KEY"`
+	Name   string `json:"name" form:"name" query:"name"`
+	Linked int    `json:"linked" form:"linked" query:"linked"`
+	Number uint   `json:"number" form:"number" query:"number"`
 }
 
 // Update function
@@ -26,7 +26,7 @@ func (image *Image) Delete() error {
 	if err != nil {
 		return err
 	}
-	images, err := GetImages(image.StickerID)
+	images, err := GetImages(image.Linked)
 	if err != nil {
 		return err
 	}
@@ -42,18 +42,18 @@ func (image *Image) Delete() error {
 
 // DeleteBySticker function
 // Delete image by sticker id
-func (image *Image) DeleteBySticker(stickerID int) error {
-	return db.Where("sticker_id = ?", stickerID).Delete(image).Error
+func (image *Image) DeleteBySticker(linked int) error {
+	return db.Where("linked = ?", linked).Delete(image).Error
 }
 
 // Create function
 // Create new image and add it in db
 // Return new image
-func (image *Image) Create(name string, stickerID int, number uint) (*Image, error) {
+func (image *Image) Create(name string, linked int, number uint) (*Image, error) {
 	image = &Image{
-		Name:      name,
-		StickerID: stickerID,
-		Number:    number,
+		Name:   name,
+		Linked: linked,
+		Number: number,
 	}
 	err := db.Create(image).Error
 	if err != nil {
@@ -72,9 +72,9 @@ func GetAllImage() ([]*Image, error) {
 
 // GetImages function
 // Return all images in category
-func GetImages(stickerID int) ([]*Image, error) {
+func GetImages(linked int) ([]*Image, error) {
 	images := []*Image{}
-	err := db.Where("sticker_id = ?", stickerID).Order("number").Find(&images).Error
+	err := db.Where("linked = ?", linked).Order("number").Find(&images).Error
 	return images, err
 }
 
@@ -84,8 +84,8 @@ func (image *Image) String() string {
 }
 
 // GetImagesCount function
-func GetImagesCount(stickerID int) (int, error) {
+func GetImagesCount(linked int) (int, error) {
 	count := 0
-	err := db.Table("images").Where("sticker_id = ?", stickerID).Count(&count).Error
+	err := db.Table("images").Where("linked = ?", linked).Count(&count).Error
 	return count, err
 }
