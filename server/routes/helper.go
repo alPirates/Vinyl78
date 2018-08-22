@@ -19,7 +19,6 @@ func SetRoutes(server *echo.Echo) {
 
 	server.File("/", "../web/dist/index.html")
 	server.Static("/static", "../web/dist/static")
-	server.Static("/media", "../media/")
 
 	api := server.Group("/api")
 
@@ -29,6 +28,7 @@ func SetRoutes(server *echo.Echo) {
 	api.POST("/application", addApplication)
 
 	api.GET("/sticker", getSticker)
+	api.Static("/media", "../media")
 
 	api.GET("/sidebar", getCategory)
 
