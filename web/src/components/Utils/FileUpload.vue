@@ -2,6 +2,7 @@
 .file-loader
   v-layout(row, wrap, align-end, justify-center).mt-2.mb-2
     v-flex(sm12).text-sm-center
+      pre {{data}}
       v-btn(:color="color")
         file-upload(
           ref="upload"
@@ -41,9 +42,9 @@ export default {
   data: () => {
     return {
       files: [],
-      url: '/api/image',
+      url: '/api/app/image',
       headers: {
-        Authorization: 'Bearer' + this.getToken
+        Authorization: ''
       }
     }
   },
@@ -54,9 +55,17 @@ export default {
         this.$emit('input', files)
       },
       deep: true
+    },
+    token: {
+      handler: function (oldVal, newVal) {
+        this.headers.Authorization = 'Bearer ' + this.token
+      }
     }
   },
   computed: {
+    token () {
+      return this.$store.getters.getToken
+    },
     getExtensions () {
       if (this.images) {
         return ['jpg', 'png', 'jpeg']
@@ -65,7 +74,6 @@ export default {
     }
   },
   mounted () {
-    console.log('token is ', this.$store.getters.getToken)
   },
   props: {
     images: {

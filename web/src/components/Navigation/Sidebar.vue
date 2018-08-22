@@ -21,7 +21,7 @@
             | Заказать стикер
     v-divider
     span(v-for="(el, index) in categories")
-      v-list-tile(:to="'/category/'+el.ID").ml-4
+      v-list-tile(:to="'/category/'+el.id").ml-4
           //- v-list-tile-avatar
             v-icon {{el.icon}}
           v-list-tile-content

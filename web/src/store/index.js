@@ -23,15 +23,9 @@ const store = new Vuex.Store({
     }
   },
   getters: {
-    getToken (state) {
-      return state.token
-    },
-    getDrawer (state) {
-      return state.drawer
-    },
-    getRole (state) {
-      return state.role
-    }
+    getToken: state => state.token,
+    getDrawer: state => state.drawer,
+    getRole: state => state.role
   }
 })
 

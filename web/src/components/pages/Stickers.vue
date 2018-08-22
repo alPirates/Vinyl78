@@ -29,7 +29,9 @@
       v-card
         v-toolbar(color="primary")
           v-toolbar-title.white--text Редактировать
-        EditSticker(:sticker="dialog.data")
+        EditSticker(
+          :sticker="dialog.data"
+        )
 
 </template>
 
@@ -69,7 +71,7 @@ export default {
     async addNewSticker () {
       let result = await this.$api.send('post', '/app/sticker', {
         description: this.sticker.description,
-        category: parseInt(this.$route.params.id)
+        category_id: this.$route.params.id
       })
       if (result) {
         this.update()
@@ -79,7 +81,7 @@ export default {
       let result = await this.$api.send('get', '/sticker', null, {
         limit: '10',
         skip: '0',
-        category: this.$route.params.id
+        category_id: this.$route.params.id
       })
 
       if (result.data.status === 'success') {

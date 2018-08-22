@@ -2,13 +2,22 @@
   v-container(grid-list-sm)
     | edit here
     pre {{sticker}}
+    pre {{files}}
+    FileUpload(
+      v-model="files"
+      :data="{linked_id: sticker.id}"
+    )
+    
 </template>
 
 <script>
+import FileUpload from '@/components/Utils/FileUpload'
 export default {
   name: '',
   data: () => {
-    return {}
+    return {
+      files: []
+    }
   },
   methods: {
   },
@@ -19,6 +28,9 @@ export default {
         return {}
       }
     }
+  },
+  components: {
+    FileUpload
   }
 }
 </script>
