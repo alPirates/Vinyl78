@@ -81,6 +81,8 @@ func GetApplicationsCount() (int, error) {
 
 // generateUUID function
 func generateUUID() string {
+	rand.Seed(time.Now().UTC().UnixNano())
+
 	uuid := ""
 	uuid += generatePartOfUUID(8) + "-"
 	uuid += generatePartOfUUID(4) + "-"
@@ -95,7 +97,6 @@ func generateUUID() string {
 func generatePartOfUUID(n int) string {
 	uuidPart := ""
 	for i := 0; i < n; i++ {
-		rand.Seed(time.Now().Unix() + rand.Int63n(1000000000))
 		randInt := rand.Intn(36)
 		if randInt < 10 {
 			uuidPart += strconv.Itoa(randInt)
