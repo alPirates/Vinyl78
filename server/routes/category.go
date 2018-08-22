@@ -56,6 +56,32 @@ func addCategory(context echo.Context) error {
 
 }
 
+func setCategory(context echo.Context) error {
+
+	token := context.Get("token").(*jwt.Token)
+	claims := token.Claims.(*jwtUserClaims)
+
+	if claims.Role == 0 {
+		return sendError(context, "not admin /addCategory POST")
+	}
+
+	category := &database.Category{}
+	err := context.Bind(category)
+	if err != nil {
+		return sendError(context, "no user information in JSON /addCategory POST")
+	}
+
+	err = category.Update()
+	if err != nil {
+		return sendError(context, "no user information in JSON /addCategory POST")
+	}
+
+	return context.JSON(http.StatusOK, map[string]string{
+		"status": "success",
+	})
+
+}
+
 func deleteCategory(context echo.Context) error {
 
 	token := context.Get("token").(*jwt.Token)

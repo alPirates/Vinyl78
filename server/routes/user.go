@@ -9,7 +9,21 @@ import (
 )
 
 func setUser(context echo.Context) error {
-	return nil
+
+	user := &database.User{}
+	err := context.Bind(user)
+	if err != nil {
+		return sendError(context, "no user information in JSON /user PUT")
+	}
+
+	err = user.Update()
+	if err != nil {
+		return sendError(context, "can't update user /user PUT")
+	}
+
+	return context.JSON(http.StatusOK, map[string]string{
+		"status": "success",
+	})
 }
 
 func deleteUser(context echo.Context) error {

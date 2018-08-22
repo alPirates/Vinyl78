@@ -10,7 +10,28 @@ import (
 )
 
 func setSticker(context echo.Context) error {
-	return nil
+
+	token := context.Get("token").(*jwt.Token)
+	claims := token.Claims.(*jwtUserClaims)
+
+	if claims.Role == 0 {
+		return sendError(context, "not admin /sticker PUT")
+	}
+
+	sticker := &database.Sticker{}
+	err := context.Bind(sticker)
+	if err != nil {
+		return sendError(context, "no sticker information in JSON /sticker POST")
+	}
+
+	err = sticker.Update()
+	if err != nil {
+		return sendError(context, "can't update sticker /user PUT")
+	}
+
+	return context.JSON(http.StatusOK, map[string]string{
+		"status": "success",
+	})
 }
 
 func deleteSticker(context echo.Context) error {
@@ -49,7 +70,7 @@ func addSticker(context echo.Context) error {
 	sticker := &database.Sticker{} // Use description, categoryUUID
 	err := context.Bind(sticker)
 	if err != nil {
-		return sendError(context, "no user information in JSON /sticker POST")
+		return sendError(context, "no sticker information in JSON /sticker POST")
 	}
 
 	if sticker.Description == "" || sticker.CategoryID == "" {

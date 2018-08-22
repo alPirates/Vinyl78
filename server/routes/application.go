@@ -50,7 +50,20 @@ func setApplication(context echo.Context) error {
 		return sendError(context, "not admin /application PUT")
 	}
 
-	return sendError(context, "not work!!!!!! not use!!!!!")
+	application := &database.Application{} // Use name, phone, email, message
+	err := context.Bind(application)
+	if err != nil {
+		return sendError(context, "no user information in JSON /application POST")
+	}
+
+	err = application.Update()
+	if err != nil {
+		return sendError(context, "can't update application /application POST")
+	}
+
+	return context.JSON(http.StatusOK, map[string]string{
+		"status": "success",
+	})
 
 }
 
@@ -92,14 +105,14 @@ func getApplication(context echo.Context) error {
 	skipParam := context.QueryParam("skip")
 	skip, err := strconv.ParseUint(skipParam, 10, 64)
 	if err != nil {
-		return sendError(context, "skip is not uint /application DELETE")
+		return sendError(context, "skip is not uint /application GET")
 	}
 	skipUint := uint(skip)
 
 	limitParam := context.QueryParam("limit")
 	limit, err := strconv.ParseUint(limitParam, 10, 64)
 	if err != nil {
-		return sendError(context, "lmit is not uint /application DELETE")
+		return sendError(context, "lmit is not uint /application GET")
 	}
 	limitUint := uint(limit)
 
