@@ -6,7 +6,6 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"strconv"
 	"strings"
 	"time"
 
@@ -20,116 +19,48 @@ const (
 	PathToImages = "../media/"
 )
 
-func addCaruselImage(context echo.Context) error {
-
-	token := context.Get("token").(*jwt.Token)
-	claims := token.Claims.(*jwtUserClaims)
-
-	if claims.Role == 0 {
-		return sendError(context, "not admin /addCaruselImage POST")
-	}
-
-	name, err := upload(context)
-	if err != nil {
-		return sendError(context, "can't upload image /addCaruselImage POST")
-	}
-
-	count, err := database.GetImagesCount(-1)
-	if err != nil {
-		return sendError(context, "can't count images /addCaruselImage POST")
-	}
-
-	_, err = (&database.Image{}).Create(
-		name,
-		-1,
-		uint(count+1),
-	)
-	if err != nil {
-		return sendError(context, "image not created /addCaruselImage POST")
-	}
-
-	return context.JSON(http.StatusOK, map[string]string{
-		"status": "success",
-	})
-}
-
-func deleteCaruselImage(context echo.Context) error {
-
-	token := context.Get("token").(*jwt.Token)
-	claims := token.Claims.(*jwtUserClaims)
-
-	if claims.Role == 0 {
-		return sendError(context, "not admin /deleteCaruselImage DELETE")
-	}
-
-	idParam := context.Param("id")
-	id, err := strconv.ParseUint(idParam, 10, 64)
-	if err != nil {
-		return sendError(context, "skip is not uint /deleteCaruselImage DELETE")
-	}
-	idUint := uint(id)
-
-	err = (&database.Image{
-		ID: idUint,
-	}).Delete()
-
-	if err != nil {
-		return sendError(context, "can't delete from db /deleteCaruselImage DELETE")
-	}
-
-	return context.JSON(http.StatusOK, map[string]string{
-		"status": "success",
-	})
-}
-
-func setCaruselImage(context echo.Context) error {
-	return nil
-}
-
 func addImage(context echo.Context) error {
 
-	// check token first
-	// token := context.Get("token").(*jwt.Token)
-	// claims := token.Claims.(*jwtUserClaims)
+	token := context.Get("token").(*jwt.Token)
+	claims := token.Claims.(*jwtUserClaims)
 
-	// if claims.Role == 0 {
-	// 	return sendError(context, "not admin /addImage POST")
-	// }
-	linked := context.FormValue("linked")
-	linkedNumber, err := strconv.Atoi(linked)
-	if err != nil {
-		return sendError(context, "linked cant convert to number")
+	if claims.Role == 0 {
+		return sendError(context, "not admin /addImage POST")
 	}
-	image := database.Image{}
-	image.Linked = linkedNumber
 
-	if image.Linked == 0 {
+	linked := context.FormValue("linked_id")
+
+	image := database.Image{}
+	image.LinkedID = linked
+
+	if image.LinkedID == "" {
 		return sendError(context, "empty params /addImage POST")
 	}
 
 	name, err := upload(context)
 	if err != nil {
+		fmt.Println(err)
 		return sendError(context, "can't upload image /addImage POST")
 	}
 
-	count, err := database.GetImagesCount(image.Linked)
+	count, err := database.GetImagesCount(image.LinkedID)
 	if err != nil {
 		return sendError(context, "can't count images /addImage POST")
 	}
 
-	img := new(database.Image)
-	img, err = (&database.Image{}).Create(
+	img, err := (&database.Image{}).Create(
 		name,
-		image.Linked,
+		image.LinkedID,
 		uint(count+1),
 	)
+
 	if err != nil {
 		return sendError(context, "image not created /addImage POST")
 	}
 
 	return context.JSON(http.StatusOK, map[string]interface{}{
-		"status": "success",
-		"image":  img.ID,
+		"status":   "success",
+		"image_id": img.ID,
 	})
 
 }
@@ -143,15 +74,10 @@ func deleteImage(context echo.Context) error {
 		return sendError(context, "not admin /deleteImage DELETE")
 	}
 
-	idParam := context.Param("id")
-	id, err := strconv.ParseUint(idParam, 10, 64)
-	if err != nil {
-		return sendError(context, "skip is not uint /deleteImage DELETE")
-	}
-	idUint := uint(id)
+	id := context.Param("id")
 
-	err = (&database.Image{
-		ID: idUint,
+	err := (&database.Image{
+		ID: id,
 	}).Delete()
 
 	if err != nil {

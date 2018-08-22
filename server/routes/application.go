@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -11,8 +12,8 @@ import (
 
 func addApplication(context echo.Context) error {
 
-	application := database.Application{} // Use name, phone, email, message
-	err := context.Bind(&application)
+	application := &database.Application{} // Use name, phone, email, message
+	err := context.Bind(application)
 	if err != nil {
 		return sendError(context, "no user information in JSON /application POST")
 	}
@@ -22,7 +23,7 @@ func addApplication(context echo.Context) error {
 		return sendError(context, "empty params /application POST")
 	}
 
-	_, err = application.Create(
+	application, err = application.Create(
 		application.Name,
 		application.Phone,
 		application.Email,
@@ -34,7 +35,8 @@ func addApplication(context echo.Context) error {
 	}
 
 	return context.JSON(http.StatusOK, map[string]string{
-		"status": "success",
+		"status":         "success",
+		"application_id": application.ID,
 	})
 
 }
@@ -62,16 +64,12 @@ func deleteApplication(context echo.Context) error {
 	}
 
 	idParam := context.Param("id")
-	id, err := strconv.ParseUint(idParam, 10, 64)
-	if err != nil {
-		return sendError(context, "id is not uint /application DELETE")
-	}
-	idUint := uint(id)
+	fmt.Println(idParam)
 
 	application := &database.Application{
-		ID: idUint,
+		ID: idParam,
 	}
-	err = application.Delete()
+	err := application.Delete()
 
 	if err != nil {
 		return sendError(context, "application not deleted /application DELETE")

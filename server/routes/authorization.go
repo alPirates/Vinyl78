@@ -31,7 +31,7 @@ func registration(context echo.Context) error {
 	}
 
 	claims := &jwtUserClaims{
-		ID:   user.ID,
+		UUID: user.ID,
 		Role: user.Role,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * 72).Unix(),
@@ -70,7 +70,7 @@ func authorization(context echo.Context) error {
 	}
 
 	claims := &jwtUserClaims{
-		ID:   user.ID,
+		UUID: user.ID,
 		Role: user.Role,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * 72).Unix(),

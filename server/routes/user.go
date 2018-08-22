@@ -18,7 +18,7 @@ func deleteUser(context echo.Context) error {
 	claims := token.Claims.(*jwtUserClaims)
 
 	user := &database.User{
-		ID: claims.ID,
+		ID: claims.UUID,
 	}
 
 	err := user.Delete()

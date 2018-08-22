@@ -12,6 +12,6 @@ const (
 // jwtCustomClaims are custom claims extending default ones.
 type jwtUserClaims struct {
 	jwt.StandardClaims
-	ID   uint `json:"ID"`
-	Role uint `json:"role"`
+	UUID string `json:"UUID"`
+	Role uint   `json:"role"`
 }

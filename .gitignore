@@ -7,6 +7,7 @@ yarn-error.log*
 Vinyl78
 server/server
 server/tmp
+/media/?*.*
 
 
 # Editor directories and files

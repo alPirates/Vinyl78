@@ -30,7 +30,7 @@ func OpenConnection(nameDB string) error {
 	// Create admin if not existed
 	user := &User{}
 	db.Where("role = ?", 1).First(user)
-	if user.ID == 0 {
+	if user.ID == "" {
 		user, err = user.Create("admin@mail.ru", "admin")
 		if err != nil {
 			fmt.Println("admin not created")

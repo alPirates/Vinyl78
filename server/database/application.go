@@ -2,6 +2,8 @@ package database
 
 import (
 	"fmt"
+	"math/rand"
+	"strconv"
 	"time"
 )
 
@@ -12,7 +14,7 @@ import (
 // Email - email of the user
 // Status - in process(0) - completed(1) - refused(2)
 type Application struct {
-	ID          uint      `json:"ID" form:"ID" query:"ID" gson:"PRIMARY_KEY"`
+	ID          string    `json:"id" form:"id" query:"id"`
 	CreatedTime time.Time `json:"time" form:"time" query:"time"`
 	Name        string    `json:"name" form:"name" query:"name"`
 	Phone       string    `json:"phone" form:"phone" query:"phone"`
@@ -38,6 +40,7 @@ func (application *Application) Delete() error {
 // Return new application
 func (application *Application) Create(name, phone, email, message string) (*Application, error) {
 	application = &Application{
+		ID:          generateUUID(),
 		Name:        name,
 		Phone:       phone,
 		Email:       email,
@@ -74,4 +77,32 @@ func GetApplicationsCount() (int, error) {
 	count := 0
 	err := db.Table("applications").Count(&count).Error
 	return count, err
+}
+
+// generateUUID function
+func generateUUID() string {
+	rand.Seed(time.Now().Unix() + rand.Int63n(9223372036854775807.))
+
+	uuid := ""
+	uuid += generatePartOfUUID(8) + "-"
+	uuid += generatePartOfUUID(4) + "-"
+	uuid += generatePartOfUUID(4) + "-"
+	uuid += generatePartOfUUID(4) + "-"
+	uuid += generatePartOfUUID(12)
+
+	return uuid
+
+}
+
+func generatePartOfUUID(n int) string {
+	uuidPart := ""
+	for i := 0; i < n; i++ {
+		randInt := rand.Intn(36)
+		if randInt < 10 {
+			uuidPart += strconv.Itoa(randInt)
+		} else {
+			uuidPart += string(rune(randInt + 87))
+		}
+	}
+	return uuidPart
 }

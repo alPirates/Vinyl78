@@ -2,7 +2,6 @@ package routes
 
 import (
 	"net/http"
-	"strconv"
 
 	"github.com/alPirates/Vinyl78/server/database"
 	jwt "github.com/dgrijalva/jwt-go"
@@ -31,8 +30,8 @@ func addCategory(context echo.Context) error {
 		return sendError(context, "not admin /addCategory POST")
 	}
 
-	category := database.Category{} // Use name, icon
-	err := context.Bind(&category)
+	category := &database.Category{} // Use name, icon
+	err := context.Bind(category)
 	if err != nil {
 		return sendError(context, "no user information in JSON /addCategory POST")
 	}
@@ -41,7 +40,7 @@ func addCategory(context echo.Context) error {
 		return sendError(context, "empty params /addCategory POST")
 	}
 
-	_, err = category.Create(
+	category, err = category.Create(
 		category.Name,
 		category.Icon,
 	)
@@ -51,7 +50,8 @@ func addCategory(context echo.Context) error {
 	}
 
 	return context.JSON(http.StatusOK, map[string]string{
-		"status": "success",
+		"status":      "success",
+		"category_id": category.ID,
 	})
 
 }
@@ -65,18 +65,13 @@ func deleteCategory(context echo.Context) error {
 		return sendError(context, "not admin /deleteCategory DELETE")
 	}
 
-	idParam := context.Param("id")
-	id, err := strconv.ParseUint(idParam, 10, 64)
-	if err != nil {
-		return sendError(context, "skip is not uint /deleteCategory DELETE")
-	}
-	idUint := uint(id)
+	uuidParam := context.Param("id")
 
 	category := &database.Category{
-		ID: idUint,
+		ID: uuidParam,
 	}
 
-	err = category.Delete()
+	err := category.Delete()
 	if err != nil {
 		return sendError(context, "category not deleted /deleteCategory DELETE")
 	}

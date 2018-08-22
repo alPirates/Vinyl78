@@ -7,7 +7,7 @@ import "fmt"
 // Number - id of this category
 // Icon - path to icon of this category
 type Category struct {
-	ID   uint   `json:"ID" form:"ID" query:"ID" gson:"PRIMARY_KEY"`
+	ID   string `json:"id" form:"id" query:"id"`
 	Name string `json:"name" form:"name" query:"name"`
 	Icon string `json:"icon" form:"icon" query:"icon"`
 }
@@ -21,6 +21,10 @@ func (category *Category) Update() error {
 // Delete function
 // Delete property
 func (category *Category) Delete() error {
+	err := DeleteByCategory(category.ID)
+	if err != nil {
+		return err
+	}
 	return db.Delete(category).Error
 }
 
@@ -31,6 +35,7 @@ func (category *Category) Create(name, icon string) (*Category, error) {
 	category = &Category{
 		Name: name,
 		Icon: icon,
+		ID:   generateUUID(),
 	}
 	err := db.Create(category).Error
 	return category, err

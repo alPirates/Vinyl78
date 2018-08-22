@@ -7,7 +7,7 @@ import "fmt"
 // Password - encrypted string
 // Role - admin(1) or usual user(0)
 type User struct {
-	ID       uint   `json:"ID" form:"ID" query:"ID" gson:"PRIMARY_KEY"`
+	ID       string `json:"id" form:"id" query:"id"`
 	Email    string `json:"email" form:"email" query:"email"`
 	Password string `json:"password" form:"password" query:"password"`
 	Role     uint
@@ -33,12 +33,12 @@ func (user *User) Create(email, password string) (*User, error) {
 		Email:    email,
 		Password: password,
 		Role:     0,
+		ID:       generateUUID(),
 	}
 	err := db.Create(user).Error
 	if err != nil {
 		return nil, err
 	}
-	user, err = GetUser(email, password)
 	return user, err
 }
 
@@ -55,9 +55,9 @@ func GetUser(email, password string) (*User, error) {
 
 // GetUserByID function
 // Return user from ID
-func GetUserByID(ID uint) (*User, error) {
+func GetUserByID(UUID string) (*User, error) {
 	user := &User{}
-	err := db.First(user, ID).Error
+	err := db.Where("UUID = ?", UUID).First(user).Error
 	return user, err
 }
 

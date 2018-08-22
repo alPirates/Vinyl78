@@ -7,10 +7,10 @@ import "fmt"
 // Category - category of sticker, -1 - carusel
 // Number - number in show
 type Image struct {
-	ID     uint   `json:"ID" form:"ID" query:"ID" gson:"PRIMARY_KEY"`
-	Name   string `json:"name" form:"name" query:"name"`
-	Linked int    `json:"linked" form:"linked" query:"linked"`
-	Number uint   `json:"number" form:"number" query:"number"`
+	ID       string `json:"id" form:"id" query:"id"`
+	Name     string `json:"name" form:"name" query:"name"`
+	LinkedID string `json:"linked_id" form:"linked_id" query:"linked_id"`
+	Number   uint   `json:"number" form:"number" query:"number"`
 }
 
 // Update function
@@ -19,14 +19,24 @@ func (image *Image) Update() error {
 	return db.Save(image).Error
 }
 
+// DeleteBySticker function
+// Delete image by linkedUUID
+func (image *Image) DeleteBySticker(linkedID string) error {
+	return db.Where("linked_id = ?", linkedID).Delete(image).Error
+}
+
 // Delete function
 // Delete image
 func (image *Image) Delete() error {
-	err := db.Delete(image).Error
+	image, err := GetImage(image.ID)
 	if err != nil {
 		return err
 	}
-	images, err := GetImages(image.Linked)
+	err = db.Delete(image).Error
+	if err != nil {
+		return err
+	}
+	images, err := GetImages(image.LinkedID)
 	if err != nil {
 		return err
 	}
@@ -40,20 +50,22 @@ func (image *Image) Delete() error {
 	return err
 }
 
-// DeleteBySticker function
-// Delete image by sticker id
-func (image *Image) DeleteBySticker(linked int) error {
-	return db.Where("linked = ?", linked).Delete(image).Error
+// GetImage function
+func GetImage(id string) (*Image, error) {
+	image := &Image{}
+	err := db.Where("id = ?", id).First(image).Error
+	return image, err
 }
 
 // Create function
 // Create new image and add it in db
 // Return new image
-func (image *Image) Create(name string, linked int, number uint) (*Image, error) {
+func (image *Image) Create(name string, linkedID string, number uint) (*Image, error) {
 	image = &Image{
-		Name:   name,
-		Linked: linked,
-		Number: number,
+		Name:     name,
+		LinkedID: linkedID,
+		Number:   number,
+		ID:       generateUUID(),
 	}
 	err := db.Create(image).Error
 	if err != nil {
@@ -72,9 +84,9 @@ func GetAllImage() ([]*Image, error) {
 
 // GetImages function
 // Return all images in category
-func GetImages(linked int) ([]*Image, error) {
+func GetImages(linkedID string) ([]*Image, error) {
 	images := []*Image{}
-	err := db.Where("linked = ?", linked).Order("number").Find(&images).Error
+	err := db.Where("linked_id = ?", linkedID).Order("number").Find(&images).Error
 	return images, err
 }
 
@@ -84,8 +96,8 @@ func (image *Image) String() string {
 }
 
 // GetImagesCount function
-func GetImagesCount(linked int) (int, error) {
+func GetImagesCount(linkedUUID string) (int, error) {
 	count := 0
-	err := db.Table("images").Where("linked = ?", linked).Count(&count).Error
+	err := db.Table("images").Where("linked_id = ?", linkedUUID).Count(&count).Error
 	return count, err
 }

@@ -6,7 +6,7 @@ import "fmt"
 // Key - name of this property
 // Value - value of this property
 type Property struct {
-	ID    uint   `json:"ID" form:"ID" query:"ID" gson:"PRIMARY_KEY"`
+	ID    string `json:"id" form:"id" query:"id"`
 	Key   string `json:"key" form:"key" query:"key"`
 	Value string `json:"value" form:"value" query:"value"`
 }
@@ -14,7 +14,7 @@ type Property struct {
 // Update function
 // Update value of the Property
 func (property *Property) Update() error {
-	return db.Model(property).Where("key = ?", property.Key).Update("value", property.Value).Error
+	return db.Save(property).Error
 }
 
 // Delete function
@@ -30,6 +30,7 @@ func (property *Property) Create(key, value string) (*Property, error) {
 	property = &Property{
 		Key:   key,
 		Value: value,
+		ID:    generateUUID(),
 	}
 	err := db.Create(property).Error
 	return property, err

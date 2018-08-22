@@ -6,10 +6,10 @@ import "fmt"
 // Description - text
 // Image - path for image
 type Sticker struct {
-	ID          uint     `json:"ID" form:"ID" query:"ID" gson:"PRIMARY_KEY"`
+	ID          string   `json:"id" form:"id" query:"id"`
 	Description string   `json:"description" form:"description" query:"description"`
 	Images      []*Image `json:"images" form:"images" query:"images" gorm:"-"`
-	Category    uint     `json:"category" form:"category" query:"category"`
+	CategoryID  string   `json:"category_id" form:"category_id" query:"category_id"`
 }
 
 // Update function
@@ -21,7 +21,7 @@ func (sticker *Sticker) Update() error {
 // Delete function
 // Delete property
 func (sticker *Sticker) Delete() error {
-	err := (&Image{}).DeleteBySticker(int(sticker.ID))
+	err := (&Image{}).DeleteBySticker(sticker.ID)
 	if err != nil {
 		return err
 	}
@@ -31,10 +31,11 @@ func (sticker *Sticker) Delete() error {
 // Create function
 // Add new sticker and add it in db
 // Return new sticker
-func (sticker *Sticker) Create(description string, category uint) (*Sticker, error) {
+func (sticker *Sticker) Create(description, categoryID string) (*Sticker, error) {
 	sticker = &Sticker{
 		Description: description,
-		Category:    category,
+		CategoryID:  categoryID,
+		ID:          generateUUID(),
 	}
 	err := db.Create(sticker).Error
 	return sticker, err
@@ -43,16 +44,34 @@ func (sticker *Sticker) Create(description string, category uint) (*Sticker, err
 // GetStickers function
 // Return all stickers
 // skip and limit
-func GetStickers(skip, limit, category uint) ([]*Sticker, error) {
+func GetStickers(skip, limit uint, categoryUUID string) ([]*Sticker, error) {
 	sticker := []*Sticker{}
-	err := db.Offset(skip).Limit(limit).Where("category = ?", category).Find(&sticker).Error
+	err := db.Offset(skip).Limit(limit).Where("category_id = ?", categoryUUID).Find(&sticker).Error
+	return sticker, err
+}
+
+// GetAllStickersCategory function
+// Return all stickers by category
+func GetAllStickersCategory(categoryUUID string) ([]*Sticker, error) {
+	sticker := []*Sticker{}
+	err := db.Where("category_id = ?", categoryUUID).Find(&sticker).Error
 	return sticker, err
 }
 
 // DeleteByCategory function
 // Delete all stickers in this category
-func DeleteByCategory(category uint) error {
-	err := db.Delete(Sticker{}, "category = ?", category).Error
+func DeleteByCategory(categoryUUID string) error {
+	stickers, err := GetAllStickersCategory(categoryUUID)
+	if err != nil {
+		return err
+	}
+	for _, sticker := range stickers {
+		err = (&Image{}).DeleteBySticker(sticker.ID)
+		if err != nil {
+			return err
+		}
+	}
+	err = db.Delete(Sticker{}, "category_id = ?", categoryUUID).Error
 	return err
 }
 
@@ -66,9 +85,9 @@ func GetAllStickers() ([]*Sticker, error) {
 
 // GetStickersCount function
 // get count of sticker in category
-func GetStickersCount(category uint) (int, error) {
+func GetStickersCount(categoryUUID string) (int, error) {
 	count := 0
-	err := db.Table("stickers").Where("category = ?", category).Count(&count).Error
+	err := db.Table("stickers").Where("category_id = ?", categoryUUID).Count(&count).Error
 	return count, err
 }
 
@@ -81,6 +100,6 @@ func (sticker *Sticker) String() string {
 // return limit for each category
 func GetPreStickers(limit uint) ([]*Sticker, error) {
 	stickers := []*Sticker{}
-	err := db.Table("stickers").Limit(limit).Group("category").Find(&stickers).Error
+	err := db.Table("stickers").Limit(limit).Group("category_id").Find(&stickers).Error
 	return stickers, err
 }

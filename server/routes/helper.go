@@ -28,8 +28,6 @@ func SetRoutes(server *echo.Echo) {
 	api.POST("/application", addApplication)
 
 	api.GET("/sticker", getSticker)
-	// for test only
-	api.POST("/image", addImage)
 
 	api.GET("/sidebar", getCategory)
 
@@ -55,8 +53,8 @@ func SetRoutes(server *echo.Echo) {
 	authorization.POST("/sticker", addSticker)                  // admin
 	authorization.DELETE("/category/:id", deleteCategory)       // admin
 	authorization.POST("/category", addCategory)                // admin
-	// authorization.POST("/image", addImage)                      // admin
-	authorization.DELETE("/image/:id", deleteImage) // admin
+	authorization.POST("/image", addImage)                      // admin
+	authorization.DELETE("/image/:id", deleteImage)             // admin
 
 	err := server.Start(":" + fmt.Sprint(Port))
 	if err != nil {

@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -23,17 +22,12 @@ func deleteSticker(context echo.Context) error {
 		return sendError(context, "not admin /sticker DELETE")
 	}
 
-	idParam := context.Param("id")
-	id, err := strconv.ParseUint(idParam, 10, 64)
-	if err != nil {
-		return sendError(context, "skip is not uint /sticker DELETE")
-	}
-	idUint := uint(id)
+	uuid := context.Param("id")
 
 	sticker := &database.Sticker{
-		ID: idUint,
+		ID: uuid,
 	}
-	err = sticker.Delete()
+	err := sticker.Delete()
 	if err != nil {
 		return sendError(context, "sticker not deleted /sticker DELETE")
 	}
@@ -52,22 +46,19 @@ func addSticker(context echo.Context) error {
 		return sendError(context, "not admin /sticker POST")
 	}
 
-	sticker := database.Sticker{} // Use description, category
-	err := context.Bind(&sticker)
+	sticker := &database.Sticker{} // Use description, categoryUUID
+	err := context.Bind(sticker)
 	if err != nil {
-		fmt.Println(err)
 		return sendError(context, "no user information in JSON /sticker POST")
 	}
 
-	if sticker.Description == "" || sticker.Category == 0 {
+	if sticker.Description == "" || sticker.CategoryID == "" {
 		return sendError(context, "empty params /sticker POST")
 	}
 
-	fmt.Println(sticker)
-
-	_, err = sticker.Create(
+	sticker, err = sticker.Create(
 		sticker.Description,
-		sticker.Category,
+		sticker.CategoryID,
 	)
 
 	if err != nil {
@@ -75,7 +66,8 @@ func addSticker(context echo.Context) error {
 	}
 
 	return context.JSON(http.StatusOK, map[string]string{
-		"status": "success",
+		"status":     "success",
+		"sticker_id": sticker.ID,
 	})
 }
 
@@ -95,24 +87,26 @@ func getSticker(context echo.Context) error {
 	}
 	limitUint := uint(limit)
 
-	categoryParam := context.QueryParam("category")
-	category, err := strconv.ParseUint(categoryParam, 10, 64)
-	if err != nil {
-		return sendError(context, "category is not uint /sticker GET")
-	}
-	categoryUint := uint(category)
-	fmt.Println("category is ", category)
+	categoryParam := context.QueryParam("category_id")
 
 	stickers, err := database.GetStickers(
 		skipUint,
 		limitUint,
-		categoryUint,
+		categoryParam,
 	)
 	if err != nil {
 		return sendError(context, "sticker not returned from db /sticker GET")
 	}
 
-	count, err := database.GetStickersCount(categoryUint)
+	for _, sticker := range stickers {
+		images, err1 := database.GetImages(sticker.ID)
+		if err1 != nil {
+			return sendError(context, "images not returned from db /sticker GET")
+		}
+		sticker.Images = images
+	}
+
+	count, err := database.GetStickersCount(categoryParam)
 	if err != nil {
 		return sendError(context, "can't get count of stickers /sticker GET")
 	}
