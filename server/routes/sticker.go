@@ -26,7 +26,7 @@ func setSticker(context echo.Context) error {
 
 	err = sticker.Update()
 	if err != nil {
-		return err
+		return sendError(context, "can't update sticker /user PUT")
 	}
 
 	return context.JSON(http.StatusOK, map[string]string{
