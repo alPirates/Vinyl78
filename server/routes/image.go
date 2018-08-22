@@ -17,7 +17,21 @@ import (
 // PathToImages - path where will contain images
 const (
 	PathToImages = "../media/"
+	DefaultImage = "default.png"
 )
+
+func getFileImage(context echo.Context) error {
+
+	name := context.Param("name")
+
+	_, err := os.Open(PathToImages + name)
+	if err != nil {
+		return context.File(PathToImages + DefaultImage)
+	}
+
+	return context.File(PathToImages + name)
+
+}
 
 func addImage(context echo.Context) error {
 

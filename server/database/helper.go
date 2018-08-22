@@ -42,6 +42,16 @@ func OpenConnection(nameDB string) error {
 		}
 	}
 
+	// Create CaruselID if not existed
+	property := &Property{}
+	db.Where("key = ?", "carusel_id").First(property)
+	if property.Key == "" {
+		_, err = property.Create("carusel_id", generateUUID(), true)
+		if err != nil {
+			fmt.Println("property for carusel not created")
+		}
+	}
+
 	return err
 }
 
