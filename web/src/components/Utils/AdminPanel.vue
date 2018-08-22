@@ -49,6 +49,14 @@
               v-flex(xs12)
                 v-layout(row)
                   v-flex(xs12)
+                    v-list
+                      span(v-for="(el, index) in info.applications")
+                        v-list-tile
+                          v-list-tile-title {{el.name}} {{el.phone}}
+                          v-spacer
+                          v-btn(icon)
+                            v-icon edit
+                        v-divider(v-if="index + 1 !== info.applications.length")
 
 </template>
 
@@ -62,7 +70,8 @@ export default {
       newCategoryRules: [
         v => !!v || 'Не может быть пустым'
       ],
-      categories: ['kek', 'cheburek']
+      categories: [],
+      info: {}
     }
   },
   methods: {
@@ -85,6 +94,11 @@ export default {
       }
     },
     async update () {
+      let adminPanel = await this.$api.send('get', '/app/admin')
+      if (adminPanel) {
+        this.$set(this, 'info', adminPanel.data)
+      }
+      console.log(adminPanel)
       let categories = await this.$api.send('get', '/sidebar')
       if (categories.data.status === 'success') {
         console.log('setting')

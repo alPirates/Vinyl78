@@ -23,7 +23,7 @@ Api.install = (Vue, {store, R}) => {
           result = await axios[type](api + path, data, { headers })
         } else {
           console.log('here', headers)
-          result = await axios[type](api + path, headers)
+          result = await axios[type](api + path, {headers})
         }
         if (result.status !== 200) {
           result = {'error': true}
