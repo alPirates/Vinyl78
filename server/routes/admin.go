@@ -8,28 +8,39 @@ import (
 	"github.com/labstack/echo"
 )
 
-func setToken(context echo.Context) error {
+func getAdminInfo(context echo.Context) error {
 
 	token := context.Get("token").(*jwt.Token)
 	claims := token.Claims.(*jwtUserClaims)
 
 	if claims.Role == 0 {
-		return sendError(context, "not admin /setToken POST")
+		return sendError(context, "not admin /admin GET")
 	}
 
-	property := &database.Property{}
-	err := context.Bind(property)
+	property, err := database.GetPropertyPrivateAndPublic("carusel_id")
 	if err != nil {
-		return sendError(context, "no user information in JSON /setToken POST")
+		return sendError(context, "no carusel id /admin GET")
 	}
 
-	property.Key = "telegram_token"
-	err = property.Update()
+	caruselImages, err := database.GetImages(property.Value)
 	if err != nil {
-		return sendError(context, "not update token /setToken POST")
+		return sendError(context, "cant't get carusel images /admin GET")
 	}
 
-	return context.JSON(http.StatusOK, map[string]string{
-		"status": "success",
+	applications, err := database.GetAllApplications()
+	if err != nil {
+		return sendError(context, "cant't get applications /admin GET")
+	}
+
+	categories, err := database.GetCategories()
+	if err != nil {
+		return sendError(context, "cant't get categories /admin GET")
+	}
+
+	return context.JSON(http.StatusOK, map[string]interface{}{
+		"status":         "success",
+		"carusel_images": caruselImages,
+		"applications":   applications,
+		"categories":     categories,
 	})
 }

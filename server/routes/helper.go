@@ -28,9 +28,10 @@ func SetRoutes(server *echo.Echo) {
 	api.POST("/application", addApplication)
 
 	api.GET("/sticker", getSticker)
-	api.Static("/media", "../media")
+	api.GET("/media/:name", getFileImage)
 
 	api.GET("/sidebar", getCategory)
+	api.GET("/property", getProperty)
 
 	authorization := api.Group("/app")
 	authorization.Use(middleware.JWTWithConfig(
@@ -48,14 +49,16 @@ func SetRoutes(server *echo.Echo) {
 	authorization.PUT("/application", setApplication)           // admin
 	authorization.GET("/application", getApplication)           // admin
 	authorization.DELETE("/application/:id", deleteApplication) // admin
-	authorization.PUT("/token", setToken)                       // admin
-	authorization.PUT("/sticker", setSticker)                   // admin
-	authorization.DELETE("/sticker/:id", deleteSticker)         // admin
-	authorization.POST("/sticker", addSticker)                  // admin
-	authorization.DELETE("/category/:id", deleteCategory)       // admin
-	authorization.POST("/category", addCategory)                // admin
-	authorization.POST("/image", addImage)                      // admin
-	authorization.DELETE("/image/:id", deleteImage)             // admin
+	authorization.GET("/property", getPrivateProperty)          // admin
+	authorization.GET("/admin", getAdminInfo)
+	// authorization.PUT("/property", setToken)                       // admin
+	authorization.PUT("/sticker", setSticker)             // admin
+	authorization.DELETE("/sticker/:id", deleteSticker)   // admin
+	authorization.POST("/sticker", addSticker)            // admin
+	authorization.DELETE("/category/:id", deleteCategory) // admin
+	authorization.POST("/category", addCategory)          // admin
+	authorization.POST("/image", addImage)                // admin
+	authorization.DELETE("/image/:id", deleteImage)       // admin
 
 	err := server.Start(":" + fmt.Sprint(Port))
 	if err != nil {

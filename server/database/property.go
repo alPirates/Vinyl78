@@ -6,9 +6,10 @@ import "fmt"
 // Key - name of this property
 // Value - value of this property
 type Property struct {
-	ID    string `json:"id" form:"id" query:"id"`
-	Key   string `json:"key" form:"key" query:"key"`
-	Value string `json:"value" form:"value" query:"value"`
+	ID         string `json:"id" form:"id" query:"id"`
+	Key        string `json:"key" form:"key" query:"key"`
+	Value      string `json:"value" form:"value" query:"value"`
+	Permission bool   `json:"permission" form:"permission" query:"permission"`
 }
 
 // Update function
@@ -26,11 +27,12 @@ func (property *Property) Delete() error {
 // Create function
 // Add new property and add it in db
 // Return new property
-func (property *Property) Create(key, value string) (*Property, error) {
+func (property *Property) Create(key, value string, permission bool) (*Property, error) {
 	property = &Property{
-		Key:   key,
-		Value: value,
-		ID:    generateUUID(),
+		Key:        key,
+		Value:      value,
+		ID:         generateUUID(),
+		Permission: permission,
 	}
 	err := db.Create(property).Error
 	return property, err
@@ -42,6 +44,20 @@ func GetProperties() ([]*Property, error) {
 	properties := []*Property{}
 	err := db.Find(&properties).Error
 	return properties, err
+}
+
+// GetPropertyPrivateAndPublic function
+func GetPropertyPrivateAndPublic(key string) (*Property, error) {
+	property := &Property{}
+	err := db.Where("key = ?", key).First(&property).Error
+	return property, err
+}
+
+// GetPropertyPublic function
+func GetPropertyPublic(key string) (*Property, error) {
+	property := &Property{}
+	err := db.Where("key = ? AND perrmision = ?", key, true).First(&property).Error
+	return property, err
 }
 
 // String function
