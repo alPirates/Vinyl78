@@ -9,6 +9,10 @@
       v-toolbar-title
         v-toolbar-side-icon(@click.stop="changeDrawer()")
         span.hidden-sm-and-down Vinil78
+        v-avatar(
+          :size="50"
+        )
+          img(:src="kdk")
       v-spacer
       v-btn(
         v-if="STATE.token"

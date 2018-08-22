@@ -14,6 +14,9 @@ const statePlugin = {
         }
       },
       methods: {
+        getMedia (value) {
+          return `/api/media/${value}`
+        },
         isAdmin () {
           if (this.STATE.role === 'admin') {
             return true

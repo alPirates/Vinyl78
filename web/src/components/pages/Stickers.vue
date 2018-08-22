@@ -18,12 +18,21 @@
           v-btn(color="success" @click="addNewSticker") Добавить
             v-icon(right) add
       v-flex(xs12, sm6, lg4, xl3)
-        v-card(v-for="(el, index) in stickers", :key="index").mb-1
-          v-toolbar(color="green")
-            v-tolbar-title.white--text {{el.description}}
+        v-card(v-for="(el, index) in stickers", :key="index").mb-2
+          v-toolbar(v-if="isAdmin()" color="primary")
+            v-toolbar-title.white--text Редактировать
             v-spacer
-            v-btn(icon v-if="isAdmin()" @click="edit(index)").white--text
+            v-btn(@click="edit(index)" icon).white--text
               v-icon edit
+          v-card-media(
+            height="200px"
+            :src="getMedia(getImagePath(el))"
+          )
+            v-container(fill-height fluid)
+              v-layout(fill-height)
+                v-flex(xs12 align-end flexbox)
+                  span.headline.white--text {{el.description}}
+
     // edit sticker dialog
     v-dialog(v-model="dialog.show")
       v-card
@@ -64,6 +73,9 @@ export default {
     }
   },
   methods: {
+    getImagePath (sticker) {
+      return this.R.path(['name'], this.R.head(this.R.path(['images'], sticker))) || ''
+    },
     edit (index) {
       this.dialog.data = this.stickers[index]
       this.dialog.show = true

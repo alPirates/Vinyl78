@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-container
+  v-container(grid-list-lg)
     br
     v-layout(row wrap)
       v-flex(xs12 lg6)
@@ -30,6 +30,26 @@
                      v-icon edit
                     v-btn(icon color="grey lighter-3", @click="deleteCategory(el.ID)")
                       v-icon delete
+      v-flex(xs12 lg6)
+       v-card
+          v-toolbar(color="success")
+            v-toolbar-title.white--text Карусель
+          v-container
+            v-layout(row, wrap)
+              v-flex(xs12)
+                v-layout(row)
+                  v-flex(xs12)
+
+      v-flex(xs12)
+       v-card
+          v-toolbar(color="success")
+            v-toolbar-title.white--text заявки
+          v-container
+            v-layout(row, wrap)
+              v-flex(xs12)
+                v-layout(row)
+                  v-flex(xs12)
+
 </template>
 
 <script>
