@@ -1,9 +1,8 @@
 <template lang="pug">
   v-container(fluid)
     v-carousel
-      v-carousel-item()
-      v-carousel-item()
-      v-carousel-item()
+      v-carousel-item(v-for="(image, index) in carouselImages")
+        img(:src="getMedia(image.name)")
     v-container
       v-layout(row wrap)
         v-flex(xs12)
@@ -21,6 +20,19 @@ export default {
   name: 'Main',
   data: () => {
     return {
+      carouselImages: []
+    }
+  },
+  async mounted () {
+    let carousel = await this.$api.send('get', '/app/property', null, {
+      key: 'carousel_id'
+    })
+    let carouselImages = await this.$api.send('get', '/image', null, {
+      linked_id: carousel.data.value
+    })
+    console.log(carouselImages.data.images)
+    if (carouselImages) {
+      this.$set(this, 'carouselImages', carouselImages.data.images)
     }
   }
 }

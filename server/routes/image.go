@@ -42,7 +42,10 @@ func getImage(context echo.Context) error {
 		return sendError(context, "no images /image GET")
 	}
 
-	return context.JSON(200, images)
+	return context.JSON(200, map[string]interface{}{
+		"status": "success",
+		"images": images,
+	})
 }
 
 func addImage(context echo.Context) error {

@@ -9,7 +9,7 @@
           :post-action="url"
           v-model="files"
           :multiple="true"
-          :headers="headers"
+          :headers="{Authorization: 'Bearer ' + STATE.token}"
           :data="data"
           :extensions="getExtensions"
           :drop-directory="true"
@@ -42,10 +42,7 @@ export default {
   data: () => {
     return {
       files: [],
-      url: '/api/app/image',
-      headers: {
-        Authorization: ''
-      }
+      url: '/api/app/image'
     }
   },
   watch: {
@@ -56,16 +53,8 @@ export default {
       },
       deep: true
     },
-    token: {
-      handler: function (oldVal, newVal) {
-        this.headers.Authorization = 'Bearer ' + this.token
-      }
-    }
   },
   computed: {
-    token () {
-      return this.$store.getters.getToken
-    },
     getExtensions () {
       if (this.images) {
         return ['jpg', 'png', 'jpeg']

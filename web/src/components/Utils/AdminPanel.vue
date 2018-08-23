@@ -39,6 +39,10 @@
               v-flex(xs12)
                 v-layout(row)
                   v-flex(xs12)
+                    pre images {{carouselImages}}
+                    FileUpload(
+                      :data="{linked_id: carousel_id}"
+                    )
 
       v-flex(xs12)
        v-card
@@ -64,11 +68,13 @@
 </template>
 
 <script>
+import FileUpload from '@/components/Utils/FileUpload';
 export default {
   name: 'AdminPanel',
   data: () => {
     return {
       valid: false,
+      files: [],
       headers: [
         {text: 'Имя', value: 'name'},
         {text: 'Телефон', value: 'phone'},
@@ -78,12 +84,14 @@ export default {
         {text: 'Cтатус', value: 'status'},
         {text: 'Опции', sortable: 'false'}
       ],
+      carousel_id: '',
       newCategory: '',
       newCategoryRules: [
         v => !!v || 'Не может быть пустым'
       ],
       categories: [],
-      info: {}
+      info: {},
+      carouselImages: []
     }
   },
   methods: {
@@ -117,15 +125,25 @@ export default {
         this.$set(this, 'categories', categories.data.result)
       }
 
-      let { value } = await this.$api.send('get', '/app/property', null, {
+      let carousel = await this.$api.send('get', '/app/property', null, {
         key: 'carousel_id'
       })
-
-      let carouselImages = await this.$api.send('get', '/image/')
+      console.log('value is ', carousel.data.value)
+      this.carousel_id = carousel.data.value
+      let carouselImages = await this.$api.send('get', '/image', null, {
+        linked_id: carousel.data.value
+      })
+      if (carouselImages) {
+        console.log('1111', carouselImages.data.images);
+        this.$set(this, 'carouselImages', carouselImages.data.images)
+      }
     }
   },
   async mounted () {
     this.update()
+  },
+  components: {
+    FileUpload
   }
 }
 </script>
