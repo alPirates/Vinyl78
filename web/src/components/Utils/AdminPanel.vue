@@ -49,14 +49,17 @@
               v-flex(xs12)
                 v-layout(row)
                   v-flex(xs12)
-                    v-list
-                      span(v-for="(el, index) in info.applications")
-                        v-list-tile
-                          v-list-tile-title {{el.name}} {{el.phone}}
-                          v-spacer
-                          v-btn(icon)
-                            v-icon edit
-                        v-divider(v-if="index + 1 !== info.applications.length")
+                    v-data-table(:headers="headers", :items="info.applications").elevation-1
+                      template(slot="items" slot-scope="el")
+                        td {{el.item.name}}
+                        td {{el.item.phone}}
+                        td {{el.item.email}}
+                        td {{el.item.message}}
+                        td {{el.item.time | date}}
+                        td {{el.item.status | status}}
+                        td
+                          v-btn(icon color="success")
+                            v-icon check
 
 </template>
 
@@ -66,6 +69,15 @@ export default {
   data: () => {
     return {
       valid: false,
+      headers: [
+        {text: 'Имя', value: 'name'},
+        {text: 'Телефон', value: 'phone'},
+        {text: 'E-mail', value: 'email'},
+        {text: 'Сообщение', value: 'message'},
+        {text: 'Дата', value: 'time'},
+        {text: 'Cтатус', value: 'status'},
+        {text: 'Опции', sortable: 'false'}
+      ],
       newCategory: '',
       newCategoryRules: [
         v => !!v || 'Не может быть пустым'
@@ -103,6 +115,13 @@ export default {
       if (categories.data.status === 'success') {
         console.log('setting')
         this.$set(this, 'categories', categories.data.result)
+      }
+
+      let carousel = await this.$api.send('get', '/app/property', null, {
+        key: 'carusel_id'
+      })
+      if (carousel) {
+        console.log(carousel)
       }
     }
   },

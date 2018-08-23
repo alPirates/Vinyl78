@@ -4,9 +4,11 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
+import moment from 'moment'
 import * as R from 'ramda'
 
 import Api from './plugins/api'
+import Filters from './plugins/filters'
 import State from './plugins/state'
 
 import Vuetify from 'vuetify'
@@ -19,6 +21,7 @@ Vue.config.productionTip = false
 Vue.prototype.R = R
 
 Vue.use(Api, { store, R })
+Vue.use(Filters, { moment })
 Vue.use(Vuetify)
 Vue.use(State)
 
