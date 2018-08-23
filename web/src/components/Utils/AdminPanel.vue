@@ -117,12 +117,11 @@ export default {
         this.$set(this, 'categories', categories.data.result)
       }
 
-      let carousel = await this.$api.send('get', '/app/property', null, {
+      let { value } = await this.$api.send('get', '/app/property', null, {
         key: 'carousel_id'
       })
-      if (carousel) {
-        console.log(carousel)
-      }
+
+      let carouselImages = await this.$api.send('get', '/image/')
     }
   },
   async mounted () {

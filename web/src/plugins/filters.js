@@ -4,7 +4,7 @@ const filters = {
     Vue.mixin({
       filters: {
         date (value) {
-          return moment(value).format('DD.MM.YY hh:mm');
+          return moment(value).format('DD.MM.YY hh:mm')
         },
         status (value) {
           switch (value) {
