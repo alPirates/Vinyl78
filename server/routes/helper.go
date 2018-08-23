@@ -31,6 +31,7 @@ func SetRoutes(server *echo.Echo) {
 	api.GET("/media/:name", getFileImage)
 
 	api.GET("/sidebar", getCategory)
+	api.GET("/image", getImage)
 	api.GET("/property", getProperty)
 
 	authorization := api.Group("/app")
