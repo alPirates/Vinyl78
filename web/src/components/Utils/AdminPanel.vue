@@ -118,7 +118,7 @@ export default {
       }
 
       let carousel = await this.$api.send('get', '/app/property', null, {
-        key: 'carusel_id'
+        key: 'carousel_id'
       })
       if (carousel) {
         console.log(carousel)

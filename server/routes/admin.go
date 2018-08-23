@@ -17,7 +17,7 @@ func getAdminInfo(context echo.Context) error {
 		return sendError(context, "not admin /admin GET")
 	}
 
-	property, err := database.GetPropertyPrivateAndPublic("carusel_id")
+	property, err := database.GetPropertyPrivateAndPublic("carousel_id")
 	if err != nil {
 		return sendError(context, "no carusel id /admin GET")
 	}
