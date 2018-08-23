@@ -33,6 +33,18 @@ func getFileImage(context echo.Context) error {
 
 }
 
+func getImage(context echo.Context) error {
+
+	id := context.QueryParams().Get("linked_id")
+
+	images, err := database.GetImages(id)
+	if err != nil {
+		return sendError(context, "no images /image GET")
+	}
+
+	return context.JSON(200, images)
+}
+
 func addImage(context echo.Context) error {
 
 	token := context.Get("token").(*jwt.Token)
