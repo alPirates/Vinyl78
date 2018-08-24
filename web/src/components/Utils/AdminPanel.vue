@@ -39,7 +39,24 @@
               v-flex(xs12)
                 v-layout(row)
                   v-flex(xs12)
-                    pre images {{carouselImages}}
+                    v-carousel(id="preview-carousel")
+                      v-carousel-item(v-for="(image, index) in carouselImages", :key="index")
+                        img(:src="getMedia(image.name)")
+                    h3.mt-2.mb-2.display-1 Укажите новую последовательность
+                    draggable(:list="carouselImages", element="v-list" @end="dropImage")
+                      div(v-for="(image, index) in carouselImages", :key="index")
+                        v-list-tile(@click="")
+                          v-list-tile-avatar
+                            img(:src="getMedia(image.name)")
+                          v-list-tile-title
+                            | Картинка:
+                            | 
+                            strong {{image.name}}
+                          v-spacer
+                          v-btn(icon color="error")
+                            v-icon delete
+                        v-divider
+                    h3.mt-2.mb-2.display-1 Добавить картинки
                     FileUpload(
                       :data="{linked_id: carousel_id}"
                     )
@@ -96,6 +113,9 @@ export default {
     }
   },
   methods: {
+    async dropImage (param) {
+      console.log('param', this.carouselImages)
+    },
     async addCategory () {
       if (this.valid) {
         let result = await this.$api.send('post', '/app/category', {
@@ -148,3 +168,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+#preview-carousel {
+  max-height: 300px;
+}
+</style>

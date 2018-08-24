@@ -52,7 +52,7 @@ export default {
         this.$emit('input', files)
       },
       deep: true
-    },
+    }
   },
   computed: {
     getExtensions () {

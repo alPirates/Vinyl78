@@ -2,8 +2,9 @@
   v-app
     Sidebar
     Header
-    v-container(fluid)
-      router-view
+    v-content
+      div.wrapper
+        router-view
 
 </template>
 

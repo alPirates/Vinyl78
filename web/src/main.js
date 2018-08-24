@@ -4,8 +4,11 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
+
+// Utils zone
 import moment from 'moment'
 import * as R from 'ramda'
+import draggable from 'vuedraggable'
 
 import Api from './plugins/api'
 import Filters from './plugins/filters'
@@ -24,6 +27,7 @@ Vue.use(Api, { store, R })
 Vue.use(Filters, { moment })
 Vue.use(Vuetify)
 Vue.use(State)
+Vue.component('draggable', draggable)
 
 /* eslint-disable no-new */
 new Vue({

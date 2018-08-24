@@ -3,8 +3,10 @@
     br
     br
     v-layout(row, wrap)
-      v-flex(xs12)
+      v-flex(xs12 v-if="isAdmin()")
         h2 Добавить стикер
+      v-flex(xs12 v-else)
+        h3.display-2 {{Стикеры}}
       v-flex(xs12)
         v-layout(row,  justify-end, v-if="isAdmin()")
           v-flex(xs12)
@@ -17,8 +19,8 @@
               )
           v-btn(color="success" @click="addNewSticker") Добавить
             v-icon(right) add
-      v-flex(xs12, sm6, lg4, xl3)
-        v-card(v-for="(el, index) in stickers", :key="index").mb-2
+      v-flex(xs12, sm6, lg4, xl3, v-for="(el, index) in stickers", :key="index")
+        v-card.mb-2
           v-toolbar(v-if="isAdmin()" color="primary")
             v-toolbar-title.white--text Редактировать
             v-spacer

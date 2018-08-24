@@ -12,7 +12,7 @@ const filters = {
               return 'На проверке'
             case 1:
               return 'Проверен'
-            case 2: 
+            case 2:
               return 'Отказан'
           }
         }

@@ -7,7 +7,6 @@
       v-model="files"
       :data="{linked_id: sticker.id}"
     )
-    
 </template>
 
 <script>
