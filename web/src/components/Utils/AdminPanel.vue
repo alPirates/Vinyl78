@@ -68,7 +68,8 @@
 </template>
 
 <script>
-import FileUpload from '@/components/Utils/FileUpload';
+import FileUpload from '@/components/Utils/FileUpload'
+
 export default {
   name: 'AdminPanel',
   data: () => {
@@ -134,7 +135,7 @@ export default {
         linked_id: carousel.data.value
       })
       if (carouselImages) {
-        console.log('1111', carouselImages.data.images);
+        console.log('1111', carouselImages.data.images)
         this.$set(this, 'carouselImages', carouselImages.data.images)
       }
     }
