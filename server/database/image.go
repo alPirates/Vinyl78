@@ -1,10 +1,13 @@
 package database
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
 // Image structure
 // Nmae - filename
-// Category - category of sticker, -1 - carusel
+// Category - category of sticker
 // Number - number in show
 type Image struct {
 	ID       string `json:"id" form:"id" query:"id"`
@@ -22,7 +25,15 @@ func (image *Image) Update() error {
 // DeleteBySticker function
 // Delete image by linkedUUID
 func (image *Image) DeleteBySticker(linkedID string) error {
+
+	images, _ := GetImages(linkedID)
+
+	for _, imageR := range images {
+		imageR.DeleteFileImage()
+	}
+
 	return db.Where("linked_id = ?", linkedID).Delete(image).Error
+
 }
 
 // Delete function
@@ -40,14 +51,19 @@ func (image *Image) Delete() error {
 	if err != nil {
 		return err
 	}
-	for i, image := range images {
-		image.Number = uint(i + 1)
-		err = image.Update()
-		if err != nil {
-			return err
+	for _, imageR := range images {
+		if imageR.Number > image.Number {
+			imageR.Number--
+			imageR.Update()
 		}
+		imageR.DeleteFileImage()
 	}
 	return err
+}
+
+// DeleteFileImage function
+func (image *Image) DeleteFileImage() {
+	os.Remove("../media/" + image.Name)
 }
 
 // GetImage function

@@ -59,6 +59,7 @@ func SetRoutes(server *echo.Echo) {
 	authorization.DELETE("/category/:id", deleteCategory) // admin
 	authorization.POST("/category", addCategory)          // admin
 	authorization.POST("/image", addImage)                // admin
+	authorization.PUT("/image", setImage)                 // admin
 	authorization.DELETE("/image/:id", deleteImage)       // admin
 
 	err := server.Start(":" + fmt.Sprint(Port))
