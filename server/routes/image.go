@@ -2,6 +2,7 @@ package routes
 
 import (
 	"crypto/md5"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -68,7 +69,6 @@ func addImage(context echo.Context) error {
 
 	name, err := upload(context)
 	if err != nil {
-		fmt.Println(err)
 		return sendError(context, "can't upload image /addImage POST")
 	}
 
@@ -119,7 +119,26 @@ func deleteImage(context echo.Context) error {
 }
 
 func setImage(context echo.Context) error {
-	return nil
+
+	form, err := context.FormParams()
+	if err != nil {
+		return sendError(context, "no images /image PUT")
+	}
+
+	imagesJSON := form.Get("images")
+	var images []database.Image
+	err = json.Unmarshal([]byte(imagesJSON), &images)
+	if err != nil {
+		return sendError(context, "can't unmarshal /image PUT")
+	}
+
+	for _, imageR := range images {
+		imageR.Update()
+	}
+
+	return context.JSON(http.StatusOK, map[string]interface{}{
+		"status": "success",
+	})
 }
 
 func upload(context echo.Context) (string, error) {
