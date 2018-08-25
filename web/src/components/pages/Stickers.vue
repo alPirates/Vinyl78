@@ -76,7 +76,7 @@ export default {
   },
   methods: {
     getImagePath (sticker) {
-      return this.R.path(['name'], this.R.head(this.R.path(['images'], sticker))) || ''
+      return R.path(['name'], this.R.head(this.R.path(['images'], sticker))) || ''
     },
     edit (index) {
       this.dialog.data = this.stickers[index]

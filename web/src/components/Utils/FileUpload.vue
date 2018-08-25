@@ -2,7 +2,6 @@
 .file-loader
   v-layout(row, wrap, align-end, justify-center).mt-2.mb-2
     v-flex(sm12).text-sm-center
-      pre {{data}}
       v-btn(:color="color")
         file-upload(
           ref="upload"

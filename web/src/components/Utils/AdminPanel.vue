@@ -50,17 +50,20 @@
                             img(:src="getMedia(image.name)")
                           v-list-tile-title
                             | Картинка:
-                            | 
+                            |
                             strong {{image.name}}
                           v-spacer
                           v-btn(icon color="error")
                             v-icon delete
                         v-divider
+                    v-layout(row, wrap)
+                      v-flex(xs12).text-xs-right
+                        v-btn(color="primary") Обновить
+                          v-icon(right) refresh
                     h3.mt-2.mb-2.display-1 Добавить картинки
                     FileUpload(
                       :data="{linked_id: carousel_id}"
                     )
-
       v-flex(xs12)
        v-card
           v-toolbar(color="success")
