@@ -42,10 +42,7 @@ func getImage(context echo.Context) error {
 		return sendError(context, "no images /image GET")
 	}
 
-	return context.JSON(200, map[string]interface{}{
-		"status": "success",
-		"images": images,
-	})
+	return context.JSON(200, images)
 }
 
 func addImage(context echo.Context) error {
@@ -136,6 +133,7 @@ func setImage(context echo.Context) error {
 	return context.JSON(http.StatusOK, map[string]interface{}{
 		"status": "success",
 	})
+
 }
 
 func upload(context echo.Context) (string, error) {

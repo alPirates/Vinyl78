@@ -7,15 +7,22 @@ import "fmt"
 // Number - id of this category
 // Icon - path to icon of this category
 type Category struct {
-	ID   string `json:"id" form:"id" query:"id"`
-	Name string `json:"name" form:"name" query:"name"`
-	Icon string `json:"icon" form:"icon" query:"icon"`
+	ID          string `json:"id" form:"id" query:"id"`
+	Name        string `json:"name" form:"name" query:"name"`
+	Icon        string `json:"icon" form:"icon" query:"icon"`
+	Description string `json:"description" form:"description" query:"description"`
 }
 
 // Update function
 // Update value of the Property
 func (category *Category) Update() error {
 	return db.Save(category).Error
+}
+
+// UpdateNotAll function
+// Update value of the Property
+func (category *Category) UpdateNotAll() error {
+	return db.Model(category).Update(category).Error
 }
 
 // Delete function
@@ -31,11 +38,12 @@ func (category *Category) Delete() error {
 // Create function
 // Add new property and add it in db
 // Return new property
-func (category *Category) Create(name, icon string) (*Category, error) {
+func (category *Category) Create(name, icon, description string) (*Category, error) {
 	category = &Category{
-		Name: name,
-		Icon: icon,
-		ID:   generateUUID(),
+		Name:        name,
+		Icon:        icon,
+		ID:          generateUUID(),
+		Description: description,
 	}
 	err := db.Create(category).Error
 	return category, err
