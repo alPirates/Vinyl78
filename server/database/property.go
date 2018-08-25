@@ -9,7 +9,7 @@ type Property struct {
 	ID         string `json:"id" form:"id" query:"id"`
 	Key        string `json:"key" form:"key" query:"key"`
 	Value      string `json:"value" form:"value" query:"value"`
-	Permission int    `json:"permission" form:"permission" query:"permission"`
+	Permission bool   `json:"permission" form:"permission" query:"permission"`
 }
 
 // Update function
@@ -27,7 +27,7 @@ func (property *Property) Delete() error {
 // Create function
 // Add new property and add it in db
 // Return new property
-func (property *Property) Create(key, value string, permission int) (*Property, error) {
+func (property *Property) Create(key, value string, permission bool) (*Property, error) {
 	property = &Property{
 		Key:        key,
 		Value:      value,
@@ -56,7 +56,7 @@ func GetPropertyPrivateAndPublic(key string) (*Property, error) {
 // GetPropertyPublic function
 func GetPropertyPublic(key string) (*Property, error) {
 	property := &Property{}
-	err := db.Where("key = ? AND perrmision = ?", key, 1).First(&property).Error
+	err := db.Where("key = ? AND permission = ?", key, true).First(&property).Error
 	return property, err
 }
 
