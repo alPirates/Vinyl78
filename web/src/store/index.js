@@ -8,11 +8,14 @@ const store = new Vuex.Store({
     token: localStorage.getItem('token') || '',
     role: 'client',
     drawer: false,
-    loader: true
+    loader: false
   },
   actions: {
   },
   mutations: {
+    setLoader (state, loader) {
+      state.loader = loader
+    },
     setToken (state, token) {
       state.token = token
     },

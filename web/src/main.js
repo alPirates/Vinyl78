@@ -21,12 +21,14 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css'
 
 Vue.config.productionTip = false
 
+// todo remove from latest commits
 Vue.prototype.R = R
+
+Vue.use(Vuetify)
 
 Vue.use(Api, { store, R })
 Vue.use(Filters, { moment })
-Vue.use(Vuetify)
-Vue.use(State)
+Vue.use(State, { store })
 Vue.component('draggable', draggable)
 
 /* eslint-disable no-new */

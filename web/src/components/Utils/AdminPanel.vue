@@ -58,7 +58,7 @@
                         v-divider
                     v-layout(row, wrap)
                       v-flex(xs12).text-xs-right
-                        v-btn(color="primary") Обновить
+                        v-btn(color="primary" @click="refreshCarouselSlides()") Обновить
                           v-icon(right) refresh
                     h3.mt-2.mb-2.display-1 Добавить картинки
                     FileUpload(
@@ -116,6 +116,21 @@ export default {
     }
   },
   methods: {
+    async refreshCarouselSlides () {
+      this.loader(true)
+      let index = 0
+      let sending = R.map(el => {
+        index++
+        return {
+          id: el.id,
+          number: index
+        }
+      }, this.carouselImages)
+      let result = await this.$api.send('put', '/app/image', { images: "hello" })
+      if (result) {
+      }
+      this.loader(false)
+    },
     async dropImage (param) {
       console.log('param', this.carouselImages)
     },

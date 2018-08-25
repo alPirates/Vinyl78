@@ -1,6 +1,6 @@
 <template lang="pug">
   div
-    v-carousel
+    v-carousel(v-if="carouselImages.length > 0")
       v-carousel-item(v-for="(image, index) in carouselImages", :key="index")
         img(:src="getMedia(image.name)")
     v-container(grid-list-lg)
@@ -65,7 +65,6 @@ export default {
     }
   },
   async mounted () {
-
     let carousel = await this.$api.send('get', '/property', null, {
       key: 'carousel_id'
     })

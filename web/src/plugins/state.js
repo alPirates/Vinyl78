@@ -1,6 +1,6 @@
 
 const statePlugin = {
-  install (Vue) {
+  install (Vue, { store }) {
     Vue.mixin({
       computed: {
         STATE () {
@@ -14,6 +14,10 @@ const statePlugin = {
         }
       },
       methods: {
+        loader (value) {
+          console.log(value)
+          console.log(store)
+        },
         getMedia (value) {
           return `/api/media/${value}`
         },
