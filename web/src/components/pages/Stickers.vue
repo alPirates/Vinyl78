@@ -1,10 +1,12 @@
 <template lang="pug">
   v-container(grid-list-sm)
-    br
-    br
     v-layout(row, wrap)
-      v-flex(xs12)
+      v-flex(xs12 v-if="isAdmin()")
         h2 Добавить стикер
+        v-btn(@click="category.show = true" v-if="isAdmin()") Радактировать категорию
+          v-icon(right) edit
+      v-flex(xs12 v-else)
+        h3.display-2 Стикеры
       v-flex(xs12)
         v-layout(row,  justify-end, v-if="isAdmin()")
           v-flex(xs12)
@@ -17,8 +19,8 @@
               )
           v-btn(color="success" @click="addNewSticker") Добавить
             v-icon(right) add
-      v-flex(xs12, sm6, lg4, xl3)
-        v-card(v-for="(el, index) in stickers", :key="index").mb-2
+      v-flex(xs12, sm6, lg4, xl3, v-for="(el, index) in stickers", :key="index")
+        v-card.mb-2
           v-toolbar(v-if="isAdmin()" color="primary")
             v-toolbar-title.white--text Редактировать
             v-spacer
@@ -34,12 +36,26 @@
                   span.headline.white--text {{el.description}}
 
     // edit sticker dialog
-    v-dialog(v-model="dialog.show")
+    v-dialog(v-model="dialog.show" fullscreen hide-overlay transition="dialog-bottom-transition")
       v-card
         v-toolbar(color="primary")
           v-toolbar-title.white--text Редактировать
+          v-spacer
+          v-btn(icon).white--text
+            v-icon(@click="dialog.show = false") close
         EditSticker(
           :sticker="dialog.data"
+        )
+    // edit category
+    v-dialog(v-model="category.show" fullscreen hide-overlay transition="dialog-bottom-transition")
+      v-card
+        v-toolbar(color="primary")
+          v-toolbar-title.white--text Редактировать
+          v-spacer
+          v-btn(icon).white--text
+            v-icon(@click="category.show = false") close
+        EditCategory(
+          :id="$route.params.id"
         )
 
 </template>
@@ -47,6 +63,8 @@
 <script>
 import FileUpload from '@/components/Utils/FileUpload'
 import EditSticker from '@/components/Edit/EditSticker'
+import EditCategory from '@/components/Edit/EditCategory'
+
 export default {
   name: 'Stickers',
   data: () => {
@@ -54,6 +72,10 @@ export default {
       dialog: {
         show: false,
         data: {}
+      },
+      // category dialog
+      category: {
+        show: false
       },
       valid: false,
       stickers: [],
@@ -74,19 +96,21 @@ export default {
   },
   methods: {
     getImagePath (sticker) {
-      return this.R.path(['name'], this.R.head(this.R.path(['images'], sticker))) || ''
+      return R.path(['name'], this.R.head(this.R.path(['images'], sticker))) || ''
     },
     edit (index) {
       this.dialog.data = this.stickers[index]
       this.dialog.show = true
     },
     async addNewSticker () {
-      let result = await this.$api.send('post', '/app/sticker', {
-        description: this.sticker.description,
-        category_id: this.$route.params.id
-      })
-      if (result) {
-        this.update()
+      if (this.valid) {
+        let result = await this.$api.send('post', '/app/sticker', {
+          description: this.sticker.description,
+          category_id: this.$route.params.id
+        })
+        if (result) {
+          this.update()
+        }
       }
     },
     async update () {
@@ -106,7 +130,9 @@ export default {
     this.update()
   },
   components: {
-    FileUpload, EditSticker
+    FileUpload,
+    EditSticker,
+    EditCategory
   }
 }
 </script>

@@ -2,18 +2,20 @@
     v-toolbar(
       :clipped-left="$vuetify.breakpoint.lgAndUp"
       color="primary"
+      :height="64"
       dark
       app
       fixed
     )
       v-toolbar-title
         v-toolbar-side-icon(@click.stop="changeDrawer()")
-        span.hidden-sm-and-down Vinil78
-        v-avatar(
-          :size="50"
-        )
-          img(:src="kdk")
+        img(src="@/assets/logo.svg" height="30px").logo-image
       v-spacer
+      v-btn(icon
+        v-if="isAdmin()"
+        to="/admin"
+      )
+        v-icon verified_user
       v-btn(
         v-if="STATE.token"
         flat
@@ -33,6 +35,7 @@ export default {
       this.$store.commit('setToken', '')
       this.$store.commit('setRole', 'client')
       localStorage.removeItem('token')
+      localStorage.removeItem('role')
       this.$router.push('/admin')
     },
     changeDrawer () {
@@ -41,3 +44,11 @@ export default {
   }
 }
 </script>
+
+<style>
+.logo-image {
+  position: absolute;
+  top: 20px;
+  left: calc(50% - 63px);
+}
+</style>

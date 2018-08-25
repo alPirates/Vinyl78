@@ -5,6 +5,10 @@ module.exports = {
   parserOptions: {
     parser: 'babel-eslint'
   },
+  globals: {
+    R: true,
+    moment: true
+  },
   env: {
     browser: true,
   },

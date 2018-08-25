@@ -42,8 +42,8 @@ func getImage(context echo.Context) error {
 		return sendError(context, "no images /image GET")
 	}
 
-	return context.JSON(200, map[string]interface{}{
-		"status": "success",
+	return context.JSON(http.StatusOK, map[string]interface{}{
+		"status":   "success",
 		"images": images,
 	})
 }
@@ -68,7 +68,6 @@ func addImage(context echo.Context) error {
 
 	name, err := upload(context)
 	if err != nil {
-		fmt.Println(err)
 		return sendError(context, "can't upload image /addImage POST")
 	}
 
@@ -119,7 +118,24 @@ func deleteImage(context echo.Context) error {
 }
 
 func setImage(context echo.Context) error {
-	return nil
+
+	type PutForm struct {
+		Images []*database.Image `json:"images"`
+	}
+	var p PutForm
+	err := context.Bind(&p)
+	if err != nil {
+		return sendError(context, "can't unmarshal /image PUT")
+	}
+
+	for _, imageR := range p.Images {
+		imageR.UpdateNotAll()
+	}
+
+	return context.JSON(http.StatusOK, map[string]interface{}{
+		"status": "success",
+	})
+
 }
 
 func upload(context echo.Context) (string, error) {

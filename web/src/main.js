@@ -4,8 +4,11 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
+
+// Utils zone
 import moment from 'moment'
 import * as R from 'ramda'
+import draggable from 'vuedraggable'
 
 import Api from './plugins/api'
 import Filters from './plugins/filters'
@@ -18,12 +21,15 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css'
 
 Vue.config.productionTip = false
 
+// todo remove from latest commits
 Vue.prototype.R = R
+
+Vue.use(Vuetify)
 
 Vue.use(Api, { store, R })
 Vue.use(Filters, { moment })
-Vue.use(Vuetify)
-Vue.use(State)
+Vue.use(State, { store })
+Vue.component('draggable', draggable)
 
 /* eslint-disable no-new */
 new Vue({

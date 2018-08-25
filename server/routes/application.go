@@ -135,3 +135,7 @@ func getApplication(context echo.Context) error {
 		"count":  count,
 	})
 }
+
+func sendIntoTelegram(appllication *database.Application) {
+
+}

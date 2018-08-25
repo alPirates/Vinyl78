@@ -1,13 +1,35 @@
 <template lang="pug">
   v-container(grid-list-sm)
-    | edit here
-    pre {{sticker}}
-    pre {{files}}
-    FileUpload(
-      v-model="files"
-      :data="{linked_id: sticker.id}"
-    )
-    
+    v-layout(row, wrap)
+      v-flex(xs12)
+        h3.display-1 Редактировать стикер
+      v-flex(xs12)
+        v-form(v-model="valid")
+          v-text-field(
+            label="Описание"
+            v-model="form.description"
+            :rules="form.descriptionRules"
+          )
+      v-flex(xs12 v-if="form.images.length > 0")
+        h4 Картинка
+        v-list
+          div(v-for="(el, index) in form.images")
+            v-list-tile(@click="")
+              v-list-tile-avatar
+                img(:src="getMedia(el.name)")
+              v-list-tile-title {{el.name}}
+              v-spacer
+              v-btn(color="error" icon)
+                v-icon remove
+      v-flex(xs12)
+        FileUpload(
+          v-model="files"
+          :data="{linked_id: sticker.id}"
+        )
+      v-flex(xs12)
+        v-layout(justify-end)
+          v-btn(color="success") Обновить
+            v-icon update
 </template>
 
 <script>
@@ -16,10 +38,40 @@ export default {
   name: '',
   data: () => {
     return {
-      files: []
+      files: [],
+      valid: false,
+      form: {
+        description: '',
+        descriptionRules: [
+          v => !!v || 'Не может быть пустым'
+        ],
+        images: []
+      }
+    }
+  },
+  watch: {
+    sticker: {
+      handler: function (val, oldVal) {
+        this.preLoadProps()
+      }
     }
   },
   methods: {
+    preLoadProps () {
+      const keys = ['description']
+      let needProps = R.pick(keys, this.sticker)
+      R.forEach((el, val) => {
+        if (!R.isEmpty(needProps[el])) { this.form[el] = needProps[el] }
+      }, keys)
+      if (this.sticker.images) {
+        this.$set(this.form, 'images', this.sticker.images)
+      }
+    }
+  },
+  mounted () {
+    if (!R.isEmpty(this.sticker)) {
+      this.preLoadProps()
+    }
   },
   props: {
     sticker: {

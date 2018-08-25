@@ -6,28 +6,28 @@
     app
   )
     v-list(dense subheader)
-    v-subheader Menu
-    v-list-tile(:to="'/'" @click="")
+      v-subheader Меню
+      v-list-tile(:to="'/'" @click="")
         v-list-tile-avatar
-          v-icon add
+          v-icon home
         v-list-tile-content
         v-list-tile-title
             | Главная
-    v-list-tile(:to="'/form'" @click="")
+      v-list-tile(:to="'/form'" @click="")
         v-list-tile-avatar
-          v-icon add
+          v-icon turned_in
         v-list-tile-content
         v-list-tile-title
             | Заказать стикер
-    v-divider
-    span(v-for="(el, index) in categories")
-      v-list-tile(:to="'/category/'+el.id").ml-4
-          //- v-list-tile-avatar
-            v-icon {{el.icon}}
-          v-list-tile-content
-          v-list-tile-title
-              | {{el.name}}
-      v-divider(v-if="index + 1 !== categories.length")
+      v-divider
+      span(v-for="(el, index) in categories")
+        v-list-tile(:to="'/category/'+el.id" @click="")
+            v-list-tile-avatar
+              v-icon {{el.icon}}
+            v-list-tile-content
+            v-list-tile-title
+                | {{el.name}}
+        v-divider(v-if="index + 1 !== categories.length")
 </template>
 
 <script>

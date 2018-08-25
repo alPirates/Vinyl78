@@ -5,13 +5,17 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    token: '',
+    token: localStorage.getItem('token') || '',
     role: 'client',
-    drawer: false
+    drawer: false,
+    loader: false
   },
   actions: {
   },
   mutations: {
+    setLoader (state, loader) {
+      state.loader = loader
+    },
     setToken (state, token) {
       state.token = token
     },

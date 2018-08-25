@@ -39,11 +39,31 @@
               v-flex(xs12)
                 v-layout(row)
                   v-flex(xs12)
-                    pre images {{carouselImages}}
+                    v-carousel(id="preview-carousel" v-if="carouselImages.length > 0")
+                      v-carousel-item(v-for="(image, index) in carouselImages", :key="index")
+                        img(:src="getMedia(image.name)")
+                    h3.mt-2.mb-2.display-1 Укажите новую последовательность
+                    draggable(:list="carouselImages", element="v-list" @end="dropImage")
+                      div(v-for="(image, index) in carouselImages", :key="index")
+                        v-list-tile(@click="")
+                          v-list-tile-avatar
+                            img(:src="getMedia(image.name)")
+                          v-list-tile-title
+                            | Картинка:
+                            |
+                            strong {{image.name}}
+                          v-spacer
+                          v-btn(icon color="error")
+                            v-icon delete
+                        v-divider
+                    v-layout(row, wrap)
+                      v-flex(xs12).text-xs-right
+                        v-btn(color="primary" @click="refreshCarouselSlides()") Обновить
+                          v-icon(right) refresh
+                    h3.mt-2.mb-2.display-1 Добавить картинки
                     FileUpload(
                       :data="{linked_id: carousel_id}"
                     )
-
       v-flex(xs12)
        v-card
           v-toolbar(color="success")
@@ -68,7 +88,8 @@
 </template>
 
 <script>
-import FileUpload from '@/components/Utils/FileUpload';
+import FileUpload from '@/components/Utils/FileUpload'
+
 export default {
   name: 'AdminPanel',
   data: () => {
@@ -95,6 +116,27 @@ export default {
     }
   },
   methods: {
+    async refreshCarouselSlides () {
+      this.loader(true)
+      let index = 0
+      let sending = R.map(el => {
+        index++
+        return {
+          id: el.id,
+          number: index
+        }
+      }, this.carouselImages)
+      let result = await this.$api.send('put', '/app/image', {
+        images: sending
+      })
+      if (result) {
+        this.update()
+      }
+      this.loader(false)
+    },
+    async dropImage (param) {
+      console.log('param', this.carouselImages)
+    },
     async addCategory () {
       if (this.valid) {
         let result = await this.$api.send('post', '/app/category', {
@@ -134,7 +176,7 @@ export default {
         linked_id: carousel.data.value
       })
       if (carouselImages) {
-        console.log('1111', carouselImages.data.images);
+        console.log('1111', carouselImages.data.images)
         this.$set(this, 'carouselImages', carouselImages.data.images)
       }
     }
@@ -147,3 +189,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+#preview-carousel {
+  max-height: 300px;
+}
+</style>

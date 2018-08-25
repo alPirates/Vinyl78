@@ -30,19 +30,20 @@ func addCategory(context echo.Context) error {
 		return sendError(context, "not admin /addCategory POST")
 	}
 
-	category := &database.Category{} // Use name, icon
+	category := &database.Category{} // Use name, icon, description
 	err := context.Bind(category)
 	if err != nil {
 		return sendError(context, "no user information in JSON /addCategory POST")
 	}
 
-	if category.Name == "" || category.Icon == "" {
+	if category.Name == "" || category.Icon == "" || category.Description == "" {
 		return sendError(context, "empty params /addCategory POST")
 	}
 
 	category, err = category.Create(
 		category.Name,
 		category.Icon,
+		category.Description,
 	)
 
 	if err != nil {
@@ -71,7 +72,7 @@ func setCategory(context echo.Context) error {
 		return sendError(context, "no user information in JSON /addCategory POST")
 	}
 
-	err = category.Update()
+	err = category.UpdateNotAll()
 	if err != nil {
 		return sendError(context, "no user information in JSON /addCategory POST")
 	}
