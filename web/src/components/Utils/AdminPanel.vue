@@ -126,7 +126,7 @@ export default {
           number: index
         }
       }, this.carouselImages)
-      let result = await this.$api.send('put', '/app/image', { images: "hello" })
+      let result = await this.$api.send('put', '/app/image', sending)
       if (result) {
       }
       this.loader(false)

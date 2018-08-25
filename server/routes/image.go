@@ -126,6 +126,7 @@ func setImage(context echo.Context) error {
 	if err != nil {
 		return sendError(context, "can't get JSON /image PUT")
 	}
+	fmt.Println("image json", string(imagesJSON))
 	var images []database.Image
 	err = json.Unmarshal(imagesJSON, &images)
 	if err != nil {
