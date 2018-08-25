@@ -39,7 +39,7 @@
               v-flex(xs12)
                 v-layout(row)
                   v-flex(xs12)
-                    v-carousel(id="preview-carousel")
+                    v-carousel(id="preview-carousel" v-if="carouselImages.length > 0")
                       v-carousel-item(v-for="(image, index) in carouselImages", :key="index")
                         img(:src="getMedia(image.name)")
                     h3.mt-2.mb-2.display-1 Укажите новую последовательность
@@ -127,9 +127,10 @@ export default {
         }
       }, this.carouselImages)
       let result = await this.$api.send('put', '/app/image', {
-          images: sending
+        images: sending
       })
       if (result) {
+        this.update()
       }
       this.loader(false)
     },

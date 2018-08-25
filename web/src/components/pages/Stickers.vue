@@ -3,6 +3,8 @@
     v-layout(row, wrap)
       v-flex(xs12 v-if="isAdmin()")
         h2 Добавить стикер
+        v-btn(@click="category.show = true" v-if="isAdmin()") Радактировать категорию
+          v-icon(right) edit
       v-flex(xs12 v-else)
         h3.display-2 Стикеры
       v-flex(xs12)
@@ -38,11 +40,22 @@
       v-card
         v-toolbar(color="primary")
           v-toolbar-title.white--text Редактировать
-        v-spacer
-        v-btn(icon).white--text
-          v-icon(close)
+          v-spacer
+          v-btn(icon).white--text
+            v-icon(@click="dialog.show = false") close
         EditSticker(
           :sticker="dialog.data"
+        )
+    // edit category
+    v-dialog(v-model="category.show" fullscreen hide-overlay transition="dialog-bottom-transition")
+      v-card
+        v-toolbar(color="primary")
+          v-toolbar-title.white--text Редактировать
+          v-spacer
+          v-btn(icon).white--text
+            v-icon(@click="category.show = false") close
+        EditCategory(
+          :id="$route.params.id"
         )
 
 </template>
@@ -50,6 +63,8 @@
 <script>
 import FileUpload from '@/components/Utils/FileUpload'
 import EditSticker from '@/components/Edit/EditSticker'
+import EditCategory from '@/components/Edit/EditCategory'
+
 export default {
   name: 'Stickers',
   data: () => {
@@ -57,6 +72,10 @@ export default {
       dialog: {
         show: false,
         data: {}
+      },
+      // category dialog
+      category: {
+        show: false
       },
       valid: false,
       stickers: [],
@@ -111,7 +130,9 @@ export default {
     this.update()
   },
   components: {
-    FileUpload, EditSticker
+    FileUpload,
+    EditSticker,
+    EditCategory
   }
 }
 </script>
