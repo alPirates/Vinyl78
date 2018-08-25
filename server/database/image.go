@@ -22,6 +22,12 @@ func (image *Image) Update() error {
 	return db.Save(image).Error
 }
 
+// UpdateNotAll function
+// Update all cahnges fields image
+func (image *Image) UpdateNotAll() error {
+	return db.Model(image).Update(image).Error
+}
+
 // DeleteBySticker function
 // Delete image by linkedUUID
 func (image *Image) DeleteBySticker(linkedID string) error {
