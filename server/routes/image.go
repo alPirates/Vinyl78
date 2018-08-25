@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
@@ -120,14 +121,13 @@ func deleteImage(context echo.Context) error {
 
 func setImage(context echo.Context) error {
 
-	form, err := context.FormParams()
+	body := context.Request().Body
+	imagesJSON, err := ioutil.ReadAll(body)
 	if err != nil {
-		return sendError(context, "no images /image PUT")
+		return sendError(context, "can't get JSON /image PUT")
 	}
-
-	imagesJSON := form.Get("images")
 	var images []database.Image
-	err = json.Unmarshal([]byte(imagesJSON), &images)
+	err = json.Unmarshal(imagesJSON, &images)
 	if err != nil {
 		return sendError(context, "can't unmarshal /image PUT")
 	}
