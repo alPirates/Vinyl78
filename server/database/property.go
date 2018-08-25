@@ -56,7 +56,7 @@ func GetPropertyPrivateAndPublic(key string) (*Property, error) {
 // GetPropertyPublic function
 func GetPropertyPublic(key string) (*Property, error) {
 	property := &Property{}
-	err := db.Where("key = ? AND perrmision = ?", key, true).First(&property).Error
+	err := db.Where("key = ? AND permission = ?", key, true).First(&property).Error
 	return property, err
 }
 
