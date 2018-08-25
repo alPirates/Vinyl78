@@ -7,7 +7,8 @@ const store = new Vuex.Store({
   state: {
     token: localStorage.getItem('token') || '',
     role: 'client',
-    drawer: false
+    drawer: false,
+    loader: true
   },
   actions: {
   },

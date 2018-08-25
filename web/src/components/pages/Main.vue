@@ -65,13 +65,14 @@ export default {
     }
   },
   async mounted () {
-    let carousel = await this.$api.send('get', '/app/property', null, {
+
+    let carousel = await this.$api.send('get', '/property', null, {
       key: 'carousel_id'
     })
     let carouselImages = await this.$api.send('get', '/image', null, {
       linked_id: carousel.data.value
     })
-    console.log(carouselImages.data.images)
+
     if (carouselImages) {
       this.$set(this, 'carouselImages', carouselImages.data.images)
     }

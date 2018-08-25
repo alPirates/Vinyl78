@@ -5,12 +5,14 @@
     v-content
       div.wrapper
         router-view
+    Loader
 
 </template>
 
 <script>
 import Header from '@/components/Navigation/Header.vue'
 import Sidebar from '@/components/Navigation/Sidebar.vue'
+import Loader from '@/components/Utils/Loader.vue'
 
 export default {
   name: 'App',
@@ -31,7 +33,8 @@ export default {
   },
   components: {
     Header,
-    Sidebar
+    Sidebar,
+    Loader
   }
 }
 </script>

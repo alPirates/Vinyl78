@@ -1,12 +1,10 @@
 <template lang="pug">
   v-container(grid-list-sm)
-    br
-    br
     v-layout(row, wrap)
       v-flex(xs12 v-if="isAdmin()")
         h2 Добавить стикер
       v-flex(xs12 v-else)
-        h3.display-2 {{Стикеры}}
+        h3.display-2 Стикеры
       v-flex(xs12)
         v-layout(row,  justify-end, v-if="isAdmin()")
           v-flex(xs12)
@@ -36,10 +34,13 @@
                   span.headline.white--text {{el.description}}
 
     // edit sticker dialog
-    v-dialog(v-model="dialog.show")
+    v-dialog(v-model="dialog.show" fullscreen hide-overlay transition="dialog-bottom-transition")
       v-card
         v-toolbar(color="primary")
           v-toolbar-title.white--text Редактировать
+        v-spacer
+        v-btn(icon).white--text
+          v-icon(close)
         EditSticker(
           :sticker="dialog.data"
         )
@@ -83,12 +84,14 @@ export default {
       this.dialog.show = true
     },
     async addNewSticker () {
-      let result = await this.$api.send('post', '/app/sticker', {
-        description: this.sticker.description,
-        category_id: this.$route.params.id
-      })
-      if (result) {
-        this.update()
+      if (this.valid) {
+        let result = await this.$api.send('post', '/app/sticker', {
+          description: this.sticker.description,
+          category_id: this.$route.params.id
+        })
+        if (result) {
+          this.update()
+        }
       }
     },
     async update () {
