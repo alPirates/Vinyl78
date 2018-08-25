@@ -2,10 +2,8 @@ package routes
 
 import (
 	"crypto/md5"
-	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
@@ -121,19 +119,18 @@ func deleteImage(context echo.Context) error {
 
 func setImage(context echo.Context) error {
 
-	body := context.Request().Body
-	imagesJSON, err := ioutil.ReadAll(body)
-	if err != nil {
-		return sendError(context, "can't get JSON /image PUT")
+	type PutForm struct {
+		Images []*database.Image `json:"images"`
 	}
-	var images []database.Image
-	err = json.Unmarshal(imagesJSON, &images)
+
+	var p PutForm
+	err := context.Bind(&p)
 	if err != nil {
 		return sendError(context, "can't unmarshal /image PUT")
 	}
 
-	for _, imageR := range images {
-		imageR.Update()
+	for _, imageR := range p.Images {
+		imageR.UpdateNotAll()
 	}
 
 	return context.JSON(http.StatusOK, map[string]interface{}{
