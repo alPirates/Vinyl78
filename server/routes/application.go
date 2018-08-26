@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/alPirates/Vinyl78/server/database"
+	"github.com/alPirates/Vinyl78/server/tgbot"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 )
@@ -33,6 +34,8 @@ func addApplication(context echo.Context) error {
 	if err != nil {
 		return sendError(context, "application not created /application POST")
 	}
+
+	go tgbot.SendApplication(application)
 
 	return context.JSON(http.StatusOK, map[string]string{
 		"status":         "success",
@@ -134,8 +137,4 @@ func getApplication(context echo.Context) error {
 		"status": "success",
 		"count":  count,
 	})
-}
-
-func sendIntoTelegram(appllication *database.Application) {
-
 }
