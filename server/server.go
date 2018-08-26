@@ -10,7 +10,6 @@ import (
 func main() {
 	go tgbot.StartBot()
 	server := echo.New()
-	server.Debug = true
 
 	database.OpenConnection("vinyl78")
 	defer database.CloseConnection()
