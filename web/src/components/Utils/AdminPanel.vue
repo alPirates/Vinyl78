@@ -28,7 +28,7 @@
                     v-spacer
                     v-btn(icon color="success")
                      v-icon edit
-                    v-btn(icon color="grey lighter-3", @click="deleteCategory(el.ID)")
+                    v-btn(icon color="grey lighter-3", @click="deleteCategory(el.id)")
                       v-icon delete
       v-flex(xs12 lg6)
        v-card
