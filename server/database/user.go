@@ -57,7 +57,7 @@ func GetUser(email, password string) (*User, error) {
 // Return user from ID
 func GetUserByID(UUID string) (*User, error) {
 	user := &User{}
-	err := db.Where("UUID = ?", UUID).First(user).Error
+	err := db.Where("id = ?", UUID).First(user).Error
 	return user, err
 }
 

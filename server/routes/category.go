@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/alPirates/Vinyl78/server/database"
@@ -16,8 +17,21 @@ func getCategory(context echo.Context) error {
 	}
 
 	return context.JSON(http.StatusOK, map[string]interface{}{
-		"result": categories,
 		"status": "success",
+		"result": categories,
+	})
+}
+
+func getCategoryById(context echo.Context) error {
+	uuidParam := context.Param("id")
+	fmt.Println("id is ", uuidParam)
+	result, err := database.GetCategoryById(uuidParam)
+	if err != nil {
+		return sendError(context, "cant find category by id")
+	}
+	return context.JSON(http.StatusOK, map[string]interface{}{
+		"status": "success",
+		"result": result,
 	})
 }
 

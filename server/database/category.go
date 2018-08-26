@@ -19,6 +19,13 @@ func (category *Category) Update() error {
 	return db.Save(category).Error
 }
 
+// GetCategoryById function
+func GetCategoryById(UUID string) (*Category, error) {
+	categ := &Category{}
+	err := db.Where("id = ?", UUID).First(categ).Error
+	return categ, err
+}
+
 // UpdateNotAll function
 // Update value of the Property
 func (category *Category) UpdateNotAll() error {
