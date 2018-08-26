@@ -24,7 +24,7 @@ func setSticker(context echo.Context) error {
 		return sendError(context, "no sticker information in JSON /sticker POST")
 	}
 
-	err = sticker.Update()
+	err = sticker.UpdateNotAll()
 	if err != nil {
 		return sendError(context, "can't update sticker /user PUT")
 	}

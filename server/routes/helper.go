@@ -33,7 +33,7 @@ func SetRoutes(server *echo.Echo) {
 	api.GET("/sidebar", getCategory)
 	api.GET("/image", getImage)
 	api.GET("/property", getProperty)
-	api.GET("/category/:id", getCategoryById)
+	api.GET("/category/:id", getCategoryByID)
 
 	authorization := api.Group("/app")
 	authorization.Use(middleware.JWTWithConfig(

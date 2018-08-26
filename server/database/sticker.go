@@ -18,6 +18,12 @@ func (sticker *Sticker) Update() error {
 	return db.Save(sticker).Error
 }
 
+// UpdateNotAll function
+// Update value of the Property
+func (sticker *Sticker) UpdateNotAll() error {
+	return db.Model(sticker).Update(sticker).Error
+}
+
 // Delete function
 // Delete property
 func (sticker *Sticker) Delete() error {

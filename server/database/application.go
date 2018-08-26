@@ -29,6 +29,12 @@ func (application *Application) Update() error {
 	return db.Save(application).Error
 }
 
+// UpdateNotAll function
+// Update all about application
+func (application *Application) UpdateNotAll() error {
+	return db.Model(application).Update(application).Error
+}
+
 // Delete function
 // Delete your application
 func (application *Application) Delete() error {
