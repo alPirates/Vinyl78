@@ -10,13 +10,19 @@ import (
 
 func setUser(context echo.Context) error {
 
+	token := context.Get("token").(*jwt.Token)
+	claims := token.Claims.(*jwtUserClaims)
+
 	user := &database.User{}
 	err := context.Bind(user)
 	if err != nil {
 		return sendError(context, "no user information in JSON /user PUT")
 	}
 
-	err = user.Update()
+	user.ID = claims.UUID
+	user.Role = claims.Role
+
+	err = user.UpdateNotAll()
 	if err != nil {
 		return sendError(context, "can't update user /user PUT")
 	}

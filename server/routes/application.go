@@ -59,7 +59,7 @@ func setApplication(context echo.Context) error {
 		return sendError(context, "no user information in JSON /application POST")
 	}
 
-	err = application.Update()
+	err = application.UpdateNotAll()
 	if err != nil {
 		return sendError(context, "can't update application /application POST")
 	}

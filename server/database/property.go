@@ -19,6 +19,12 @@ func (property *Property) Update() error {
 	return db.Save(property).Error
 }
 
+// UpdateNotAll function
+// Update value of the Property
+func (property *Property) UpdateNotAll() error {
+	return db.Model(property).Update(property).Error
+}
+
 // Delete function
 // Delete property
 func (property *Property) Delete() error {
@@ -61,7 +67,7 @@ func GetPropertiesByKey(key string) ([]*Property, error) {
 	return properties, err
 }
 
-// ChecProperty function
+// CheckProperty function
 // Return true if key and value existed
 func CheckProperty(key, value string) bool {
 	property := &Property{}

@@ -43,7 +43,7 @@ func getImage(context echo.Context) error {
 	}
 
 	return context.JSON(http.StatusOK, map[string]interface{}{
-		"status":   "success",
+		"status": "success",
 		"images": images,
 	})
 }

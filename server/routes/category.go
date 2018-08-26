@@ -22,10 +22,10 @@ func getCategory(context echo.Context) error {
 	})
 }
 
-func getCategoryById(context echo.Context) error {
+func getCategoryByID(context echo.Context) error {
 	uuidParam := context.Param("id")
 	fmt.Println("id is ", uuidParam)
-	result, err := database.GetCategoryById(uuidParam)
+	result, err := database.GetCategoryByID(uuidParam)
 	if err != nil {
 		return sendError(context, "cant find category by id")
 	}
