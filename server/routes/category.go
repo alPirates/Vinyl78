@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/alPirates/Vinyl78/server/database"
@@ -13,25 +12,31 @@ func getCategory(context echo.Context) error {
 
 	categories, err := database.GetCategories()
 	if err != nil {
-		return sendError(context, "categories not returned from db /sidebar GET")
+		return sendError(context, "can't get categories", "не удалось получить категории")
 	}
 
 	return context.JSON(http.StatusOK, map[string]interface{}{
-		"status": "success",
-		"result": categories,
+		"status":  "success",
+		"result":  categories,
+		"message": "категории получены",
 	})
 }
 
 func getCategoryByID(context echo.Context) error {
 	uuidParam := context.Param("id")
-	fmt.Println("id is ", uuidParam)
+
+	if !database.CheckUUID(uuidParam) {
+		return sendError(context, "incorrect id", "не удалось получить категорию")
+	}
+
 	result, err := database.GetCategoryByID(uuidParam)
 	if err != nil {
-		return sendError(context, "cant find category by id")
+		return sendError(context, "can't find category", "не удалось получить категорию")
 	}
 	return context.JSON(http.StatusOK, map[string]interface{}{
-		"status": "success",
-		"result": result,
+		"status":  "success",
+		"result":  result,
+		"message": "категория получена",
 	})
 }
 
@@ -41,17 +46,17 @@ func addCategory(context echo.Context) error {
 	claims := token.Claims.(*jwtUserClaims)
 
 	if claims.Role == 0 {
-		return sendError(context, "not admin /addCategory POST")
+		return sendError(context, "not admin", "вы не администратор")
 	}
 
 	category := &database.Category{} // Use name, icon, description
 	err := context.Bind(category)
 	if err != nil {
-		return sendError(context, "no user information in JSON /addCategory POST")
+		return sendError(context, "no category information in JSON", "не удалось создать категорию")
 	}
 
-	if category.Name == "" || category.Icon == "" || category.Description == "" {
-		return sendError(context, "empty params /addCategory POST")
+	if category.Name == "" || category.Icon == "" {
+		return sendError(context, "empty params", "не удалось создать категорию")
 	}
 
 	category, err = category.Create(
@@ -61,12 +66,13 @@ func addCategory(context echo.Context) error {
 	)
 
 	if err != nil {
-		return sendError(context, "category not created /addCategory POST")
+		return sendError(context, "category not created", "не удалось создать категорию")
 	}
 
 	return context.JSON(http.StatusOK, map[string]string{
 		"status":      "success",
 		"category_id": category.ID,
+		"message":     "категория создана",
 	})
 
 }
@@ -77,22 +83,27 @@ func setCategory(context echo.Context) error {
 	claims := token.Claims.(*jwtUserClaims)
 
 	if claims.Role == 0 {
-		return sendError(context, "not admin /addCategory POST")
+		return sendError(context, "not admin", "вы не администратор")
 	}
 
 	category := &database.Category{}
 	err := context.Bind(category)
 	if err != nil {
-		return sendError(context, "no user information in JSON /addCategory POST")
+		return sendError(context, "no category information in JSON", "не удалось изменить категорию")
+	}
+
+	if !database.CheckUUID(category.ID) {
+		return sendError(context, "incorrect id", "не удалось изменить категорию")
 	}
 
 	err = category.UpdateNotAll()
 	if err != nil {
-		return sendError(context, "no user information in JSON /addCategory POST")
+		return sendError(context, "can't update category", "не удалось изменить категорию")
 	}
 
 	return context.JSON(http.StatusOK, map[string]string{
-		"status": "success",
+		"status":  "success",
+		"message": "категория изменена",
 	})
 
 }
@@ -103,10 +114,14 @@ func deleteCategory(context echo.Context) error {
 	claims := token.Claims.(*jwtUserClaims)
 
 	if claims.Role == 0 {
-		return sendError(context, "not admin /deleteCategory DELETE")
+		return sendError(context, "not admin", "вы не администратор")
 	}
 
 	uuidParam := context.Param("id")
+
+	if !database.CheckUUID(uuidParam) {
+		return sendError(context, "incorrect id", "не удалось удалить категорию")
+	}
 
 	category := &database.Category{
 		ID: uuidParam,
@@ -114,16 +129,17 @@ func deleteCategory(context echo.Context) error {
 
 	err := category.Delete()
 	if err != nil {
-		return sendError(context, "category not deleted /deleteCategory DELETE")
+		return sendError(context, "category not deleted", "не удалось удалить категорию")
 	}
 
 	err = database.DeleteByCategory(category.ID)
 	if err != nil {
-		return sendError(context, "stickers in this category not deleted /deleteCategory DELETE")
+		return sendError(context, "stickers or images not deleted", "не удалось удалить категорию")
 	}
 
 	return context.JSON(http.StatusOK, map[string]string{
-		"status": "success",
+		"status":  "success",
+		"message": "категория удалена",
 	})
 
 }

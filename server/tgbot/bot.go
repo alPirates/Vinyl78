@@ -54,13 +54,13 @@ func workUpdate() {
 			case "start":
 				bot.Send(telega.NewMessage(
 					update.Message.Chat.ID,
-					"/help - все команды\n/auth <email> <password> - авторизация",
+					"/help - все команды\n/auth <email> <password> - авторизация\n/unauth - выход",
 				))
 				break
 			case "help":
 				bot.Send(telega.NewMessage(
 					update.Message.Chat.ID,
-					"/help - все команды\n/auth <email> <password> - авторизация",
+					"/help - все команды\n/auth <email> <password> - авторизация\n/unauth - выход",
 				))
 				break
 			case "unauth":

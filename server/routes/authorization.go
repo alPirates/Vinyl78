@@ -14,20 +14,20 @@ func registration(context echo.Context) error {
 	userInfo := database.User{}
 	err := context.Bind(&userInfo) // email and password
 	if err != nil {
-		return sendError(context, "no user information in JSON /registration")
+		return sendError(context, "no user information in JSON", "не удалось зарегистровать пользователя")
 	}
 
 	if userInfo.Email == "" || userInfo.Password == "" {
-		return sendError(context, "empty params /registration")
+		return sendError(context, "empty params", "не удалось зарегистровать пользователя")
 	}
 
 	if database.CheckEmailAndPassword(userInfo.Email, userInfo.Password) {
-		return sendError(context, "email already existed /registration")
+		return sendError(context, "email already exist", "E-mail занят")
 	}
 	user, err := (&database.User{}).Create(userInfo.Email, userInfo.Password)
 
 	if err != nil {
-		return sendError(context, "user not created /registration")
+		return sendError(context, "user not created", "не удалось зарегистровать пользователя")
 	}
 
 	claims := &jwtUserClaims{
@@ -42,13 +42,14 @@ func registration(context echo.Context) error {
 
 	endToken, err := token.SignedString([]byte(SignedString))
 	if err != nil {
-		return sendError(context, "token not encoded /registration")
+		return sendError(context, "token not encoded", "не удалось зарегистровать пользователя")
 	}
 
 	return context.JSON(http.StatusOK, map[string]string{
-		"token":  endToken,
-		"role":   "user",
-		"status": "success",
+		"token":   endToken,
+		"role":    "user",
+		"status":  "success",
+		"message": "пользователь зарегистрирован",
 	})
 }
 
@@ -57,16 +58,16 @@ func authorization(context echo.Context) error {
 	userInfo := database.User{}
 	err := context.Bind(&userInfo)
 	if err != nil {
-		return sendError(context, "no user information in JSON /authorization")
+		return sendError(context, "no user information in JSON", "не удалось авторизировать пользователя")
 	}
 
 	if !database.CheckEmailAndPassword(userInfo.Email, userInfo.Password) {
-		return sendError(context, "no user information in DB /authorization")
+		return sendError(context, "no this user", "не удалось авторизировать пользователя")
 	}
 	user, err := database.GetUser(userInfo.Email, userInfo.Password)
 
 	if err != nil {
-		return sendError(context, "can't get user from db /authorization")
+		return sendError(context, "can't get user", "не удалось авторизировать пользователя")
 	}
 
 	claims := &jwtUserClaims{
@@ -81,7 +82,7 @@ func authorization(context echo.Context) error {
 
 	endToken, err := token.SignedString([]byte(SignedString))
 	if err != nil {
-		return sendError(context, "token not encoded /authorizationa")
+		return sendError(context, "token not encoded", "не удалось авторизировать пользователя")
 	}
 
 	var roleStr string
@@ -92,9 +93,10 @@ func authorization(context echo.Context) error {
 	}
 
 	return context.JSON(http.StatusOK, map[string]string{
-		"token":  endToken,
-		"role":   roleStr,
-		"status": "success",
+		"token":   endToken,
+		"role":    roleStr,
+		"status":  "success",
+		"message": "пользователь авторизован",
 	})
 }
 

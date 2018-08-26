@@ -16,7 +16,7 @@ func setUser(context echo.Context) error {
 	user := &database.User{}
 	err := context.Bind(user)
 	if err != nil {
-		return sendError(context, "no user information in JSON /user PUT")
+		return sendError(context, "no user information in JSON", "не удалось изменить пользователя")
 	}
 
 	user.ID = claims.UUID
@@ -24,11 +24,12 @@ func setUser(context echo.Context) error {
 
 	err = user.UpdateNotAll()
 	if err != nil {
-		return sendError(context, "can't update user /user PUT")
+		return sendError(context, "can't update user", "не удалось изменить пользователя")
 	}
 
 	return context.JSON(http.StatusOK, map[string]string{
-		"status": "success",
+		"status":  "success",
+		"message": "пользователь изменен",
 	})
 }
 
@@ -44,10 +45,11 @@ func deleteUser(context echo.Context) error {
 	err := user.Delete()
 
 	if err != nil {
-		return sendError(context, "application not deleted /application DELETE")
+		return sendError(context, "can't delete user", "не удалось удалить пользователя")
 	}
 
 	return context.JSON(http.StatusOK, map[string]string{
-		"status": "success",
+		"status":  "success",
+		"message": "пользователь удален",
 	})
 }
