@@ -4,7 +4,7 @@
     v-layout(row wrap)
       v-flex(xs12 lg6)
         v-card
-          v-toolbar(color="success")
+          v-toolbar(color="secondary")
             v-toolbar-title.white--text Категории
           v-container
             v-layout(row, wrap)
@@ -32,7 +32,7 @@
                       v-icon delete
       v-flex(xs12 lg6)
        v-card
-          v-toolbar(color="success")
+          v-toolbar(color="secondary")
             v-toolbar-title.white--text Карусель
           v-container
             v-layout(row, wrap)
@@ -66,7 +66,7 @@
                     )
       v-flex(xs12)
        v-card
-          v-toolbar(color="success")
+          v-toolbar(color="secondary")
             v-toolbar-title.white--text заявки
           v-container
             v-layout(row, wrap)
