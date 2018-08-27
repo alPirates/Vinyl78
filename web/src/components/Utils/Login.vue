@@ -17,6 +17,7 @@
                     )
                     v-text-field(
                       label="Пароль"
+                      type="password"
                       v-model="form.password"
                       :rules="form.passwordRules"
                     )
@@ -31,12 +32,12 @@ export default {
     return {
       valid: false,
       form: {
-        email: 'admin@mail.ru',
+        email: '',
         emailRules: [
           v => !!v || 'Требуется пароль',
           v => /.+@.+/.test(v) || 'Введите коректный email'
         ],
-        password: 'admin',
+        password: '',
         passwordRules: [
           v => !!v || 'Требуется пароль'
         ]

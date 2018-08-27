@@ -1,6 +1,13 @@
 <template lang="pug">
   v-container(grid-list-lg)
-    br
+    v-layout(row, wrap)
+      v-badge(color="red" right id="red-badge")
+        span(slot="badge") 3
+        v-btn(color="secondary") Заявки
+      v-btn(color="secondary") Карусель
+      v-btn(color="secondary") Карусель
+    v-layour()
+      v-divider
     v-layout(row wrap)
       v-flex(xs12 lg6)
         v-card
@@ -26,7 +33,7 @@
                   v-list-tile(id="sticker-card")
                     v-list-tile-title {{el.name}}
                     v-spacer
-                    v-btn(icon color="success")
+                    v-btn(icon color="success" @click="showEditCategory(el.id)")
                      v-icon edit
                     v-btn(icon color="grey lighter-3", @click="deleteCategory(el.id)")
                       v-icon delete
@@ -84,16 +91,27 @@
                         td
                           v-btn(icon color="success")
                             v-icon check
+      v-dialog(v-model="editCateg.show")
+        v-card
+          v-toolbar(color="primary")
+            v-toolbar-title.white--text Редактировать категорию
+          v-card-title
+            EditCategory(:id="editCateg.id")
 
 </template>
 
 <script>
 import FileUpload from '@/components/Utils/FileUpload'
+import EditCategory from '@/components/Edit/EditCategory'
 
 export default {
   name: 'AdminPanel',
   data: () => {
     return {
+      editCateg: {
+        show: false,
+        id: ''
+      },
       valid: false,
       files: [],
       headers: [
@@ -116,6 +134,11 @@ export default {
     }
   },
   methods: {
+    showEditCategory (id) {
+      this.editCateg.id = id
+      this.editCateg.show = true
+      console.log('showing');
+    },
     async refreshCarouselSlides () {
       this.loader(true)
       let index = 0
@@ -185,7 +208,8 @@ export default {
     this.update()
   },
   components: {
-    FileUpload
+    FileUpload,
+    EditCategory
   }
 }
 </script>
@@ -193,5 +217,9 @@ export default {
 <style scoped>
 #preview-carousel {
   max-height: 300px;
+}
+#red-badge {
+  top: -2px !important;
+  right: 1px !important;
 }
 </style>
