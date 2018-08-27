@@ -23,7 +23,7 @@
                       v-icon(right) add
               v-flex(xs12)
                 v-list(v-for="(el, index) in categories", :key="index")
-                  v-list-tile
+                  v-list-tile(id="sticker-card")
                     v-list-tile-title {{el.name}}
                     v-spacer
                     v-btn(icon color="success")

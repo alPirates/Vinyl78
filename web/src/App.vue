@@ -12,6 +12,7 @@
 <script>
 import Header from '@/components/Navigation/Header.vue'
 import Sidebar from '@/components/Navigation/Sidebar.vue'
+import Footer from '@/components/Navigation/Footer.vue'
 import Loader from '@/components/Utils/Loader.vue'
 
 export default {
@@ -34,7 +35,8 @@ export default {
   components: {
     Header,
     Sidebar,
-    Loader
+    Loader,
+    Footer
   }
 }
 </script>
