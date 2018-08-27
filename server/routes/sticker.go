@@ -15,22 +15,27 @@ func setSticker(context echo.Context) error {
 	claims := token.Claims.(*jwtUserClaims)
 
 	if claims.Role == 0 {
-		return sendError(context, "not admin /sticker PUT")
+		return sendError(context, "not admin", "вы не администратор")
 	}
 
 	sticker := &database.Sticker{}
 	err := context.Bind(sticker)
 	if err != nil {
-		return sendError(context, "no sticker information in JSON /sticker POST")
+		return sendError(context, "no sticker information in JSON", "не удалось изменить стикер")
+	}
+
+	if !database.CheckUUID(sticker.ID) {
+		return sendError(context, "incorrect id", "не удалось изменить стикер")
 	}
 
 	err = sticker.UpdateNotAll()
 	if err != nil {
-		return sendError(context, "can't update sticker /user PUT")
+		return sendError(context, "can't update sticker", "не удалось изменить стикер")
 	}
 
 	return context.JSON(http.StatusOK, map[string]string{
-		"status": "success",
+		"status":  "success",
+		"message": "стикер изменен",
 	})
 }
 
@@ -40,21 +45,26 @@ func deleteSticker(context echo.Context) error {
 	claims := token.Claims.(*jwtUserClaims)
 
 	if claims.Role == 0 {
-		return sendError(context, "not admin /sticker DELETE")
+		return sendError(context, "not admin", "вы не администратор")
 	}
 
 	uuid := context.Param("id")
+
+	if !database.CheckUUID(uuid) {
+		return sendError(context, "incorrect id", "не удалось удалить стикер")
+	}
 
 	sticker := &database.Sticker{
 		ID: uuid,
 	}
 	err := sticker.Delete()
 	if err != nil {
-		return sendError(context, "sticker not deleted /sticker DELETE")
+		return sendError(context, "sticker not deleted", "не удалось удалить стикер")
 	}
 
 	return context.JSON(http.StatusOK, map[string]string{
-		"status": "success",
+		"status":  "success",
+		"message": "стикер удален",
 	})
 }
 
@@ -64,17 +74,17 @@ func addSticker(context echo.Context) error {
 	claims := token.Claims.(*jwtUserClaims)
 
 	if claims.Role == 0 {
-		return sendError(context, "not admin /sticker POST")
+		return sendError(context, "not admin", "вы не администратор")
 	}
 
 	sticker := &database.Sticker{} // Use description, categoryUUID
 	err := context.Bind(sticker)
 	if err != nil {
-		return sendError(context, "no sticker information in JSON /sticker POST")
+		return sendError(context, "no sticker information in JSON", "не удалось создать стикер")
 	}
 
 	if sticker.Description == "" || sticker.CategoryID == "" {
-		return sendError(context, "empty params /sticker POST")
+		return sendError(context, "empty params", "не удалось создать стикер")
 	}
 
 	sticker, err = sticker.Create(
@@ -83,12 +93,13 @@ func addSticker(context echo.Context) error {
 	)
 
 	if err != nil {
-		return sendError(context, "sticker not created /sticker POST")
+		return sendError(context, "sticker not created", "не удалось создать стикер")
 	}
 
 	return context.JSON(http.StatusOK, map[string]string{
 		"status":     "success",
 		"sticker_id": sticker.ID,
+		"message":    "стикер создан",
 	})
 }
 
@@ -97,14 +108,14 @@ func getSticker(context echo.Context) error {
 	skipParam := context.QueryParam("skip")
 	skip, err := strconv.ParseUint(skipParam, 10, 64)
 	if err != nil {
-		return sendError(context, "skip is not uint /sticker GET")
+		return sendError(context, "skip is not uint", "не удалось получить стикеры")
 	}
 	skipUint := uint(skip)
 
 	limitParam := context.QueryParam("limit")
 	limit, err := strconv.ParseUint(limitParam, 10, 64)
 	if err != nil {
-		return sendError(context, "limit is not uint /sticker GET")
+		return sendError(context, "limit is not uint", "не удалось получить стикеры")
 	}
 	limitUint := uint(limit)
 
@@ -116,25 +127,26 @@ func getSticker(context echo.Context) error {
 		categoryParam,
 	)
 	if err != nil {
-		return sendError(context, "sticker not returned from db /sticker GET")
+		return sendError(context, "can't get stickers", "не удалось получить стикеры")
 	}
 
 	for _, sticker := range stickers {
 		images, err1 := database.GetImages(sticker.ID)
 		if err1 != nil {
-			return sendError(context, "images not returned from db /sticker GET")
+			return sendError(context, "can't get images", "не удалось получить стикеры")
 		}
 		sticker.Images = images
 	}
 
 	count, err := database.GetStickersCount(categoryParam)
 	if err != nil {
-		return sendError(context, "can't get count of stickers /sticker GET")
+		return sendError(context, "can't count stickers", "не удалось получить стикеры")
 	}
 
 	return context.JSON(http.StatusOK, map[string]interface{}{
-		"result": stickers,
-		"status": "success",
-		"count":  count,
+		"result":  stickers,
+		"status":  "success",
+		"count":   count,
+		"message": "стикеры получены",
 	})
 }

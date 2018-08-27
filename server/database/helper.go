@@ -2,6 +2,10 @@ package database
 
 import (
 	"fmt"
+	"math/rand"
+	"strconv"
+	"strings"
+	"time"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres" // we use postgres
@@ -59,4 +63,40 @@ func OpenConnection(nameDB string) error {
 // Disconnect to postgres DB
 func CloseConnection() {
 	db.Close()
+}
+
+// generateUUID function
+func generateUUID() string {
+	rand.Seed(time.Now().UTC().UnixNano())
+
+	uuid := ""
+	uuid += generatePartOfUUID(8) + "-"
+	uuid += generatePartOfUUID(4) + "-"
+	uuid += generatePartOfUUID(4) + "-"
+	uuid += generatePartOfUUID(4) + "-"
+	uuid += generatePartOfUUID(12)
+
+	return uuid
+
+}
+
+func generatePartOfUUID(n int) string {
+	uuidPart := ""
+	for i := 0; i < n; i++ {
+		randInt := rand.Intn(36)
+		if randInt < 10 {
+			uuidPart += strconv.Itoa(randInt)
+		} else {
+			uuidPart += string(rune(randInt + 87))
+		}
+	}
+	return uuidPart
+}
+
+// CheckUUID function
+func CheckUUID(id string) bool {
+	if len(id) == 36 && strings.Count(id, "-") == 4 {
+		return true
+	}
+	return false
 }

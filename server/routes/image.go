@@ -37,14 +37,19 @@ func getImage(context echo.Context) error {
 
 	id := context.QueryParams().Get("linked_id")
 
+	if !database.CheckUUID(id) {
+		return sendError(context, "incorrect id", "не удалось получить изображение")
+	}
+
 	images, err := database.GetImages(id)
 	if err != nil {
-		return sendError(context, "no images /image GET")
+		return sendError(context, "can't get images", "не удалось получить изображение")
 	}
 
 	return context.JSON(http.StatusOK, map[string]interface{}{
-		"status": "success",
-		"images": images,
+		"status":  "success",
+		"images":  images,
+		"message": "изображение получено",
 	})
 }
 
@@ -54,26 +59,30 @@ func addImage(context echo.Context) error {
 	claims := token.Claims.(*jwtUserClaims)
 
 	if claims.Role == 0 {
-		return sendError(context, "not admin /addImage POST")
+		return sendError(context, "not admin", "вы не администратор")
 	}
 
 	linked := context.FormValue("linked_id")
+
+	if !database.CheckUUID(linked) {
+		return sendError(context, "incorrect linked_id", "не удалось создать изображение")
+	}
 
 	image := database.Image{}
 	image.LinkedID = linked
 
 	if image.LinkedID == "" {
-		return sendError(context, "empty params /addImage POST")
+		return sendError(context, "empty params", "не удалось создать изображение")
 	}
 
 	name, err := upload(context)
 	if err != nil {
-		return sendError(context, "can't upload image /addImage POST")
+		return sendError(context, "can't upload image", "не удалось создать изображение")
 	}
 
 	count, err := database.GetImagesCount(image.LinkedID)
 	if err != nil {
-		return sendError(context, "can't count images /addImage POST")
+		return sendError(context, "can't count images", "не удалось создать изображение")
 	}
 
 	img, err := (&database.Image{}).Create(
@@ -83,12 +92,13 @@ func addImage(context echo.Context) error {
 	)
 
 	if err != nil {
-		return sendError(context, "image not created /addImage POST")
+		return sendError(context, "image not created", "не удалось создать изображение")
 	}
 
 	return context.JSON(http.StatusOK, map[string]interface{}{
 		"status":   "success",
 		"image_id": img.ID,
+		"message":  "изображение создано",
 	})
 
 }
@@ -99,25 +109,37 @@ func deleteImage(context echo.Context) error {
 	claims := token.Claims.(*jwtUserClaims)
 
 	if claims.Role == 0 {
-		return sendError(context, "not admin /deleteImage DELETE")
+		return sendError(context, "not admin", "вы не администратор")
 	}
 
 	id := context.Param("id")
+
+	if !database.CheckUUID(id) {
+		return sendError(context, "incorrect id", "не удалось удалить изображение")
+	}
 
 	err := (&database.Image{
 		ID: id,
 	}).Delete()
 
 	if err != nil {
-		return sendError(context, "can't delete from db /deleteImage DELETE")
+		return sendError(context, "can't delete image", "не удалось удалить изображение")
 	}
 
 	return context.JSON(http.StatusOK, map[string]string{
-		"status": "success",
+		"status":  "success",
+		"message": "изображение удалено",
 	})
 }
 
 func setImage(context echo.Context) error {
+
+	token := context.Get("token").(*jwt.Token)
+	claims := token.Claims.(*jwtUserClaims)
+
+	if claims.Role == 0 {
+		return sendError(context, "not admin", "вы не администратор")
+	}
 
 	type PutForm struct {
 		Images []*database.Image `json:"images"`
@@ -125,15 +147,19 @@ func setImage(context echo.Context) error {
 	var p PutForm
 	err := context.Bind(&p)
 	if err != nil {
-		return sendError(context, "can't unmarshal /image PUT")
+		return sendError(context, "no images information in JSON", "не удалось изменить изображения")
 	}
 
 	for _, imageR := range p.Images {
+		if !database.CheckUUID(imageR.ID) {
+			return sendError(context, "incorrect id", "не удалось изменить изображения")
+		}
 		imageR.UpdateNotAll()
 	}
 
 	return context.JSON(http.StatusOK, map[string]interface{}{
-		"status": "success",
+		"status":  "success",
+		"message": "изображения изенено",
 	})
 
 }
