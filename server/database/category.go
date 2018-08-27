@@ -62,13 +62,12 @@ func (category *Category) Delete() error {
 // Add new property and add it in db
 // Return new property
 func (category *Category) Create(name, icon, description string) (*Category, error) {
-	count, _ := GetCategoriesCount()
 	category = &Category{
 		Name:        name,
 		Icon:        icon,
 		ID:          generateUUID(),
 		Description: description,
-		Number:      count + 1,
+		Number:      0,
 	}
 	err := db.Create(category).Error
 	return category, err
@@ -78,7 +77,14 @@ func (category *Category) Create(name, icon, description string) (*Category, err
 // Return all categories
 func GetCategories() ([]*Category, error) {
 	categories := []*Category{}
-	err := db.Order("number").Find(&categories).Error
+	err := db.Find(&categories).Error
+	return categories, err
+}
+
+// GetCategoriesOnMain function
+func GetCategoriesOnMain() ([]*Category, error) {
+	categories := []*Category{}
+	err := db.Where("number != ?", 0).Find(&categories).Error
 	return categories, err
 }
 
@@ -93,11 +99,4 @@ func GetCategory(id string) (*Category, error) {
 // String function
 func (category *Category) String() string {
 	return fmt.Sprint(*category)
-}
-
-// GetCategoriesCount function
-func GetCategoriesCount() (int, error) {
-	count := 0
-	err := db.Table("categories").Count(&count).Error
-	return count, err
 }

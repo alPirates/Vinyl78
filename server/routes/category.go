@@ -122,12 +122,12 @@ func setCategories(context echo.Context) error {
 	var p PutForm
 	err := context.Bind(&p)
 	if err != nil {
-		return sendError(context, "no images information in JSON", "не удалось изменить категории")
+		return sendError(context, "no categories information in JSON "+err.Error(), "не удалось изменить категории")
 	}
 
 	for _, category := range p.Categories {
 		if !database.CheckUUID(category.ID) {
-			return sendError(context, "incorrect id", "не удалось изменить категрии")
+			return sendError(context, "incorrect id", "не удалось изменить категории")
 		}
 		category.UpdateNotAll()
 	}
@@ -170,6 +170,21 @@ func deleteCategory(context echo.Context) error {
 	return context.JSON(http.StatusOK, map[string]string{
 		"status":  "success",
 		"message": "категория удалена",
+	})
+
+}
+
+func getCategories(context echo.Context) error {
+
+	categories, err := database.GetCategoriesOnMain()
+	if err != nil {
+		return sendError(context, "can't get categories", "не удалось получить категории")
+	}
+
+	return context.JSON(http.StatusOK, map[string]interface{}{
+		"status":  "success",
+		"result":  categories,
+		"message": "категории получены",
 	})
 
 }
