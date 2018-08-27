@@ -105,7 +105,37 @@ func setCategory(context echo.Context) error {
 		"status":  "success",
 		"message": "категория изменена",
 	})
+}
 
+func setCategories(context echo.Context) error {
+
+	token := context.Get("token").(*jwt.Token)
+	claims := token.Claims.(*jwtUserClaims)
+
+	if claims.Role == 0 {
+		return sendError(context, "not admin", "вы не администратор")
+	}
+
+	type PutForm struct {
+		Categories []*database.Category `json:"categories"`
+	}
+	var p PutForm
+	err := context.Bind(&p)
+	if err != nil {
+		return sendError(context, "no images information in JSON", "не удалось изменить категории")
+	}
+
+	for _, category := range p.Categories {
+		if !database.CheckUUID(category.ID) {
+			return sendError(context, "incorrect id", "не удалось изменить категрии")
+		}
+		category.UpdateNotAll()
+	}
+
+	return context.JSON(http.StatusOK, map[string]interface{}{
+		"status":  "success",
+		"message": "категории изенены",
+	})
 }
 
 func deleteCategory(context echo.Context) error {

@@ -11,6 +11,7 @@ type Category struct {
 	Name        string `json:"name" form:"name" query:"name"`
 	Icon        string `json:"icon" form:"icon" query:"icon"`
 	Description string `json:"description" form:"description" query:"description"`
+	Number      int    `json:"number" form:"number" query:"number"`
 }
 
 // Update function
@@ -39,18 +40,35 @@ func (category *Category) Delete() error {
 	if err != nil {
 		return err
 	}
-	return db.Delete(category).Error
+	category, _ = GetCategory(category.ID)
+	err = db.Delete(category).Error
+	if err != nil {
+		return err
+	}
+	categories, err := GetCategories()
+	if err != nil {
+		return err
+	}
+	for _, categoryR := range categories {
+		if categoryR.Number > category.Number {
+			categoryR.Number--
+			categoryR.Update()
+		}
+	}
+	return err
 }
 
 // Create function
 // Add new property and add it in db
 // Return new property
 func (category *Category) Create(name, icon, description string) (*Category, error) {
+	count, _ := GetCategoriesCount()
 	category = &Category{
 		Name:        name,
 		Icon:        icon,
 		ID:          generateUUID(),
 		Description: description,
+		Number:      count + 1,
 	}
 	err := db.Create(category).Error
 	return category, err
@@ -64,7 +82,22 @@ func GetCategories() ([]*Category, error) {
 	return categories, err
 }
 
+// GetCategory function
+// Return all categories
+func GetCategory(id string) (*Category, error) {
+	categories := &Category{}
+	err := db.Where("id = ?", id).First(categories).Error
+	return categories, err
+}
+
 // String function
 func (category *Category) String() string {
 	return fmt.Sprint(*category)
+}
+
+// GetCategoriesCount function
+func GetCategoriesCount() (int, error) {
+	count := 0
+	err := db.Table("categories").Count(&count).Error
+	return count, err
 }
