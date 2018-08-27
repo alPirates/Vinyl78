@@ -28,12 +28,13 @@ func StartBot() {
 	}
 
 	fmt.Println("")
-	fmt.Println("")
 	fmt.Println(
-		`\    / |   /\    / \   / |`+"\n",
-		`\  /  |  /  \  /   \ /  |`+"\n",
-		` \/   | /    \/     |   |___`,
+		`  __   ___  ___  ___  ___  __   ___  ___`+"\n",
+		`|  | /  / /  / /   |/  / |  |_/  / /  /`+"\n",
+		`|  |/  / /  / /       /  |_    _/ /  /__`+"\n",
+		`|_____/ /__/ /__/|___/    /___/  /_____/`,
 	)
+	fmt.Println("Bot for web site Vinyl78 @Vinyl78Bot")
 
 	workUpdate()
 }
