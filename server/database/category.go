@@ -78,7 +78,7 @@ func (category *Category) Create(name, icon, description string) (*Category, err
 // Return all categories
 func GetCategories() ([]*Category, error) {
 	categories := []*Category{}
-	err := db.Find(&categories).Error
+	err := db.Order("number").Find(&categories).Error
 	return categories, err
 }
 
