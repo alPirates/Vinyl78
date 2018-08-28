@@ -15,6 +15,13 @@ func getCategory(context echo.Context) error {
 		return sendError(context, "can't get categories", "не удалось получить категории")
 	}
 
+	for _, category := range categories {
+		category.Images, err = database.GetImages(category.ID)
+		if err != nil {
+			return sendError(context, "can't find category's images", "не удалось получить категории")
+		}
+	}
+
 	return context.JSON(http.StatusOK, map[string]interface{}{
 		"status":  "success",
 		"result":  categories,
@@ -179,6 +186,13 @@ func getCategories(context echo.Context) error {
 	categories, err := database.GetCategoriesOnMain()
 	if err != nil {
 		return sendError(context, "can't get categories", "не удалось получить категории")
+	}
+
+	for _, category := range categories {
+		category.Images, err = database.GetImages(category.ID)
+		if err != nil {
+			return sendError(context, "can't find category's images", "не удалось получить категории")
+		}
 	}
 
 	return context.JSON(http.StatusOK, map[string]interface{}{
