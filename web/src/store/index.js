@@ -6,6 +6,10 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     token: localStorage.getItem('token') || '',
+    alert: {
+      show: true,
+      message: ''
+    },
     role: 'client',
     drawer: false,
     loader: false
@@ -13,6 +17,10 @@ const store = new Vuex.Store({
   actions: {
   },
   mutations: {
+    setAlert (state, show, message) {
+      state.message = message
+      state.alert = alert
+    },
     setLoader (state, loader) {
       state.loader = loader
     },
@@ -29,7 +37,8 @@ const store = new Vuex.Store({
   getters: {
     getToken: state => state.token,
     getDrawer: state => state.drawer,
-    getRole: state => state.role
+    getRole: state => state.role,
+    getAlert: state => state.alert
   }
 })
 

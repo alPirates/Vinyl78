@@ -6,14 +6,16 @@
       div.wrapper
         router-view
     Loader
+    Alert
 
 </template>
 
 <script>
-import Header from '@/components/Navigation/Header.vue'
-import Sidebar from '@/components/Navigation/Sidebar.vue'
-import Footer from '@/components/Navigation/Footer.vue'
-import Loader from '@/components/Utils/Loader.vue'
+import Header from '@/components/Navigation/Header'
+import Sidebar from '@/components/Navigation/Sidebar'
+import Footer from '@/components/Navigation/Footer'
+import Loader from '@/components/Utils/Loader'
+import Alert from '@/components/Utils/Alert'
 
 export default {
   name: 'App',
@@ -36,7 +38,8 @@ export default {
     Header,
     Sidebar,
     Loader,
-    Footer
+    Footer,
+    Alert
   }
 }
 </script>
