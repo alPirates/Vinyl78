@@ -1,13 +1,6 @@
 <template lang="pug">
   v-container(grid-list-lg)
-    v-layout(row, wrap)
-      v-badge(color="red" right id="red-badge")
-        span(slot="badge") 3
-        v-btn(color="secondary") Заявки
-      v-btn(color="secondary") Карусель
-      v-btn(color="secondary") Карусель
-    v-layour()
-      v-divider
+    AdminNavigation()
     v-layout(row wrap)
       v-flex(xs12 lg6)
         v-card
@@ -74,7 +67,7 @@
       v-flex(xs12)
        v-card
           v-toolbar(color="secondary")
-            v-toolbar-title.white--text заявки
+            v-toolbar-title.white--text Заявки
           v-container
             v-layout(row, wrap)
               v-flex(xs12)
@@ -91,10 +84,13 @@
                         td
                           v-btn(icon color="success")
                             v-icon check
-      v-dialog(v-model="editCateg.show")
+      v-dialog(v-model="editCateg.show" fullscreen hide-overlay transition="dialog-bottom-transition")
         v-card
           v-toolbar(color="primary")
             v-toolbar-title.white--text Редактировать категорию
+            v-spacer
+            v-btn(icon @click="editCateg.show = false").white--text
+              v-icon close
           v-card-title
             EditCategory(:id="editCateg.id")
 
@@ -103,6 +99,7 @@
 <script>
 import FileUpload from '@/components/Utils/FileUpload'
 import EditCategory from '@/components/Edit/EditCategory'
+import AdminNavigation from '@/components/Navigation/AdminNavigation'
 
 export default {
   name: 'AdminPanel',
@@ -137,7 +134,7 @@ export default {
     showEditCategory (id) {
       this.editCateg.id = id
       this.editCateg.show = true
-      console.log('showing');
+      console.log('showing')
     },
     async refreshCarouselSlides () {
       this.loader(true)
@@ -209,7 +206,8 @@ export default {
   },
   components: {
     FileUpload,
-    EditCategory
+    EditCategory,
+    AdminNavigation
   }
 }
 </script>

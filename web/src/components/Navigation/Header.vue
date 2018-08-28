@@ -19,9 +19,11 @@
         v-icon verified_user
       v-btn(
         v-if="STATE.token"
+        icon
         flat
-        @click="logout"
-      ) Выйти
+        @click="logout")
+        v-icon fa-sign-out-alt
+
 </template>
 
 <script>

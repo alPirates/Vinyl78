@@ -1,9 +1,8 @@
 <template lang="pug">
-  v-container(grid-list-sm)
+  v-container(grid-list-lg)
     v-layout(row, wrap)
       v-flex(xs12)
         v-form(v-model="valid")
-          pre {{valid}}
           v-layout(row, wrap)
             v-flex(xs12)
               v-text-field(

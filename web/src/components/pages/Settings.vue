@@ -1,5 +1,6 @@
 <template lang="pug">
-  v-container(grid-list-sm)
+  v-container(grid-list-lg)
+    AdminNavigation(v-if="isAdmin()")
     v-layout(row, wrap)
       v-flex(xs12)
         v-tabs(
@@ -19,7 +20,8 @@
 </template>
 
 <script>
-import EditUser from '@/components/Edit/EditUser.vue'
+import EditUser from '@/components/Edit/EditUser'
+import AdminNavigation from '@/components/Navigation/AdminNavigation'
 
 export default {
   name: 'Settings',
@@ -27,7 +29,8 @@ export default {
     return {}
   },
   components: {
-    EditUser
+    EditUser,
+    AdminNavigation
   }
 }
 </script>

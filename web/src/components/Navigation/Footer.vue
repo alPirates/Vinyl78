@@ -12,7 +12,7 @@
         v-btn(icon) Ist
       v-divider
       v-card-text
-        | &copy;2018 — 
+        | &copy;2018 —
         strong Vuetify
 </template>
 

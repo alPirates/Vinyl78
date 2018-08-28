@@ -18,6 +18,7 @@ import Vuetify from 'vuetify'
 
 import 'vuetify/dist/vuetify.min.css'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
+import '@fortawesome/fontawesome-free/css/all.css'
 
 Vue.config.productionTip = false
 
@@ -33,7 +34,8 @@ Vue.use(Vuetify, {
     warning: '#FDD835',
     info: '#80CBC4',
     success: '#7CB342'
-  }
+  },
+  iconfont: 'fa'
 })
 
 Vue.use(Api, { store, R })
