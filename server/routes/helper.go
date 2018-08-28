@@ -31,6 +31,7 @@ func SetRoutes(server *echo.Echo) {
 	api.GET("/media/:name", getFileImage)
 
 	api.GET("/sidebar", getCategory)
+	api.GET("/main_sidebar", getCategories)
 	api.GET("/image", getImage)
 	api.GET("/property", getProperty)
 	api.GET("/category/:id", getCategoryByID)
