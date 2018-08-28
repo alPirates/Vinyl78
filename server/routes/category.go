@@ -105,7 +105,37 @@ func setCategory(context echo.Context) error {
 		"status":  "success",
 		"message": "категория изменена",
 	})
+}
 
+func setCategories(context echo.Context) error {
+
+	token := context.Get("token").(*jwt.Token)
+	claims := token.Claims.(*jwtUserClaims)
+
+	if claims.Role == 0 {
+		return sendError(context, "not admin", "вы не администратор")
+	}
+
+	type PutForm struct {
+		Categories []*database.Category `json:"categories"`
+	}
+	var p PutForm
+	err := context.Bind(&p)
+	if err != nil {
+		return sendError(context, "no categories information in JSON "+err.Error(), "не удалось изменить категории")
+	}
+
+	for _, category := range p.Categories {
+		if !database.CheckUUID(category.ID) {
+			return sendError(context, "incorrect id", "не удалось изменить категории")
+		}
+		category.UpdateNotAll()
+	}
+
+	return context.JSON(http.StatusOK, map[string]interface{}{
+		"status":  "success",
+		"message": "категории изенены",
+	})
 }
 
 func deleteCategory(context echo.Context) error {
@@ -140,6 +170,21 @@ func deleteCategory(context echo.Context) error {
 	return context.JSON(http.StatusOK, map[string]string{
 		"status":  "success",
 		"message": "категория удалена",
+	})
+
+}
+
+func getCategories(context echo.Context) error {
+
+	categories, err := database.GetCategoriesOnMain()
+	if err != nil {
+		return sendError(context, "can't get categories", "не удалось получить категории")
+	}
+
+	return context.JSON(http.StatusOK, map[string]interface{}{
+		"status":  "success",
+		"result":  categories,
+		"message": "категории получены",
 	})
 
 }

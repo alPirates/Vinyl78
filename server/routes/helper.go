@@ -58,6 +58,7 @@ func SetRoutes(server *echo.Echo) {
 	authorization.POST("/sticker", addSticker)                  // admin
 	authorization.DELETE("/category/:id", deleteCategory)       // admin
 	authorization.PUT("/category", setCategory)                 // admin
+	authorization.PUT("/categories", setCategories)             // admin
 	authorization.POST("/category", addCategory)                // admin
 	authorization.POST("/image", addImage)                      // admin
 	authorization.PUT("/image", setImage)                       // admin
