@@ -3,12 +3,12 @@
     :bottom="true"
     :multi-line="true"
     v-model="STATE.alert.show"
-  ) {{SATTE.alert.message}}
+  ) {{STATE.alert.message}}
     v-btn(
       color="pink"
       flat
       @click="STATE.alert.show = false"
-    )
+    ) Закрыть
 </template>
 
 <script>

@@ -23,9 +23,8 @@ func getCategory(context echo.Context) error {
 	}
 
 	return context.JSON(http.StatusOK, map[string]interface{}{
-		"status":  "success",
-		"result":  categories,
-		"message": "категории получены",
+		"status": "success",
+		"result": categories,
 	})
 }
 
@@ -41,9 +40,8 @@ func getCategoryByID(context echo.Context) error {
 		return sendError(context, "can't find category", "не удалось получить категорию")
 	}
 	return context.JSON(http.StatusOK, map[string]interface{}{
-		"status":  "success",
-		"result":  result,
-		"message": "категория получена",
+		"status": "success",
+		"result": result,
 	})
 }
 
@@ -196,9 +194,8 @@ func getCategories(context echo.Context) error {
 	}
 
 	return context.JSON(http.StatusOK, map[string]interface{}{
-		"status":  "success",
-		"result":  categories,
-		"message": "категории получены",
+		"status": "success",
+		"result": categories,
 	})
 
 }

@@ -144,9 +144,8 @@ func getSticker(context echo.Context) error {
 	}
 
 	return context.JSON(http.StatusOK, map[string]interface{}{
-		"result":  stickers,
-		"status":  "success",
-		"count":   count,
-		"message": "стикеры получены",
+		"result": stickers,
+		"status": "success",
+		"count":  count,
 	})
 }

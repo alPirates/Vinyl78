@@ -23,6 +23,9 @@ Api.install = (Vue, { store, R }) => {
         if (result.status !== 200) {
           result = {'error': true}
         }
+        if (R.path(['data', 'message'], result)) {
+          store.commit('setAlert', result.data.message, 4000)
+        }
       } catch (err) {
         result = {
           'error': true,

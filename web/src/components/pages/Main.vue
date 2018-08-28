@@ -49,7 +49,7 @@
         v-card
           v-toolbar(color="primary")
             v-toolbar-title.white--text Заголовок
-          v-card-content.mt-2
+          v-card-text.mt-2
             v-container(grid-list-sm)
               v-layout(row, wrap)
                 v-flex(xs12)
@@ -68,6 +68,7 @@ export default {
     let carousel = await this.$api.send('get', '/property', null, {
       key: 'carousel_id'
     })
+    console.log('carousel is ', carousel);
     let carouselImages = await this.$api.send('get', '/image', null, {
       linked_id: carousel.data.value
     })

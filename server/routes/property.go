@@ -22,9 +22,8 @@ func getProperty(context echo.Context) error {
 	}
 
 	return context.JSON(http.StatusOK, map[string]string{
-		"status":  "success",
-		"value":   property.Value,
-		"message": "свойство получено",
+		"status": "success",
+		"value":  property.Value,
 	})
 
 }
@@ -50,8 +49,7 @@ func getPrivateProperty(context echo.Context) error {
 	}
 
 	return context.JSON(http.StatusOK, map[string]string{
-		"status":  "success",
-		"value":   property.Value,
-		"message": "свойство получено",
+		"status": "success",
+		"value":  property.Value,
 	})
 }

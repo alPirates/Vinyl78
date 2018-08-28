@@ -142,9 +142,8 @@ func getApplication(context echo.Context) error {
 	}
 
 	return context.JSON(http.StatusOK, map[string]interface{}{
-		"result":  applications,
-		"status":  "success",
-		"count":   count,
-		"message": "заявка получена",
+		"result": applications,
+		"status": "success",
+		"count":  count,
 	})
 }

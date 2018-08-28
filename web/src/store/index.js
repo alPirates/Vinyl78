@@ -7,8 +7,8 @@ const store = new Vuex.Store({
   state: {
     token: localStorage.getItem('token') || '',
     alert: {
-      show: true,
-      message: ''
+      show: false,
+      message: 'kek'
     },
     role: 'client',
     drawer: false,
@@ -17,9 +17,15 @@ const store = new Vuex.Store({
   actions: {
   },
   mutations: {
-    setAlert (state, show, message) {
-      state.message = message
-      state.alert = alert
+    setAlert (state, message, time = 3000) {
+      if (state.alert.show) {
+        state.alert.show = false
+      }
+      state.alert.message = message
+      state.alert.show = true
+      setTimeout(() => {
+        state.alert.show = false
+      }, time)
     },
     setLoader (state, loader) {
       state.loader = loader
