@@ -71,7 +71,7 @@ export default {
       console.log('sending', sending)
       let result = await this.$api.send('put', '/app/categories', sending)
       if (result) {
-        console.log('success');
+        console.log('success')
         this.update()
       }
     },

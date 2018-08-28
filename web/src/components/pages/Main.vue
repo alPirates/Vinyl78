@@ -65,10 +65,13 @@ export default {
     }
   },
   async mounted () {
+    let mainCategories = await this.$api.send('get', '/main_sidebar')
+    console.log('main', mainCategories)
+    // TODO add main sidebar
     let carousel = await this.$api.send('get', '/property', null, {
       key: 'carousel_id'
     })
-    console.log('carousel is ', carousel);
+    console.log('carousel is ', carousel)
     let carouselImages = await this.$api.send('get', '/image', null, {
       linked_id: carousel.data.value
     })
