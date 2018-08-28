@@ -22,7 +22,7 @@
                     v-btn(color="primary" @click="addCategory") Добавить
                       v-icon(right) add
               v-flex(xs12)
-                v-list(v-for="(el, index) in categories", :key="index")
+                v-list(v-for="(el, index) in categories", :key="el.id")
                   v-list-tile(id="sticker-card")
                     v-list-tile-title {{el.name}}
                     v-spacer
@@ -44,7 +44,7 @@
                         img(:src="getMedia(image.name)")
                     h3.mt-2.mb-2.display-1 Укажите новую последовательность
                     draggable(:list="carouselImages", element="v-list" @end="dropImage")
-                      div(v-for="(image, index) in carouselImages", :key="index")
+                      div(v-for="(image, index) in carouselImages", :key="el.id")
                         v-list-tile(@click="")
                           v-list-tile-avatar
                             img(:src="getMedia(image.name)")

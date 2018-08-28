@@ -26,6 +26,12 @@ func (category *Category) UpdateNotAll() error {
 	return db.Model(category).Update(category).Error
 }
 
+// UpdateNumber function
+// Update value of the Property
+func (category *Category) UpdateNumber() error {
+	return db.Model(category).Update("Number", category.Number).Error
+}
+
 // GetCategoryByID function
 func GetCategoryByID(UUID string) (*Category, error) {
 	categ := &Category{}

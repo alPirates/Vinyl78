@@ -129,7 +129,7 @@ func setCategories(context echo.Context) error {
 		if !database.CheckUUID(category.ID) {
 			return sendError(context, "incorrect id", "не удалось изменить категории")
 		}
-		category.UpdateNotAll()
+		category.UpdateNumber()
 	}
 
 	return context.JSON(http.StatusOK, map[string]interface{}{
