@@ -7,11 +7,12 @@ import "fmt"
 // Number - id of this category
 // Icon - path to icon of this category
 type Category struct {
-	ID          string `json:"id" form:"id" query:"id"`
-	Name        string `json:"name" form:"name" query:"name"`
-	Icon        string `json:"icon" form:"icon" query:"icon"`
-	Description string `json:"description" form:"description" query:"description"`
-	Number      int    `json:"number" form:"number" query:"number"`
+	ID          string   `json:"id" form:"id" query:"id"`
+	Name        string   `json:"name" form:"name" query:"name"`
+	Icon        string   `json:"icon" form:"icon" query:"icon"`
+	Description string   `json:"description" form:"description" query:"description"`
+	Images      []*Image `json:"images" gorm:"-"`
+	Number      int      `json:"number" form:"number" query:"number"`
 }
 
 // Update function
