@@ -19,22 +19,22 @@ func getAdminInfo(context echo.Context) error {
 
 	property, err := database.GetPropertyPrivateAndPublic("carousel_id")
 	if err != nil {
-		return sendError(context, "no carousel_id property", "не удалось получить информацию")
+		return sendError(context, "no carousel_id property", "")
 	}
 
 	caruselImages, err := database.GetImages(property.Value)
 	if err != nil {
-		return sendError(context, "cant't get carusel images", "не удалось получить информацию")
+		return sendError(context, "cant't get carusel images", "")
 	}
 
 	applications, err := database.GetAllApplications()
 	if err != nil {
-		return sendError(context, "cant't get applications", "не удалось получить информацию")
+		return sendError(context, "cant't get applications", "")
 	}
 
 	categories, err := database.GetCategories()
 	if err != nil {
-		return sendError(context, "cant't get categories", "не удалось получить информацию")
+		return sendError(context, "cant't get categories", "")
 	}
 
 	return context.JSON(http.StatusOK, map[string]interface{}{
@@ -42,6 +42,5 @@ func getAdminInfo(context echo.Context) error {
 		"carusel_images": caruselImages,
 		"applications":   applications,
 		"categories":     categories,
-		"message":        "информация получена",
 	})
 }
