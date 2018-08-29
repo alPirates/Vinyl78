@@ -32,6 +32,10 @@ const webpackConfig = merge(baseWebpackConfig, {
     new webpack.DefinePlugin({
       'process.env': env
     }),
+    new webpack.ProvidePlugin({
+      moment: 'moment',
+      R: 'ramda'
+    }),
     new UglifyJsPlugin({
       uglifyOptions: {
         compress: {
