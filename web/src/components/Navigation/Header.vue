@@ -9,7 +9,8 @@
     )
       v-toolbar-title
         v-toolbar-side-icon(@click.stop="changeDrawer()")
-        img(src="@/assets/logo.svg" height="30px").logo-image
+        router-link(to="/")
+          img(src="@/assets/logo.svg" height="30px" to="/").logo-image
       v-spacer
       v-btn(icon
         v-if="isAdmin()"
@@ -18,9 +19,11 @@
         v-icon verified_user
       v-btn(
         v-if="STATE.token"
+        icon
         flat
-        @click="logout"
-      ) Выйти
+        @click="logout")
+        v-icon fa-sign-out-alt
+
 </template>
 
 <script>

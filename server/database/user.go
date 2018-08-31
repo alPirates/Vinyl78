@@ -19,6 +19,12 @@ func (user *User) Update() error {
 	return db.Save(user).Error
 }
 
+// UpdateNotAll function
+// Update all about user
+func (user *User) UpdateNotAll() error {
+	return db.Model(user).Update(user).Error
+}
+
 // Delete function
 // Delete user
 func (user *User) Delete() error {
@@ -57,7 +63,7 @@ func GetUser(email, password string) (*User, error) {
 // Return user from ID
 func GetUserByID(UUID string) (*User, error) {
 	user := &User{}
-	err := db.Where("UUID = ?", UUID).First(user).Error
+	err := db.Where("id = ?", UUID).First(user).Error
 	return user, err
 }
 

@@ -1,10 +1,10 @@
 <template lang="pug">
   v-container(grid-list-lg)
-    br
+    AdminNavigation()
     v-layout(row wrap)
       v-flex(xs12 lg6)
         v-card
-          v-toolbar(color="success")
+          v-toolbar(color="secondary")
             v-toolbar-title.white--text Категории
           v-container
             v-layout(row, wrap)
@@ -22,17 +22,17 @@
                     v-btn(color="primary" @click="addCategory") Добавить
                       v-icon(right) add
               v-flex(xs12)
-                v-list(v-for="(el, index) in categories", :key="index")
-                  v-list-tile
+                v-list(v-for="(el, index) in categories", :key="el.id")
+                  v-list-tile(id="sticker-card")
                     v-list-tile-title {{el.name}}
                     v-spacer
-                    v-btn(icon color="success")
+                    v-btn(icon color="success" @click="showEditCategory(el.id)")
                      v-icon edit
-                    v-btn(icon color="grey lighter-3", @click="deleteCategory(el.ID)")
+                    v-btn(icon color="grey lighter-3", @click="deleteCategory(el.id)")
                       v-icon delete
       v-flex(xs12 lg6)
        v-card
-          v-toolbar(color="success")
+          v-toolbar(color="secondary")
             v-toolbar-title.white--text Карусель
           v-container
             v-layout(row, wrap)
@@ -44,7 +44,7 @@
                         img(:src="getMedia(image.name)")
                     h3.mt-2.mb-2.display-1 Укажите новую последовательность
                     draggable(:list="carouselImages", element="v-list" @end="dropImage")
-                      div(v-for="(image, index) in carouselImages", :key="index")
+                      div(v-for="(image, index) in carouselImages", :key="image.id")
                         v-list-tile(@click="")
                           v-list-tile-avatar
                             img(:src="getMedia(image.name)")
@@ -66,8 +66,8 @@
                     )
       v-flex(xs12)
        v-card
-          v-toolbar(color="success")
-            v-toolbar-title.white--text заявки
+          v-toolbar(color="secondary")
+            v-toolbar-title.white--text Заявки
           v-container
             v-layout(row, wrap)
               v-flex(xs12)
@@ -84,16 +84,31 @@
                         td
                           v-btn(icon color="success")
                             v-icon check
+      v-dialog(v-model="editCateg.show" fullscreen hide-overlay transition="dialog-bottom-transition")
+        v-card
+          v-toolbar(color="primary")
+            v-toolbar-title.white--text Редактировать категорию
+            v-spacer
+            v-btn(icon @click="editCateg.show = false").white--text
+              v-icon close
+          v-card-title
+            EditCategory(:id="editCateg.id")
 
 </template>
 
 <script>
 import FileUpload from '@/components/Utils/FileUpload'
+import EditCategory from '@/components/Edit/EditCategory'
+import AdminNavigation from '@/components/Navigation/AdminNavigation'
 
 export default {
   name: 'AdminPanel',
   data: () => {
     return {
+      editCateg: {
+        show: false,
+        id: ''
+      },
       valid: false,
       files: [],
       headers: [
@@ -116,6 +131,11 @@ export default {
     }
   },
   methods: {
+    showEditCategory (id) {
+      this.editCateg.id = id
+      this.editCateg.show = true
+      console.log('showing')
+    },
     async refreshCarouselSlides () {
       this.loader(true)
       let index = 0
@@ -185,7 +205,9 @@ export default {
     this.update()
   },
   components: {
-    FileUpload
+    FileUpload,
+    EditCategory,
+    AdminNavigation
   }
 }
 </script>
@@ -193,5 +215,9 @@ export default {
 <style scoped>
 #preview-carousel {
   max-height: 300px;
+}
+#red-badge {
+  top: -2px !important;
+  right: 1px !important;
 }
 </style>

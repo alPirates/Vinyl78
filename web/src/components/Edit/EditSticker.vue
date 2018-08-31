@@ -19,7 +19,7 @@
                 img(:src="getMedia(el.name)")
               v-list-tile-title {{el.name}}
               v-spacer
-              v-btn(color="error" icon)
+              v-btn(color="error" icon @click="deleteSticker(el.id)")
                 v-icon remove
       v-flex(xs12)
         FileUpload(
@@ -28,7 +28,7 @@
         )
       v-flex(xs12)
         v-layout(justify-end)
-          v-btn(color="success") Обновить
+          v-btn(color="success" @click="updateSticker") Обновить
             v-icon update
 </template>
 
@@ -57,6 +57,30 @@ export default {
     }
   },
   methods: {
+    deleteSticker: async function (id) {
+      let result = await this.$api.send(
+        'delete',
+        `/app/sticker/${id}`
+      )
+      if (result) {
+        this.$emit('refresh')
+      }
+    },
+    updateSticker: async function () {
+      if (this.valid) {
+        let result = await this.$api.send(
+          'put',
+          '/app/sticker',
+          {
+            ...R.pick(['description'], this.form),
+            id: this.sticker.id
+          }
+        )
+        if (result) {
+          this.$emit('refresh')
+        }
+      }
+    },
     preLoadProps () {
       const keys = ['description']
       let needProps = R.pick(keys, this.sticker)

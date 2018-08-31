@@ -3,6 +3,7 @@ package routes
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -31,8 +32,10 @@ func SetRoutes(server *echo.Echo) {
 	api.GET("/media/:name", getFileImage)
 
 	api.GET("/sidebar", getCategory)
+	api.GET("/main_sidebar", getCategories)
 	api.GET("/image", getImage)
 	api.GET("/property", getProperty)
+	api.GET("/category/:id", getCategoryByID)
 
 	authorization := api.Group("/app")
 	authorization.Use(middleware.JWTWithConfig(
@@ -51,16 +54,17 @@ func SetRoutes(server *echo.Echo) {
 	authorization.GET("/application", getApplication)           // admin
 	authorization.DELETE("/application/:id", deleteApplication) // admin
 	authorization.GET("/property", getPrivateProperty)          // admin
-	authorization.GET("/admin", getAdminInfo)
-	// authorization.PUT("/property", setToken)                       // admin
-	authorization.PUT("/sticker", setSticker)             // admin
-	authorization.DELETE("/sticker/:id", deleteSticker)   // admin
-	authorization.POST("/sticker", addSticker)            // admin
-	authorization.DELETE("/category/:id", deleteCategory) // admin
-	authorization.POST("/category", addCategory)          // admin
-	authorization.POST("/image", addImage)                // admin
-	authorization.PUT("/image", setImage)                 // admin
-	authorization.DELETE("/image/:id", deleteImage)       // admin
+	authorization.GET("/admin", getAdminInfo)                   // admin
+	authorization.PUT("/sticker", setSticker)                   // admin
+	authorization.DELETE("/sticker/:id", deleteSticker)         // admin
+	authorization.POST("/sticker", addSticker)                  // admin
+	authorization.DELETE("/category/:id", deleteCategory)       // admin
+	authorization.PUT("/category", setCategory)                 // admin
+	authorization.PUT("/categories", setCategories)             // admin
+	authorization.POST("/category", addCategory)                // admin
+	authorization.POST("/image", addImage)                      // admin
+	authorization.PUT("/image", setImage)                       // admin
+	authorization.DELETE("/image/:id", deleteImage)             // admin
 
 	err := server.Start(":" + fmt.Sprint(Port))
 	if err != nil {
@@ -69,9 +73,11 @@ func SetRoutes(server *echo.Echo) {
 
 }
 
-func sendError(context echo.Context, errorName string) error {
+func sendError(context echo.Context, errorName, message string) error {
+	fmt.Println(time.Now().Format(time.UnixDate) + " : " + context.Path() + " : " + errorName)
 	return context.JSON(http.StatusOK, map[string]string{
 		"status":  "failure",
-		"message": errorName,
+		"error":   errorName,
+		"message": message,
 	})
 }

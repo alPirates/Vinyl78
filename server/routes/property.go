@@ -13,12 +13,12 @@ func getProperty(context echo.Context) error {
 	property := &database.Property{}
 	err := context.Bind(property)
 	if err != nil {
-		return sendError(context, "no property information in JSON /property GET")
+		return sendError(context, "no property information in JSON", "")
 	}
 
 	property, err = database.GetPropertyPublic(property.Key)
 	if err != nil {
-		return sendError(context, "no property information in DB /property GET")
+		return sendError(context, "no property information", "")
 	}
 
 	return context.JSON(http.StatusOK, map[string]string{
@@ -34,18 +34,18 @@ func getPrivateProperty(context echo.Context) error {
 	claims := token.Claims.(*jwtUserClaims)
 
 	if claims.Role == 0 {
-		return sendError(context, "not admin /property GET")
+		return sendError(context, "not admin", "вы не администратор")
 	}
 
 	property := &database.Property{}
 	err := context.Bind(property)
 	if err != nil {
-		return sendError(context, "no property information in JSON /property GET")
+		return sendError(context, "no property information in JSON", "")
 	}
 
 	property, err = database.GetPropertyPrivateAndPublic(property.Key)
 	if err != nil {
-		return sendError(context, "no property information in DB /property GET")
+		return sendError(context, "no property information", "")
 	}
 
 	return context.JSON(http.StatusOK, map[string]string{

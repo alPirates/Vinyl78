@@ -14,27 +14,27 @@ func getAdminInfo(context echo.Context) error {
 	claims := token.Claims.(*jwtUserClaims)
 
 	if claims.Role == 0 {
-		return sendError(context, "not admin /admin GET")
+		return sendError(context, "not admin", "вы не администратор")
 	}
 
 	property, err := database.GetPropertyPrivateAndPublic("carousel_id")
 	if err != nil {
-		return sendError(context, "no carusel id /admin GET")
+		return sendError(context, "no carousel_id property", "")
 	}
 
 	caruselImages, err := database.GetImages(property.Value)
 	if err != nil {
-		return sendError(context, "cant't get carusel images /admin GET")
+		return sendError(context, "cant't get carusel images", "")
 	}
 
 	applications, err := database.GetAllApplications()
 	if err != nil {
-		return sendError(context, "cant't get applications /admin GET")
+		return sendError(context, "cant't get applications", "")
 	}
 
 	categories, err := database.GetCategories()
 	if err != nil {
-		return sendError(context, "cant't get categories /admin GET")
+		return sendError(context, "cant't get categories", "")
 	}
 
 	return context.JSON(http.StatusOK, map[string]interface{}{

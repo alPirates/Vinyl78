@@ -5,6 +5,7 @@ import "fmt"
 // Property structure
 // Key - name of this property
 // Value - value of this property
+// PRIVATE = FALSE
 type Property struct {
 	ID         string `json:"id" form:"id" query:"id"`
 	Key        string `json:"key" form:"key" query:"key"`
@@ -18,15 +19,28 @@ func (property *Property) Update() error {
 	return db.Save(property).Error
 }
 
+// UpdateNotAll function
+// Update value of the Property
+func (property *Property) UpdateNotAll() error {
+	return db.Model(property).Update(property).Error
+}
+
 // Delete function
 // Delete property
 func (property *Property) Delete() error {
 	return db.Delete(property).Error
 }
 
+// DeleteKV function
+// Delete property
+func (property *Property) DeleteKV(key, value string) error {
+	return db.Where("key = ? AND value = ?", key, value).Delete(property).Error
+}
+
 // Create function
 // Add new property and add it in db
 // Return new property
+// private - false
 func (property *Property) Create(key, value string, permission bool) (*Property, error) {
 	property = &Property{
 		Key:        key,
@@ -46,17 +60,38 @@ func GetProperties() ([]*Property, error) {
 	return properties, err
 }
 
+// GetPropertiesByKey function
+func GetPropertiesByKey(key string) ([]*Property, error) {
+	properties := []*Property{}
+	err := db.Where("key = ?", key).Find(&properties).Error
+	return properties, err
+}
+
+// CheckProperty function
+// Return true if key and value existed
+func CheckProperty(key, value string) bool {
+	property := &Property{}
+	db.Where(&Property{
+		Key:   key,
+		Value: value,
+	}).First(property)
+	if property.ID == "" {
+		return false
+	}
+	return true
+}
+
 // GetPropertyPrivateAndPublic function
 func GetPropertyPrivateAndPublic(key string) (*Property, error) {
 	property := &Property{}
-	err := db.Where("key = ?", key).First(&property).Error
+	err := db.Where("key = ?", key).First(property).Error
 	return property, err
 }
 
 // GetPropertyPublic function
 func GetPropertyPublic(key string) (*Property, error) {
 	property := &Property{}
-	err := db.Where("key = ? AND permission = ?", key, true).First(&property).Error
+	err := db.Where("key = ? AND permission = ?", key, true).First(property).Error
 	return property, err
 }
 

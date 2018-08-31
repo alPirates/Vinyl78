@@ -10,19 +10,26 @@ import (
 
 func setUser(context echo.Context) error {
 
+	token := context.Get("token").(*jwt.Token)
+	claims := token.Claims.(*jwtUserClaims)
+
 	user := &database.User{}
 	err := context.Bind(user)
 	if err != nil {
-		return sendError(context, "no user information in JSON /user PUT")
+		return sendError(context, "no user information in JSON", "не удалось изменить пользователя")
 	}
 
-	err = user.Update()
+	user.ID = claims.UUID
+	user.Role = claims.Role
+
+	err = user.UpdateNotAll()
 	if err != nil {
-		return sendError(context, "can't update user /user PUT")
+		return sendError(context, "can't update user", "не удалось изменить пользователя")
 	}
 
 	return context.JSON(http.StatusOK, map[string]string{
-		"status": "success",
+		"status":  "success",
+		"message": "пользователь изменен",
 	})
 }
 
@@ -38,10 +45,11 @@ func deleteUser(context echo.Context) error {
 	err := user.Delete()
 
 	if err != nil {
-		return sendError(context, "application not deleted /application DELETE")
+		return sendError(context, "can't delete user", "не удалось удалить пользователя")
 	}
 
 	return context.JSON(http.StatusOK, map[string]string{
-		"status": "success",
+		"status":  "success",
+		"message": "пользователь удален",
 	})
 }

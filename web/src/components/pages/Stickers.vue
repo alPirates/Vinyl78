@@ -26,6 +26,8 @@
             v-spacer
             v-btn(@click="edit(index)" icon).white--text
               v-icon edit
+            v-btn(@click="remove(el.id)" icon).white--text
+              v-icon remove
           v-card-media(
             height="200px"
             :src="getMedia(getImagePath(el))"
@@ -45,6 +47,7 @@
             v-icon(@click="dialog.show = false") close
         EditSticker(
           :sticker="dialog.data"
+          @refresh="refreshData"
         )
     // edit category
     v-dialog(v-model="category.show" fullscreen hide-overlay transition="dialog-bottom-transition")
@@ -56,6 +59,7 @@
             v-icon(@click="category.show = false") close
         EditCategory(
           :id="$route.params.id"
+          @refresh="changeData"
         )
 
 </template>
@@ -95,6 +99,26 @@ export default {
     }
   },
   methods: {
+    refreshData () {
+      this.update()
+      this.dialog.show = false
+    },
+    async remove (id) {
+      this.loader(true)
+      try {
+        let result = await this.$api.send('delete', `/app/sticker/${id}`)
+        if (result) {
+          this.update()
+        }
+      } catch (err) {
+        this.loader(false)
+      }
+      this.loader(false)
+    },
+    changeData () {
+      this.category.show = false
+      this.update()
+    },
     getImagePath (sticker) {
       return R.path(['name'], this.R.head(this.R.path(['images'], sticker))) || ''
     },

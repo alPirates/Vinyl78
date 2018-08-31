@@ -1,11 +1,11 @@
 package routes
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/alPirates/Vinyl78/server/database"
+	"github.com/alPirates/Vinyl78/server/tgbot"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 )
@@ -15,12 +15,12 @@ func addApplication(context echo.Context) error {
 	application := &database.Application{} // Use name, phone, email, message
 	err := context.Bind(application)
 	if err != nil {
-		return sendError(context, "no user information in JSON /application POST")
+		return sendError(context, "no application information in JSON", "не удалось создать заявку")
 	}
 
 	if application.Name == "" || application.Phone == "" ||
 		application.Email == "" || application.Message == "" {
-		return sendError(context, "empty params /application POST")
+		return sendError(context, "empty params", "не удалось создать заявку")
 	}
 
 	application, err = application.Create(
@@ -31,12 +31,15 @@ func addApplication(context echo.Context) error {
 	)
 
 	if err != nil {
-		return sendError(context, "application not created /application POST")
+		return sendError(context, "application not created", "не удалось создать заявку")
 	}
+
+	go tgbot.SendApplication(application)
 
 	return context.JSON(http.StatusOK, map[string]string{
 		"status":         "success",
 		"application_id": application.ID,
+		"message":        "заяка создана",
 	})
 
 }
@@ -47,22 +50,27 @@ func setApplication(context echo.Context) error {
 	claims := token.Claims.(*jwtUserClaims)
 
 	if claims.Role == 0 {
-		return sendError(context, "not admin /application PUT")
+		return sendError(context, "not admin", "вы не администратор")
 	}
 
-	application := &database.Application{} // Use name, phone, email, message
+	application := &database.Application{}
 	err := context.Bind(application)
 	if err != nil {
-		return sendError(context, "no user information in JSON /application POST")
+		return sendError(context, "no application information in JSON", "не удалось изменить заявку")
 	}
 
-	err = application.Update()
+	if !database.CheckUUID(application.ID) {
+		return sendError(context, "incorrect id", "не удалось изменить заявку")
+	}
+
+	err = application.UpdateNotAll()
 	if err != nil {
-		return sendError(context, "can't update application /application POST")
+		return sendError(context, "can't update application", "не удалось изменить заявку")
 	}
 
 	return context.JSON(http.StatusOK, map[string]string{
-		"status": "success",
+		"status":  "success",
+		"message": "заяка изменена",
 	})
 
 }
@@ -73,11 +81,14 @@ func deleteApplication(context echo.Context) error {
 	claims := token.Claims.(*jwtUserClaims)
 
 	if claims.Role == 0 {
-		return sendError(context, "not admin /application DELETE")
+		return sendError(context, "not admin", "вы не администратор")
 	}
 
 	idParam := context.Param("id")
-	fmt.Println(idParam)
+
+	if !database.CheckUUID(idParam) {
+		return sendError(context, "incorrect id", "не удалось удалить заявку")
+	}
 
 	application := &database.Application{
 		ID: idParam,
@@ -85,11 +96,12 @@ func deleteApplication(context echo.Context) error {
 	err := application.Delete()
 
 	if err != nil {
-		return sendError(context, "application not deleted /application DELETE")
+		return sendError(context, "appkication is not deleted", "не удалось удалить заявку")
 	}
 
 	return context.JSON(http.StatusOK, map[string]string{
-		"status": "success",
+		"status":  "success",
+		"message": "заяка удалена",
 	})
 }
 
@@ -99,20 +111,20 @@ func getApplication(context echo.Context) error {
 	claims := token.Claims.(*jwtUserClaims)
 
 	if claims.Role == 0 {
-		return sendError(context, "not admin /application GET")
+		return sendError(context, "not admin", "вы не администратор")
 	}
 
 	skipParam := context.QueryParam("skip")
 	skip, err := strconv.ParseUint(skipParam, 10, 64)
 	if err != nil {
-		return sendError(context, "skip is not uint /application GET")
+		return sendError(context, "skip is not uint", "")
 	}
 	skipUint := uint(skip)
 
 	limitParam := context.QueryParam("limit")
 	limit, err := strconv.ParseUint(limitParam, 10, 64)
 	if err != nil {
-		return sendError(context, "lmit is not uint /application GET")
+		return sendError(context, "limit is not uint", "")
 	}
 	limitUint := uint(limit)
 
@@ -121,12 +133,12 @@ func getApplication(context echo.Context) error {
 		limitUint,
 	)
 	if err != nil {
-		return sendError(context, "application not returned from db /application GET")
+		return sendError(context, "can't get applications", "")
 	}
 
 	count, err := database.GetApplicationsCount()
 	if err != nil {
-		return sendError(context, "can't get count of applications /application GET")
+		return sendError(context, "can't count applications", "")
 	}
 
 	return context.JSON(http.StatusOK, map[string]interface{}{
@@ -134,8 +146,4 @@ func getApplication(context echo.Context) error {
 		"status": "success",
 		"count":  count,
 	})
-}
-
-func sendIntoTelegram(appllication *database.Application) {
-
 }
