@@ -38,18 +38,17 @@ func getImage(context echo.Context) error {
 	id := context.QueryParams().Get("linked_id")
 
 	if !database.CheckUUID(id) {
-		return sendError(context, "incorrect id", "не удалось получить изображение")
+		return sendError(context, "incorrect id", "")
 	}
 
 	images, err := database.GetImages(id)
 	if err != nil {
-		return sendError(context, "can't get images", "не удалось получить изображение")
+		return sendError(context, "can't get images", "")
 	}
 
 	return context.JSON(http.StatusOK, map[string]interface{}{
-		"status":  "success",
-		"images":  images,
-		"message": "изображение получено",
+		"status": "success",
+		"images": images,
 	})
 }
 
@@ -121,6 +120,7 @@ func deleteImage(context echo.Context) error {
 	err := (&database.Image{
 		ID: id,
 	}).Delete()
+	// todo delete from media
 
 	if err != nil {
 		return sendError(context, "can't delete image", "не удалось удалить изображение")

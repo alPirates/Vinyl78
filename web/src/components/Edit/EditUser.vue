@@ -98,7 +98,6 @@ export default {
   mounted () {
     if (!R.isEmpty(this.STATE.token)) {
       this.needShow = true
-      this.update()
     }
   },
   components: {

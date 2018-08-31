@@ -44,7 +44,7 @@
                         img(:src="getMedia(image.name)")
                     h3.mt-2.mb-2.display-1 Укажите новую последовательность
                     draggable(:list="carouselImages", element="v-list" @end="dropImage")
-                      div(v-for="(image, index) in carouselImages", :key="el.id")
+                      div(v-for="(image, index) in carouselImages", :key="image.id")
                         v-list-tile(@click="")
                           v-list-tile-avatar
                             img(:src="getMedia(image.name)")

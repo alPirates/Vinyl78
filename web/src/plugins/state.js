@@ -18,6 +18,9 @@ const statePlugin = {
           console.log(value)
           console.log(store)
         },
+        getImage (value) {
+          return this.getMedia(R.path(['name'], R.head(R.path(['images'], value))))
+        },
         getMedia (value) {
           return `/api/media/${value}`
         },

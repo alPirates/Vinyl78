@@ -12,13 +12,13 @@ func getCategory(context echo.Context) error {
 
 	categories, err := database.GetCategories()
 	if err != nil {
-		return sendError(context, "can't get categories", "не удалось получить категории")
+		return sendError(context, "can't get categories", "")
 	}
 
 	for _, category := range categories {
 		category.Images, err = database.GetImages(category.ID)
 		if err != nil {
-			return sendError(context, "can't find category's images", "не удалось получить категории")
+			return sendError(context, "can't find category's images", "")
 		}
 	}
 
@@ -32,13 +32,19 @@ func getCategoryByID(context echo.Context) error {
 	uuidParam := context.Param("id")
 
 	if !database.CheckUUID(uuidParam) {
-		return sendError(context, "incorrect id", "не удалось получить категорию")
+		return sendError(context, "incorrect id", "")
 	}
 
 	result, err := database.GetCategoryByID(uuidParam)
 	if err != nil {
-		return sendError(context, "can't find category", "не удалось получить категорию")
+		return sendError(context, "can't find category", "")
 	}
+
+	result.Images, err = database.GetImages(result.ID)
+	if err != nil {
+		return sendError(context, "can't find category's images", "")
+	}
+
 	return context.JSON(http.StatusOK, map[string]interface{}{
 		"status": "success",
 		"result": result,

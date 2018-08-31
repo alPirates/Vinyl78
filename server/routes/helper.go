@@ -3,6 +3,7 @@ package routes
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
@@ -73,6 +74,7 @@ func SetRoutes(server *echo.Echo) {
 }
 
 func sendError(context echo.Context, errorName, message string) error {
+	fmt.Println(time.Now().Format(time.UnixDate) + " : " + context.Path() + " : " + errorName)
 	return context.JSON(http.StatusOK, map[string]string{
 		"status":  "failure",
 		"error":   errorName,

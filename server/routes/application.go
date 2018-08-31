@@ -117,14 +117,14 @@ func getApplication(context echo.Context) error {
 	skipParam := context.QueryParam("skip")
 	skip, err := strconv.ParseUint(skipParam, 10, 64)
 	if err != nil {
-		return sendError(context, "skip is not uint", "не удалось получить заявки")
+		return sendError(context, "skip is not uint", "")
 	}
 	skipUint := uint(skip)
 
 	limitParam := context.QueryParam("limit")
 	limit, err := strconv.ParseUint(limitParam, 10, 64)
 	if err != nil {
-		return sendError(context, "limit is not uint", "не удалось получить заявки")
+		return sendError(context, "limit is not uint", "")
 	}
 	limitUint := uint(limit)
 
@@ -133,12 +133,12 @@ func getApplication(context echo.Context) error {
 		limitUint,
 	)
 	if err != nil {
-		return sendError(context, "can't get applications", "не удалось получить заявки")
+		return sendError(context, "can't get applications", "")
 	}
 
 	count, err := database.GetApplicationsCount()
 	if err != nil {
-		return sendError(context, "can't count applications", "не удалось получить заявки")
+		return sendError(context, "can't count applications", "")
 	}
 
 	return context.JSON(http.StatusOK, map[string]interface{}{

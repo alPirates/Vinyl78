@@ -108,14 +108,14 @@ func getSticker(context echo.Context) error {
 	skipParam := context.QueryParam("skip")
 	skip, err := strconv.ParseUint(skipParam, 10, 64)
 	if err != nil {
-		return sendError(context, "skip is not uint", "не удалось получить стикеры")
+		return sendError(context, "skip is not uint", "")
 	}
 	skipUint := uint(skip)
 
 	limitParam := context.QueryParam("limit")
 	limit, err := strconv.ParseUint(limitParam, 10, 64)
 	if err != nil {
-		return sendError(context, "limit is not uint", "не удалось получить стикеры")
+		return sendError(context, "limit is not uint", "")
 	}
 	limitUint := uint(limit)
 
@@ -127,20 +127,20 @@ func getSticker(context echo.Context) error {
 		categoryParam,
 	)
 	if err != nil {
-		return sendError(context, "can't get stickers", "не удалось получить стикеры")
+		return sendError(context, "can't get stickers", "")
 	}
 
 	for _, sticker := range stickers {
 		images, err1 := database.GetImages(sticker.ID)
 		if err1 != nil {
-			return sendError(context, "can't get images", "не удалось получить стикеры")
+			return sendError(context, "can't get images", "")
 		}
 		sticker.Images = images
 	}
 
 	count, err := database.GetStickersCount(categoryParam)
 	if err != nil {
-		return sendError(context, "can't count stickers", "не удалось получить стикеры")
+		return sendError(context, "can't count stickers", "")
 	}
 
 	return context.JSON(http.StatusOK, map[string]interface{}{

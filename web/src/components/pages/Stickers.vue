@@ -47,6 +47,7 @@
             v-icon(@click="dialog.show = false") close
         EditSticker(
           :sticker="dialog.data"
+          @refresh="refreshData"
         )
     // edit category
     v-dialog(v-model="category.show" fullscreen hide-overlay transition="dialog-bottom-transition")
@@ -98,6 +99,10 @@ export default {
     }
   },
   methods: {
+    refreshData () {
+      this.update()
+      this.dialog.show = false
+    },
     async remove (id) {
       this.loader(true)
       try {

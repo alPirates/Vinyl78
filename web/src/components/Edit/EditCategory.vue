@@ -13,9 +13,25 @@
                 label="Иконка"
                 v-model="form.icon"
               )
+              label.mt-2 Превью категории на главной
               v-textarea(
                 label="Описание стикера"
                 v-model="form.description"
+              )
+            v-flex(xs12)
+              h4 Картинка
+              v-list
+                div(v-for="(el, index) in form.images")
+                  v-list-tile(@click="")
+                    v-list-tile-avatar
+                      img(:src="getMedia(el.name)")
+                    v-list-tile-title {{el.name}}
+                    v-spacer
+                    v-btn(color="error" icon @click="deleteImage(el.id)")
+                      v-icon remove
+              FileUpload(
+                v-model="files"
+                :data="{linked_id: id}"
               )
             v-flex(xs12)
               v-layout(justify-end)
@@ -24,6 +40,7 @@
 </template>
 
 <script>
+import FileUpload from '@/components/Utils/FileUpload'
 export default {
   name: 'EditCategory',
   data: () => {
@@ -32,8 +49,10 @@ export default {
       form: {
         icon: '',
         name: '',
-        description: ''
-      }
+        description: '',
+        images: []
+      },
+      files: []
     }
   },
   watch: {
@@ -48,7 +67,6 @@ export default {
       if (!R.isEmpty(this.id)) {
         this.loader(true)
         let result = await this.$api.send('get', `/category/${this.id}`)
-        console.log('result is', result)
         if (result) {
           let data = result.data.result
           const keys = ['icon', 'name', 'description']
@@ -58,6 +76,7 @@ export default {
               this.form[key] = data[key]
             }
           }, keys)
+          this.$set(this.form, 'images', data.images)
         }
         this.loader(false)
       }
@@ -70,6 +89,7 @@ export default {
           ...R.pick(fields, this.form),
           id: this.id
         })
+
         if (result) {
           await this.updateProps()
           this.$emit('refresh')
@@ -78,6 +98,12 @@ export default {
         this.loader(false)
       }
       this.loader(false)
+    },
+    async deleteImage (id) {
+      let result = await this.$api.send('delete', `/app/image/${id}`)
+      if (result) {
+        this.updateCategory()
+      }
     }
   },
   mounted () {
@@ -88,6 +114,9 @@ export default {
       type: String,
       default: ''
     }
+  },
+  components: {
+    FileUpload
   }
 }
 </script>
