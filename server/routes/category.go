@@ -39,6 +39,12 @@ func getCategoryByID(context echo.Context) error {
 	if err != nil {
 		return sendError(context, "can't find category", "")
 	}
+
+	result.Images, err = database.GetImages(result.ID)
+	if err != nil {
+		return sendError(context, "can't find category's images", "")
+	}
+
 	return context.JSON(http.StatusOK, map[string]interface{}{
 		"status": "success",
 		"result": result,

@@ -120,6 +120,7 @@ func deleteImage(context echo.Context) error {
 	err := (&database.Image{
 		ID: id,
 	}).Delete()
+	// todo delete from media
 
 	if err != nil {
 		return sendError(context, "can't delete image", "не удалось удалить изображение")
