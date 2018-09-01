@@ -9,6 +9,7 @@ import store from './store'
 import moment from 'moment'
 import * as R from 'ramda'
 import draggable from 'vuedraggable'
+import InfiniteLoading from 'vue-infinite-loading'
 
 import Api from './plugins/api'
 import Filters from './plugins/filters'
@@ -42,6 +43,7 @@ Vue.use(Api, { store, R })
 Vue.use(Filters, { moment })
 Vue.use(State, { store })
 Vue.component('draggable', draggable)
+Vue.component('InfiniteLoading', InfiniteLoading)
 
 /* eslint-disable no-new */
 new Vue({

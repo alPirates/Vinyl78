@@ -5,7 +5,7 @@
         img(:src="getMedia(image.name)")
     v-container(grid-list-lg)
       v-layout(row wrap)
-        v-flex(xs12, sm6, md4 v-for="(el, index) in thumbnails")
+        v-flex(xs12, sm6, md4 v-for="(el, index) in thumbnails", :key="index")
           v-card
             v-layout(row, justify-center, align-center)
               v-avatar(size="128").text-xs-center
