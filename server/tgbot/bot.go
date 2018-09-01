@@ -2,7 +2,9 @@ package tgbot
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"net/smtp"
 	"net/url"
 	"strconv"
 	"strings"
@@ -121,7 +123,7 @@ func workUpdate() {
 func SendApplication(app *database.Application) {
 	properties, err := database.GetPropertiesByKey("chat_id_telegram")
 	if err != nil {
-		sendMessageByEamil(app)
+		sendMessageByEmail(app)
 		return
 	}
 	for _, property := range properties {
@@ -131,12 +133,34 @@ func SendApplication(app *database.Application) {
 			app.Name+"\n"+app.Email+"\n"+app.Phone+"\n"+app.Message,
 		))
 		if err != nil {
-			sendMessageByEamil(app)
+			sendMessageByEmail(app)
 			return
 		}
 	}
 }
 
-func sendMessageByEamil(app *database.Application) {
+func sendMessageByEmail(app *database.Application) {
+	//@TODO read from config or something
+	email := ""
+	password := ""
+
+	auth := smtp.PlainAuth("", email, password, "smtp.yandex.ru")
+	to := []string{email}
+	msg := []byte(
+		"Subject: Новая заявка!\r\n" +
+			"\r\n" +
+			fmt.Sprintf(
+				"Телефон: %s\nИмя: %s\nE-mail: %s\nСообщение: %s\n",
+				app.Phone,
+				app.Name,
+				app.Email,
+				app.Message,
+			) +
+			"\r\n",
+	)
+	err := smtp.SendMail("smtp.yandex.ru:25", auth, email, to, msg)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 }
