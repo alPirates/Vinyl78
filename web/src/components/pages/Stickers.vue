@@ -43,7 +43,6 @@
         v-layout(row, justify-center, slot="spinner")
           v-progress-circular(size="50" indeterminate color="primary").mt-2
 
-
     // edit sticker dialog
     v-dialog(v-model="dialog.show" fullscreen hide-overlay transition="dialog-bottom-transition")
       v-card
@@ -113,7 +112,6 @@ export default {
         skip: this.page * 12,
         category_id: this.$route.params.id
       })
-
       if (result.data.status === 'success') {
         this.page++
         if (R.isEmpty(result.data.result)) {

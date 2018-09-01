@@ -5,6 +5,7 @@
     v-content
       div.wrapper
         router-view
+      Footer
     Loader
     Alert
 
