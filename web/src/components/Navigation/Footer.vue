@@ -5,9 +5,9 @@
     app
     absolute
   )
-    v-btn(icon).white--text
+    v-btn(icon, to="/").white--text
       v-icon fab fa-instagram
-    v-btn(icon).white--text
+    v-btn(icon, to="").white--text
       v-icon fab fa-vk
     v-spacer
     v-card(
