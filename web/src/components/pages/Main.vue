@@ -5,7 +5,7 @@
         img(:src="getMedia(image.name)")
     v-container(grid-list-lg)
       v-layout(row wrap)
-        v-flex(xs12, sm6, md4 v-for="(el, index) in thumbnails")
+        v-flex(xs12, sm6, md4 v-for="(el, index) in thumbnails", :key="index")
           v-card
             v-layout(row, justify-center, align-center)
               v-avatar(size="128").text-xs-center
@@ -22,12 +22,13 @@
       v-container(grid-list-sm)
         v-card
           v-toolbar(color="primary")
-            v-toolbar-title.white--text Заголовок
+            v-toolbar-title.white--text Контакты
           v-card-text.mt-2
             v-container(grid-list-sm)
-              v-layout(row, wrap)
-                v-flex(xs12)
-                  h3.display-1 Наши преимущества
+              v-layout(row, wrap, justify-center)
+                v-flex(xs12).text-xs-center
+                  h5.display-1.low-text +7 XXX XX XX
+                  h5.display-1.low-text vinyl78official@gmail.com
 </template>
 
 <script>
@@ -61,5 +62,9 @@ export default {
 <style scoped>
   .m-top {
     margin: 0 auto;
+  }
+  .low-text {
+    font-weight: 300;
+    font-size: 27px !important;
   }
 </style>

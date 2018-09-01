@@ -36,6 +36,12 @@
               v-layout(fill-height)
                 v-flex(xs12 align-end flexbox)
                   span.headline.white--text {{el.description}}
+      InfiniteLoading(
+        @infinite="loadNew"
+        v-if="disableScroll"
+      )
+        v-layout(row, justify-center, slot="spinner")
+          v-progress-circular(size="50" indeterminate color="primary").mt-2
 
     // edit sticker dialog
     v-dialog(v-model="dialog.show" fullscreen hide-overlay transition="dialog-bottom-transition")
@@ -90,7 +96,8 @@ export default {
         ],
         files: []
       },
-      count: 0
+      page: 0,
+      disableScroll: true
     }
   },
   watch: {
@@ -99,6 +106,23 @@ export default {
     }
   },
   methods: {
+    async loadNew ($state) {
+      let result = await this.$api.send('get', '/sticker', null, {
+        limit: '12',
+        skip: this.page * 12,
+        category_id: this.$route.params.id
+      })
+      if (result.data.status === 'success') {
+        this.page++
+        if (R.isEmpty(result.data.result)) {
+          this.disableScroll = false
+        }
+        let data = this.stickers.concat(result.data.result)
+        this.$set(this, 'stickers', data)
+        console.log('loaded');
+        $state.loaded()
+      }
+    },
     refreshData () {
       this.update()
       this.dialog.show = false
@@ -139,19 +163,18 @@ export default {
     },
     async update () {
       let result = await this.$api.send('get', '/sticker', null, {
-        limit: '10',
-        skip: '0',
+        limit: '12',
+        skip: 0,
         category_id: this.$route.params.id
       })
-
+      this.page++
       if (result.data.status === 'success') {
-        this.count = result.data.count
         this.$set(this, 'stickers', result.data.result)
       }
     }
   },
   mounted () {
-    this.update()
+    // this.update()
   },
   components: {
     FileUpload,
@@ -160,3 +183,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .infinite-loading-container {
+    width: 100%
+  }
+</style>

@@ -9,10 +9,16 @@
                 label="Имя"
                 v-model="form.name"
               )
-              v-text-field(
-                label="Иконка"
-                v-model="form.icon"
-              )
+              v-layout(row)
+                v-flex(xs6)
+                  v-text-field(
+                    label="Иконка"
+                    v-model="form.icon"
+                  )
+                v-flex(xs6)
+                  | Превью иконки
+                  v-btn(icon)
+                    v-icon {{form.icon}}
               label.mt-2 Превью категории на главной
               v-textarea(
                 label="Описание стикера"

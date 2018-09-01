@@ -1,19 +1,23 @@
 <template lang="pug">
   v-footer(
     height="auto"
+    color="primary"
     app
+    absolute
   )
+    v-btn(icon, to="/").white--text
+      v-icon fab fa-instagram
+    v-btn(icon, to="").white--text
+      v-icon fab fa-vk
+    v-spacer
     v-card(
       flat, tile
       flex
-    ).text-xs-center
-      v-card-text
-        v-btn(icon) Vk
-        v-btn(icon) Ist
-      v-divider
-      v-card-text
+      color="success"
+    )
+      v-card-text.white--text
         | &copy;2018 —
-        strong Vuetify
+        strong Vinyl78
 </template>
 
 <script>
@@ -24,3 +28,9 @@ export default {
   }
 }
 </script>
+
+<style>
+  .v-footer {
+    bottom: -53px;
+  }
+</style>

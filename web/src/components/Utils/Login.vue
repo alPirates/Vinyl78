@@ -20,6 +20,7 @@
                       type="password"
                       v-model="form.password"
                       :rules="form.passwordRules"
+                      @keyup.enter="loginUser"
                     )
                     v-layout(row, wrap, justify-end)
                       v-btn(color="success" @click="loginUser") Войти
