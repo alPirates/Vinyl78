@@ -31,6 +31,6 @@ export default {
 
 <style>
   .v-footer {
-    bottom: -53px;
+    bottom: -53px !important;
   }
 </style>

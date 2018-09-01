@@ -119,7 +119,6 @@ export default {
         }
         let data = this.stickers.concat(result.data.result)
         this.$set(this, 'stickers', data)
-        console.log('loaded');
         $state.loaded()
       }
     },
