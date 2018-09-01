@@ -26,7 +26,7 @@
         v-if="files.length"
       ) Начать загрузку
 
-    v-flex.text-sm-center(v-else-if="showSuccess")
+    v-flex.text-sm-center(v-else-if="showSuccess && files.length > 0")
       h3 Успешно
       ul.filenames
         li(v-for="file in files")
