@@ -5,10 +5,12 @@
     app
     absolute
   )
-    v-btn(icon, to="/").white--text
-      v-icon fab fa-instagram
-    v-btn(icon, to="").white--text
-      v-icon fab fa-vk
+    a(href="https://www.instagram.com/vinyl_78")
+      v-btn(icon).white--text
+        v-icon fab fa-instagram
+    a(href="https://vk.com/vinyl_78")
+      v-btn(icon).white--text
+        v-icon fab fa-vk
     v-spacer
     v-card(
       flat, tile

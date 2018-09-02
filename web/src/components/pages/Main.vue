@@ -27,8 +27,9 @@
             v-container(grid-list-sm)
               v-layout(row, wrap, justify-center)
                 v-flex(xs12).text-xs-center
-                  h5.display-1.low-text +7 XXX XX XX
-                  h5.display-1.low-text vinyl78official@gmail.com
+                  h5.display-1.low-text +7 931 308 73 77
+                  a.links(href="mailto:vinyl78official@gmail.com")
+                    h5.display-1.low-text vinyl78official@gmail.com
 </template>
 
 <script>
@@ -66,5 +67,8 @@ export default {
   .low-text {
     font-weight: 300;
     font-size: 27px !important;
+  }
+  .links {
+    text-decoration: none;
   }
 </style>
