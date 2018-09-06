@@ -3,9 +3,7 @@ package tgbot
 import (
 	"fmt"
 	"log"
-	"net/http"
 	"net/smtp"
-	"net/url"
 	"strconv"
 	"strings"
 
@@ -21,9 +19,7 @@ var (
 // StartBot function
 func StartBot() {
 	var err error
-	proxyURL, _ := url.Parse("http://54.39.97.250:3128")
-	myClient := &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(proxyURL)}}
-	bot, err = telega.NewBotAPIWithClient("689989185:AAELI2tILkC6d_feyy-sXpBFvHg-5oFUqe8", myClient)
+	bot, err = telega.NewBotAPI("689989185:AAELI2tILkC6d_feyy-sXpBFvHg-5oFUqe8")
 	if err != nil {
 		fmt.Println("can't start bot ", err)
 		return
