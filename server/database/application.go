@@ -3,6 +3,8 @@ package database
 import (
 	"fmt"
 	"time"
+
+	"github.com/fatih/structs"
 )
 
 // Application structure
@@ -30,7 +32,10 @@ func (application *Application) Update() error {
 // UpdateNotAll function
 // Update all about application
 func (application *Application) UpdateNotAll() error {
-	return db.Model(application).Update(application).Error
+	return db.Model(application).Updates(
+		// convert to map[string], interface to update zero values
+		structs.Map(application),
+	).Error
 }
 
 // Delete function
