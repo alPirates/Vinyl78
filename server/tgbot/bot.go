@@ -1,12 +1,15 @@
 package tgbot
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net/smtp"
+	"regexp"
 	"strconv"
 	"strings"
 
+	"github.com/alPirates/Vinyl78/server/config"
 	"github.com/alPirates/Vinyl78/server/database"
 	telega "gopkg.in/telegram-bot-api.v4"
 )
@@ -14,11 +17,19 @@ import (
 var (
 	bot    *telega.BotAPI
 	toSend []*database.Application
+	conf   config.Config
 )
 
 // StartBot function
 func StartBot() {
 	var err error
+
+	err = conf.ReadConfig()
+	if err != nil {
+		fmt.Println("can't read config ", err)
+		return
+	}
+
 	bot, err = telega.NewBotAPI("689989185:AAELI2tILkC6d_feyy-sXpBFvHg-5oFUqe8")
 	if err != nil {
 		fmt.Println("can't start bot ", err)
@@ -135,12 +146,41 @@ func SendApplication(app *database.Application) {
 	}
 }
 
-func sendMessageByEmail(app *database.Application) {
-	//@TODO read from config or something
-	email := ""
-	password := ""
+func getSmtpName(name string) (map[string]string, error) {
+	servers := map[string]map[string]string{
+		"yandex": map[string]string{
+			"smtp": "smtp.yandex.ru",
+			"port": "smtp.yandex.ru:25",
+		},
+		"google": map[string]string{
+			"smtp": "smtp.gmail.com",
+			"port": "smtp.gmail.com:587",
+		},
+	}
+	rgx := regexp.MustCompile(`@(\w+)`)
+	output := rgx.FindStringSubmatch(name)
+	if len(output) > 1 {
+		r := servers[output[1]]
+		if r != nil {
+			return r, nil
+		}
+		return nil, errors.New("Cant find smtp server in list")
+	}
+	return nil, errors.New("Cant find email addres regexp in string")
+}
 
-	auth := smtp.PlainAuth("", email, password, "smtp.yandex.ru")
+func sendMessageByEmail(app *database.Application) {
+	//@TODO red from config or something
+	email := conf.Email
+	password := conf.Password
+	serverSMTP, err := getSmtpName(email)
+
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	auth := smtp.PlainAuth("", email, password, serverSMTP["smtp"])
 	to := []string{email}
 	msg := []byte(
 		"Subject: Новая заявка!\r\n" +
@@ -154,7 +194,7 @@ func sendMessageByEmail(app *database.Application) {
 			) +
 			"\r\n",
 	)
-	err := smtp.SendMail("smtp.yandex.ru:25", auth, email, to, msg)
+	err = smtp.SendMail(serverSMTP["port"], auth, email, to, msg)
 	if err != nil {
 		log.Fatal(err)
 	}

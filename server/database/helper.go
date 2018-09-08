@@ -21,10 +21,18 @@ var (
 // nameDB is name of your DB
 // return error if db is not open
 func OpenConnection(nameDB string) error {
-
 	var err error
+
+	if err != nil {
+		fmt.Println("config erro")
+		return err
+	}
+
 	// for production build use root and test credentials
-	db, err = gorm.Open("postgres", "user=root password='test' dbname="+nameDB+" sslmode=disable")
+	db, err = gorm.Open(
+		"postgres",
+		"password='postgres' dbname="+nameDB+" sslmode=disable",
+	)
 	if err != nil {
 		fmt.Println("db not opened")
 		return err
