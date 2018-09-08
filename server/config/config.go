@@ -16,7 +16,11 @@ type Config struct {
 }
 
 func createDefautlConfig() error {
-	data, err := json.MarshalIndent(&Config{}, "", "\t")
+	data, err := json.MarshalIndent(&Config{
+		Email:    "test@test.com",
+		Password: "test_password",
+	}, "", "\t")
+
 	if err != nil {
 		return err
 	}
