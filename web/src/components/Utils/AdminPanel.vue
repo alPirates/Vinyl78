@@ -82,8 +82,10 @@
                         td {{el.item.time | date}}
                         td {{el.item.status | status}}
                         td
-                          v-btn(icon color="success")
+                          v-btn(icon color="success" @click="changeStatus(el.item, 1)" v-if="el.item.status === 0")
                             v-icon check
+                          v-btn(icon color="error" @click="changeStatus(el.item, 0)" v-if="el.item.status === 1")
+                            v-icon remove
       v-dialog(v-model="editCateg.show" fullscreen hide-overlay transition="dialog-bottom-transition")
         v-card
           v-toolbar(color="primary")
@@ -174,6 +176,20 @@ export default {
       if (result.data.status === 'success') {
         this.update()
       }
+    },
+    async changeStatus (application, status) {
+      this.loader(true)
+      try {
+        let data = application
+        data.status = status
+        let result = await this.$api.send('put', `/app/application`, data)
+        if (result) {
+          await this.update()
+        }
+      } catch (err) {
+        console.error(err)
+      }
+      this.loader(false)
     },
     async update () {
       let adminPanel = await this.$api.send('get', '/app/admin')
