@@ -25,9 +25,10 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 - set port :80
 - vps name, password
 
-### Building
-in server folder
+# Building
+***in server folder***
 - bash build_prod.sh
-in web folder
+
+***in web folder***
 - npm run build
-- !Create media folder on root project on vps server for media files
+- **Create media folder on root project on vps server for media files**
