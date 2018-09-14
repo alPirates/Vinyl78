@@ -71,7 +71,7 @@ export default {
           this.R.pick(['name', 'phone', 'email', 'message'], this.form)
         )
         if (result) {
-          console.log(result)
+          this.form = this.baseForm
         }
       }
     }

@@ -28,10 +28,11 @@ func OpenConnection(nameDB string) error {
 		return err
 	}
 
-	// for production build use root and test credentials
+	// for production build use user=root and password='test' credentials
 	db, err = gorm.Open(
 		"postgres",
-		"password='postgres' dbname="+nameDB+" sslmode=disable",
+		// "password='postgres' dbname="+nameDB+" sslmode=disable",
+		"user=root password='test' dbname="+nameDB+" sslmode=disable",
 	)
 	if err != nil {
 		fmt.Println("db not opened")

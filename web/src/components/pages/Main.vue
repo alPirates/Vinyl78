@@ -19,6 +19,7 @@
                 v-btn(color="success", to="/form")
                   | Купить
       v-divider.mt-2.mb-2
+      Form
       v-container(grid-list-sm)
         v-card
           v-toolbar(color="primary")
@@ -33,6 +34,8 @@
 </template>
 
 <script>
+import Form from '@/components/pages/Form'
+
 export default {
   name: 'Main',
   data: () => {
@@ -56,6 +59,9 @@ export default {
     if (carouselImages) {
       this.$set(this, 'carouselImages', carouselImages.data.images)
     }
+  },
+  components: {
+    Form
   }
 }
 </script>
