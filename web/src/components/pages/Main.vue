@@ -20,17 +20,6 @@
                   | Купить
       v-divider.mt-2.mb-2
       Form
-      v-container(grid-list-sm)
-        v-card
-          v-toolbar(color="primary")
-            v-toolbar-title.white--text Контакты
-          v-card-text.mt-2
-            v-container(grid-list-sm)
-              v-layout(row, wrap, justify-center)
-                v-flex(xs12).text-xs-center
-                  h5.display-1.low-text +7 931 308 73 77
-                  a.links(href="mailto:vinyl78official@gmail.com")
-                    h5.display-1.low-text vinyl78official@gmail.com
 </template>
 
 <script>

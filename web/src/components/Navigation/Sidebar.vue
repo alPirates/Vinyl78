@@ -30,6 +30,25 @@
             v-list-tile-title
                 | {{el.name}}
         v-divider(v-if="index + 1 !== categories.length")
+      v-list-group(
+        no-action
+      )
+        v-list-tile(slot="activator")
+          v-list-tile-avatar
+            v-icon info
+          v-list-tile-title Контакты
+        v-list-tile(@click="")
+          v-list-tile-avatar
+            v-icon phone
+          v-list-tile-title
+            strong Телефон:
+            |  +7 931 308 73 77
+        v-list-tile(@click="")
+          v-list-tile-avatar
+            v-icon email
+          v-list-tile-title
+            strong E-mail:
+            |  vinyl78official@gmail.com
 </template>
 
 <script>
