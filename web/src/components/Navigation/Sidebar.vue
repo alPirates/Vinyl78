@@ -1,8 +1,10 @@
 <template lang="pug">
   v-navigation-drawer(
     v-model="drawer"
+    v-resize="onResize"
     :clipped="$vuetify.breakpoint.lgAndUp"
     fixed
+    :width="windowSize"
     app
   )
     v-list(dense subheader)
@@ -35,7 +37,8 @@ export default {
   name: 'Sidebar',
   data: () => {
     return {
-      categories: []
+      categories: [],
+      windowSize: 0
     }
   },
   computed: {
@@ -55,6 +58,9 @@ export default {
       if (categories.data.status === 'success') {
         this.$set(this, 'categories', categories.data.result)
       }
+    },
+    onResize () {
+      this.windowSize = window.innerWidth
     }
   },
   mounted () {
@@ -62,3 +68,16 @@ export default {
   }
 }
 </script>
+
+<style>
+  .v-navigation-drawer--is-mobile {
+    /* replace styles */
+    margin-top: 64px !important;
+    /* add new styles */
+    opacity: 0.96;
+  }
+  .v-overlay--active {
+    display: none !important;
+    background: none !important;
+  }
+</style>

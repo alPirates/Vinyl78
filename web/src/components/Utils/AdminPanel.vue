@@ -5,7 +5,7 @@
       v-flex(xs12 lg6)
         v-card
           v-toolbar(color="secondary")
-            v-toolbar-title.white--text Категории
+            v-toolbar-title.white--text Разделы меню
           v-container
             v-layout(row, wrap)
               v-flex(xs12)
