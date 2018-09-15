@@ -30,8 +30,8 @@ func ExportDatabase() error {
 		hr, min, sec,
 	)
 
-	err := exec.Command("pg_dump", "vinyl78 | gzip > "+dirPath+formatDate+".gz").Run()
-	_, err = exec.Command("sh", "kek"+dirPath+formatDate+".gz").Output()
+	a, err := exec.Command("pg_dump", "-Fc", "vinyl78", "-f", dirPath+formatDate+".gz").Output()
+	fmt.Println("a is ", a)
 	if err != nil {
 		return err
 	}
@@ -53,8 +53,8 @@ func OpenConnection(nameDB string) error {
 	// for production build use user=root and password='test' credentials
 	db, err = gorm.Open(
 		"postgres",
-		// "password='postgres' dbname="+nameDB+" sslmode=disable",
-		"user=root password='test' dbname="+nameDB+" sslmode=disable",
+		"password='postgres' dbname="+nameDB+" sslmode=disable",
+		// "user=root password='test' dbname="+nameDB+" sslmode=disable",
 	)
 	if err != nil {
 		fmt.Println("db not opened")
