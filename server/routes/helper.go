@@ -11,7 +11,7 @@ import (
 
 // Port - number of a port
 const (
-	Port = 80
+	Port = 3000
 )
 
 // SetRoutes function

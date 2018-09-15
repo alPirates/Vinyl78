@@ -2,6 +2,7 @@
   v-navigation-drawer(
     v-model="drawer"
     :clipped="$vuetify.breakpoint.lgAndUp"
+    :width="500"
     fixed
     app
   )

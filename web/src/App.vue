@@ -1,5 +1,7 @@
 <template lang="pug">
-  v-app
+  v-app(
+    sidebar-under-toolbar
+  )
     Sidebar
     Header
     v-content
