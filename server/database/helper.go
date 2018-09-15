@@ -3,6 +3,7 @@ package database
 import (
 	"fmt"
 	"math/rand"
+	"os/exec"
 	"strconv"
 	"strings"
 	"time"
@@ -15,6 +16,27 @@ import (
 var (
 	db *gorm.DB
 )
+
+// ExportDatabase function
+// create local backup file in ./backups folder
+func ExportDatabase() error {
+	currentTime := time.Now()
+	year, month, day := currentTime.Date()
+	hr, min, sec := currentTime.Clock()
+	dirPath := "./backups/"
+	formatDate := fmt.Sprintf(
+		"%v-%v-%v_%v-%v-%v",
+		year, month, day,
+		hr, min, sec,
+	)
+
+	err := exec.Command("pg_dump", "vinyl78 | gzip > "+dirPath+formatDate+".gz").Run()
+	_, err = exec.Command("sh", "kek"+dirPath+formatDate+".gz").Output()
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
 // OpenConnection function
 // Connect to postgres DB

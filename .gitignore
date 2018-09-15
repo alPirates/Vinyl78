@@ -8,7 +8,7 @@ Vinyl78
 server/server
 server/tmp
 /media/?*.*
-
+/server/backups/?*.*
 
 # Editor directories and files
 .idea
