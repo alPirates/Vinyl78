@@ -19,7 +19,7 @@
                   | Превью иконки
                   v-btn(icon)
                     v-icon {{form.icon}}
-              label.mt-2 Превью категории на главной
+              label.mt-2 Превью раздела меню на главной
               v-textarea(
                 label="Описание стикера"
                 v-model="form.description"

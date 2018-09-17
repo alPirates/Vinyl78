@@ -18,8 +18,14 @@
                   | Больше
                 v-btn(color="success", to="/form")
                   | Купить
-      v-divider.mt-2.mb-2
+      v-divider.mt-3.mb-2
       Form
+      v-layout(row, wrap, justify-center)#links
+        v-flex(xs12)
+        a.links.big-icon.mr-4(href="https://www.instagram.com/vinyl_78")
+          v-icon fab fa-instagram
+        a.links.big-icon(href="https://vk.com/vinyl_78")
+          v-icon fab fa-vk
 </template>
 
 <script>
@@ -65,5 +71,9 @@ export default {
   }
   .links {
     text-decoration: none;
+  }
+  .big-icon i {
+    font-size: 70px !important;
+    color: black;
   }
 </style>

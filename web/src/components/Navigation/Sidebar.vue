@@ -4,17 +4,17 @@
     v-resize="onResize"
     :clipped="$vuetify.breakpoint.lgAndUp"
     fixed
-    :width="windowSize"
+    :width="windowSize <= 960 ? windowSize : 350"
     app
   )
     v-list(dense subheader)
       v-subheader Меню
-      v-list-tile(:to="'/'" @click="")
-        v-list-tile-avatar
-          v-icon home
-        v-list-tile-content
-        v-list-tile-title
-            | Главная
+      //- v-list-tile(:to="'/'" @click="")
+      //-   v-list-tile-avatar
+      //-     v-icon home
+      //-   v-list-tile-content
+      //-   v-list-tile-title
+      //-       | Главная
       v-list-tile(:to="'/form'" @click="")
         v-list-tile-avatar
           v-icon turned_in
@@ -95,6 +95,7 @@ export default {
     /* add new styles */
     opacity: 0.96;
   }
+
   .v-overlay--active {
     display: none !important;
     background: none !important;
