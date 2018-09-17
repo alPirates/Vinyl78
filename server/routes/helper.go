@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/echo/middleware"
 )
 
-// Port - number of a port
+// Port - number of a port use 80 port on proxy
 const (
 	Port = 3000
 )

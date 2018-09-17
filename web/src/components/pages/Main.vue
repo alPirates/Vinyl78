@@ -18,19 +18,14 @@
                   | Больше
                 v-btn(color="success", to="/form")
                   | Купить
-      v-divider.mt-2.mb-2
+      v-divider.mt-3.mb-2
       Form
-      v-container(grid-list-sm)
-        v-card
-          v-toolbar(color="primary")
-            v-toolbar-title.white--text Контакты
-          v-card-text.mt-2
-            v-container(grid-list-sm)
-              v-layout(row, wrap, justify-center)
-                v-flex(xs12).text-xs-center
-                  h5.display-1.low-text +7 931 308 73 77
-                  a.links(href="mailto:vinyl78official@gmail.com")
-                    h5.display-1.low-text vinyl78official@gmail.com
+      v-layout(row, wrap, justify-center)#links
+        v-flex(xs12)
+        a.links.big-icon.mr-4(href="https://www.instagram.com/vinyl_78")
+          v-icon fab fa-instagram
+        a.links.big-icon(href="https://vk.com/vinyl_78")
+          v-icon fab fa-vk
 </template>
 
 <script>
@@ -76,5 +71,9 @@ export default {
   }
   .links {
     text-decoration: none;
+  }
+  .big-icon i {
+    font-size: 70px !important;
+    color: black;
   }
 </style>

@@ -5,7 +5,7 @@
       v-flex(xs12 lg6)
         v-card
           v-toolbar(color="secondary")
-            v-toolbar-title.white--text Категории
+            v-toolbar-title.white--text Разделы меню
           v-container
             v-layout(row, wrap)
               v-flex(xs12)
@@ -13,7 +13,7 @@
                   v-flex(xs12)
                     v-form(v-model="valid")
                       v-text-field(
-                        label="Добавить категорию"
+                        label="Добавить раздел меню"
                         :rules="newCategoryRules"
                         v-model="newCategory"
                         @key.enter="addCategory"
@@ -42,7 +42,7 @@
                     v-carousel(id="preview-carousel" v-if="carouselImages.length > 0")
                       v-carousel-item(v-for="(image, index) in carouselImages", :key="index")
                         img(:src="getMedia(image.name)")
-                    h3.mt-2.mb-2.display-1 Укажите новую последовательность
+                    h3.mt-2.mb-2 Укажите новую последовательность
                     draggable(:list="carouselImages", element="v-list" @end="dropImage")
                       div(v-for="(image, index) in carouselImages", :key="image.id")
                         v-list-tile(@click="")
@@ -60,7 +60,6 @@
                       v-flex(xs12).text-xs-right
                         v-btn(color="primary" @click="refreshCarouselSlides()") Обновить
                           v-icon(right) refresh
-                    h3.mt-2.mb-2.display-1 Добавить картинки
                     FileUpload(
                       :data="{linked_id: carousel_id}"
                     )
