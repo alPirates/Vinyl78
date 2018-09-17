@@ -3,9 +3,8 @@
     v-model="drawer"
     v-resize="onResize"
     :clipped="$vuetify.breakpoint.lgAndUp"
-    :width="500"
-    fixed
-    :width="windowSize <= 960 ? windowSize : 350"
+    fixed,
+    :width="windowSize <= 1264  ? windowSize : 350"
     app
   )
     v-list(dense subheader)
