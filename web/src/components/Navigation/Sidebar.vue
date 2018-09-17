@@ -7,46 +7,45 @@
     :width="windowSize <= 1264  ? windowSize : 350"
     app
   )
-    v-list(dense subheader)
-      v-subheader Меню
+    v-list(dense subheader)#side-list
+      //- v-subheader Меню
       //- v-list-tile(:to="'/'" @click="")
       //-   v-list-tile-avatar
       //-     v-icon home
       //-   v-list-tile-content
       //-   v-list-tile-title
       //-       | Главная
-      v-list-tile(:to="'/form'" @click="")
-        v-list-tile-avatar
-          v-icon turned_in
-        v-list-tile-content
-        v-list-tile-title
-            | Заказать стикер
+      //- v-list-tile(:to="'/form'" @click="")
+      //-   v-list-tile-avatar
+      //-     v-icon turned_in
+      //-   v-list-tile-content
+      //-   v-list-tile-title
+      //-       | Заказать стикер
       v-divider
       span(v-for="(el, index) in categories")
         v-list-tile(:to="'/category/'+el.id" @click="")
-            v-list-tile-avatar
-              v-icon {{el.icon}}
+            //- v-list-tile-avatar
+            //-   v-icon {{el.icon}}
             v-list-tile-content
-            v-list-tile-title
+            v-list-tile-title.tile-title-custom
                 | {{el.name}}
-        v-divider(v-if="index + 1 !== categories.length")
+        //- v-divider(v-if="index + 1 !== categories.length")
+        v-divider
       v-list-group(
         no-action
       )
         v-list-tile(slot="activator")
-          v-list-tile-avatar
-            v-icon info
           v-list-tile-title Контакты
         v-list-tile(@click="")
           v-list-tile-avatar
             v-icon phone
-          v-list-tile-title
+          v-list-tile-title.tile-title-custom
             strong Телефон:
             |  +7 931 308 73 77
         v-list-tile(@click="")
           v-list-tile-avatar
             v-icon email
-          v-list-tile-title
+          v-list-tile-title.tile-title-custom
             strong E-mail:
             |  vinyl78official@gmail.com
 </template>
@@ -99,5 +98,14 @@ export default {
   .v-overlay--active {
     display: none !important;
     background: none !important;
+  }
+
+  .v-list__group__items--no-action .v-list__tile {
+    padding-left: 26px !important;
+  }
+
+  .tile-title-custom {
+    text-align: center;
+    font-size: 1.4em;
   }
 </style>
