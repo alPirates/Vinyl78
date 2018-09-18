@@ -35,17 +35,18 @@
         no-action
       )
         v-list-tile(slot="activator")
-          v-list-tile-title Контакты
-        v-list-tile(@click="")
+          v-list-tile-title.tile-title-contact Контакты
+        v-list-tile(@click="").tile-phone
+
           v-list-tile-avatar
             v-icon phone
-          v-list-tile-title.tile-title-custom
+          v-list-tile-title.tile-big-title
             strong Телефон:
             |  +7 931 308 73 77
-        v-list-tile(@click="")
+        v-list-tile(@click="").tile-email
           v-list-tile-avatar
             v-icon email
-          v-list-tile-title.tile-title-custom
+          v-list-tile-title.tile-big-title
             strong E-mail:
             |  vinyl78official@gmail.com
 </template>
@@ -104,8 +105,23 @@ export default {
     padding-left: 26px !important;
   }
 
-  .tile-title-custom {
-    text-align: center;
-    font-size: 1.4em;
+  @media screen and (max-width: 960px) {
+    .tile-title-custom {
+      text-align: center;
+      font-size: 1.4em;
+    }
+    .tile-title-contact {
+      padding-left: calc(50% - 15px);
+      font-size: 1.4em;
+    }
+    .tile-phone {
+      padding-left: calc(50% - 175px);
+    }
+    .tile-email {
+      padding-left: calc(50% - 200px);
+    }
+    .tile-big-title {
+      font-size: 1.4em;
+    }
   }
 </style>
