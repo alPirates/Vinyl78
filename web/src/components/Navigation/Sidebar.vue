@@ -21,7 +21,6 @@
       //-   v-list-tile-content
       //-   v-list-tile-title
       //-       | Заказать стикер
-      v-divider
       span(v-for="(el, index) in categories")
         v-list-tile(:to="'/category/'+el.id" @click="")
             //- v-list-tile-avatar
@@ -29,24 +28,19 @@
             v-list-tile-content
             v-list-tile-title.tile-title-custom
                 | {{el.name}}
-        //- v-divider(v-if="index + 1 !== categories.length")
-        v-divider
       v-list-group(
         no-action
       )
         v-list-tile(slot="activator")
-          v-list-tile-title.tile-title-contact Контакты
-        v-list-tile(@click="").tile-phone
-
-          v-list-tile-avatar
-            v-icon phone
+          v-list-tile-title.tile-title-contact КОНТАКТЫ
+        v-list-tile(@click="openPhone").tile-phone
           v-list-tile-title.tile-big-title
+            v-icon.lefted phone
             strong Телефон:
             |  +7 931 308 73 77
-        v-list-tile(@click="").tile-email
-          v-list-tile-avatar
-            v-icon email
+        v-list-tile(@click="openEmail").tile-email
           v-list-tile-title.tile-big-title
+            v-icon.lefted email
             strong E-mail:
             |  vinyl78official@gmail.com
 </template>
@@ -71,6 +65,12 @@ export default {
     }
   },
   methods: {
+    openEmail () {
+      window.location.href = 'mailto:vinyl78official@gmail.com'
+    },
+    openPhone () {
+      window.location.href = 'tel:79313087377'
+    },
     async update () {
       let categories = await this.$api.send('get', '/sidebar')
       console.log('categories', categories)
@@ -104,24 +104,38 @@ export default {
   .v-list__group__items--no-action .v-list__tile {
     padding-left: 26px !important;
   }
-
-  @media screen and (max-width: 960px) {
+  .lefted {
+    margin-right: 7px;
+  }
+  @media screen and (max-width: 1264px) {
+    .v-navigation-drawer--is-mobile {
+      opacity: 1;
+    }
+    .lefted {
+      margin-right: 10px;
+    }
     .tile-title-custom {
-      text-align: center;
+      text-align: center !important;
       font-size: 1.4em;
     }
     .tile-title-contact {
-      padding-left: calc(50% - 15px);
+      padding-left: 53px;
+      text-align: center !important;
       font-size: 1.4em;
-    }
-    .tile-phone {
-      padding-left: calc(50% - 175px);
-    }
-    .tile-email {
-      padding-left: calc(50% - 200px);
     }
     .tile-big-title {
       font-size: 1.4em;
+      text-align: center !important;
+    }
+    .theme--light .v-list .v-list__group--active:before {
+      display: none !important;
+    }
+    .theme--light .v-list .v-list__group--active:after {
+      display: none !important;
+    }
+    .v-navigation-drawer>.v-list .v-list__tile {
+      margin-top: 7px;
+      letter-spacing: 0.037em;
     }
   }
 </style>

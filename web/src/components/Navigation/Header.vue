@@ -12,7 +12,14 @@
         router-link(to="/")
           img(src="@/assets/logo.svg" height="30px" to="/").logo-image
       v-spacer
-      v-btn(icon
+      v-btn(
+        icon
+        v-if="!isAdmin()"
+        @click="openPhone"
+      )
+        v-icon phone
+      v-btn(
+        icon
         v-if="isAdmin()"
         to="/admin"
       )
@@ -34,6 +41,9 @@ export default {
     }
   },
   methods: {
+    openPhone () {
+      window.location.href = 'tel:79313087377'
+    },
     logout () {
       this.$store.commit('setToken', '')
       this.$store.commit('setRole', 'client')
