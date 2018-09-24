@@ -16,8 +16,12 @@
         icon
         v-if="!isAdmin()"
         @click="openPhone"
-      )
-        v-icon phone
+      )#phone-btn
+        //- v-icon phone
+        img(
+          width="30"
+          src="@/assets/phone.svg"
+        )
       v-btn(
         icon
         v-if="isAdmin()"
@@ -63,5 +67,9 @@ export default {
   position: absolute;
   top: 20px;
   left: calc(50% - 63px);
+}
+#phone-btn {
+  width: 50px;
+  height: 50px;
 }
 </style>
