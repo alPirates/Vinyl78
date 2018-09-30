@@ -144,7 +144,7 @@ export default {
       font-size: 0.8em;
     }
     #side-list {
-      margin-top: 10%;
+      margin-top: calc(10% + 24px);
     }
     .v-navigation-drawer--is-mobile {
       opacity: 1;
