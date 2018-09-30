@@ -105,7 +105,7 @@ export default {
     font-size: 1em;
   }
   .tile-title-contact {
-    font-size: 1.2em;
+    font-size: 1.3em;
   }
   .tile-phone a div {
     font-size: 1.2em;
