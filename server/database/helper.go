@@ -31,15 +31,22 @@ func OpenConnection(nameDB string) error {
 	// for production build use user=root and password='test' credentials
 	db, err = gorm.Open(
 		"postgres",
-		// "password='postgres' dbname="+nameDB+" sslmode=disable",
-		"user=root password='test' dbname="+nameDB+" sslmode=disable",
+		"password='postgres' dbname="+nameDB+" sslmode=disable",
+		// "user=root password='test' dbname="+nameDB+" sslmode=disable",
 	)
 	if err != nil {
 		fmt.Println("db not opened")
 		return err
 	}
 
-	db.AutoMigrate(&User{}, &Property{}, &Application{}, &Sticker{}, &Category{}, &Image{})
+	db.AutoMigrate(
+		&User{},
+		&Property{},
+		&Application{},
+		&Sticker{},
+		&Category{},
+		&Image{},
+	)
 
 	// Create admin if not existed
 	user := &User{}
