@@ -22,9 +22,9 @@
       Form
       v-layout(row, wrap, justify-center)#links
         v-flex(xs12)
-        a.links.big-icon.mr-4(href="https://www.instagram.com/vinyl_78")
+        a.links.big-icon.mr-4(target="_blank" href="https://www.instagram.com/vinyl_78")
           v-icon fab fa-instagram
-        a.links.big-icon(href="https://vk.com/vinyl_78")
+        a.links.big-icon(target="_blank" href="https://vk.com/vinyl_78")
           v-icon fab fa-vk
 </template>
 

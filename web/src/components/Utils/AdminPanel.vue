@@ -53,7 +53,7 @@
                             |
                             strong {{image.name}}
                           v-spacer
-                          v-btn(icon color="error")
+                          v-btn(icon color="error" @click="removeImage(image.id)")
                             v-icon delete
                         v-divider
                     v-layout(row, wrap)
@@ -157,6 +157,13 @@ export default {
     },
     async dropImage (param) {
       console.log('param', this.carouselImages)
+    },
+    async removeImage (imageId) {
+      console.log(imageId)
+      let result = await this.$api.send('delete', `/app/image/${imageId}`)
+      if (result.data.status === 'success') {
+        this.update()
+      }
     },
     async addCategory () {
       if (this.valid) {

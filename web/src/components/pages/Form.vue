@@ -3,11 +3,11 @@
     .wrapper
       v-card
         v-toolbar(color="primary")
-          v-toolbar-title.white--text Заказать стикер
+          v-toolbar-title.white--text Обратная связь
         v-container
           v-layout(row wrap)
           v-flex(xs12)
-            h3 Форма
+            //- h3 Обратная связь
             v-form(
               v-model="valid"
               ref="form"

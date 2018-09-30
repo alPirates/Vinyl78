@@ -43,6 +43,13 @@
             v-icon.lefted email
             strong E-mail:
             |  vinyl78official@gmail.com
+        v-list-tile()
+          v-layout(row, wrap, justify-center)#links
+            v-flex(xs12)
+            a.links.big-icon.mr-4(target="_blank" href="https://www.instagram.com/vinyl_78")
+              v-icon fab fa-instagram
+            a.links.big-icon(target="_blank" href="https://vk.com/vinyl_78")
+              v-icon fab fa-vk
 </template>
 
 <script>
@@ -89,6 +96,31 @@ export default {
 </script>
 
 <style>
+  .v-navigation-drawer {
+    max-height: calc(100% - 10px) !important;
+    font-size: 1.2em !important;
+  }
+
+  #side-list span div a{
+    font-size: 1em;
+  }
+  .tile-title-contact {
+    font-size: 1.2em;
+  }
+  .tile-phone a div {
+    font-size: 1.2em;
+  }
+  .tile-email a div {
+    font-size: 1.2em;
+  }
+  .links {
+    text-decoration: none;
+  }
+  .big-icon i {
+    font-size: 32px !important;
+    color: #000 !important;
+  }
+
   .v-navigation-drawer--is-mobile {
     /* replace styles */
     margin-top: 64px !important;
@@ -108,6 +140,12 @@ export default {
     margin-right: 7px;
   }
   @media screen and (max-width: 1264px) {
+    #side-list span div a{
+      font-size: 0.8em;
+    }
+    #side-list {
+      margin-top: 10%;
+    }
     .v-navigation-drawer--is-mobile {
       opacity: 1;
     }
@@ -136,6 +174,10 @@ export default {
     .v-navigation-drawer>.v-list .v-list__tile {
       margin-top: 7px;
       letter-spacing: 0.037em;
+    }
+    .big-icon i {
+      font-size: 40px !important;
+      color: #000 !important;
     }
   }
 </style>
