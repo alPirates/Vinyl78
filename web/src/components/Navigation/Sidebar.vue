@@ -139,7 +139,41 @@ export default {
   .lefted {
     margin-right: 7px;
   }
-  @media screen and (max-width: 1264px) {
+
+  @media (max-width: 600px) {
+    #side-list span div a{
+      font-size: 4em;
+    }
+    .tile-title-contact {
+      font-size: 1.2em;
+    }
+    .tile-phone a div {
+      font-size: 1.2em;
+    }
+    .tile-email a div {
+      font-size: 1.2em;
+    }
+  }
+
+  @media (min-width: 600px) and (max-width: 1264px) {
+    #side-list span div a{
+      font-size: 1.1em !important;
+    }
+    .v-list__tile__title {
+      height: 40px !important;
+      line-height: 40px !important;
+    }
+    .tile-title-contact {
+      font-size: 2em !important;
+    }
+    .tile-phone a div {
+      font-size: 1.8em !important;
+    }
+    .tile-email a div {
+      font-size: 1.8em !important;
+    }
+  }
+  @media (max-width: 1264px) {
     #side-list span div a{
       font-size: 0.8em;
     }
