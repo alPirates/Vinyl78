@@ -30,7 +30,7 @@
               v-icon edit
             v-btn(@click="remove(el.id)" icon).white--text
               v-icon remove
-          router-link(:to="'/sticker/' + el.id")
+          router-link(:to="'/sticker/' + el.id").link
             v-card-media(
               height="200px"
               :src="getMedia(getImagePath(el))"
@@ -219,5 +219,8 @@ export default {
   }
   .visible {
     visibility: visible !important;
+  }
+  .link {
+    text-decoration: none;
   }
  </style>

@@ -27,9 +27,13 @@ export default {
       }
     }
   },
-  mounted () {
-    this.update()
+  async mounted () {
+    await this.update()
+    console.log('loaded')
+
+    $('.fotorama').fotorama()
   }
+
 }
 </script>
 
@@ -38,4 +42,3 @@ export default {
     float: left;
   }
 </style>
-

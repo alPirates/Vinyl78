@@ -7,7 +7,8 @@ module.exports = {
   },
   globals: {
     R: true,
-    moment: true
+    moment: true,
+    $: true
   },
   env: {
     browser: true,
