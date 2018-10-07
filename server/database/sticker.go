@@ -56,6 +56,15 @@ func GetStickers(skip, limit uint, categoryUUID string) ([]*Sticker, error) {
 	return sticker, err
 }
 
+func GetSticker(categoryUUID string) (Sticker, error) {
+	var sticker Sticker
+	err := db.First(&sticker, "id = ?", categoryUUID).Error
+	if err != nil {
+		return Sticker{}, err
+	}
+	return sticker, nil
+}
+
 // GetAllStickersCategory function
 // Return all stickers by category
 func GetAllStickersCategory(categoryUUID string) ([]*Sticker, error) {

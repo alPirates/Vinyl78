@@ -6,6 +6,7 @@ import Form from '@/components/pages/Form'
 import Admin from '@/components/pages/Admin'
 import AdminCategory from '@/components/pages/admin/AdminCategory'
 import Stickers from '@/components/pages/Stickers'
+import StickerView from '@/components/pages/StickerView'
 import Settings from '@/components/pages/Settings'
 
 Vue.use(Router)
@@ -31,6 +32,11 @@ export default new Router({
       path: '/admin/category',
       name: 'Admin category',
       component: AdminCategory
+    },
+    {
+      path: '/sticker/:id',
+      name: 'Sticker full view',
+      component: StickerView
     },
     {
       path: '/category/:id',

@@ -50,7 +50,11 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     }),
     new webpack.ProvidePlugin({
       moment: 'moment',
-      R: 'ramda'
+      R: 'ramda',
+      $: 'jquery',
+      jquery: 'jquery',
+      'window.jQuery': 'jquery',
+      jQuery: 'jquery'
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.

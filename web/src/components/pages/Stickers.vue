@@ -18,10 +18,10 @@
           v-btn(color="success" @click="addNewSticker") Добавить
             v-icon(right) add
       v-flex(xs12, sm4, lg4, xl4, v-for="(el, index) in stickers", :key="index")
-      
         v-card(
             v-on:mouseover="mouseOnSticker(index)"
             v-on:mouseleave="mouseOutSticker(index)"
+            @click="gotoSticker(el.id)"
         ).mb-2
           v-toolbar(v-if="isAdmin()" color="primary")
             v-toolbar-title.white--text Редактировать
@@ -30,14 +30,15 @@
               v-icon edit
             v-btn(@click="remove(el.id)" icon).white--text
               v-icon remove
-          v-card-media(
-            height="200px"
-            :src="getMedia(getImagePath(el))"
-          ).ccard-media
-            v-container(fill-height fluid).low-index
-              v-layout(fill-height)
-                v-flex(xs12 align-end flexbox)
-                  span.headline.white--text.invisible {{el.description}}
+          router-link(:to="'/sticker/' + el.id")
+            v-card-media(
+              height="200px"
+              :src="getMedia(getImagePath(el))"
+            ).ccard-media
+              v-container(fill-height fluid).low-index
+                v-layout(fill-height)
+                  v-flex(xs12 align-end flexbox)
+                    span.headline.white--text.invisible {{el.description}}
 
       InfiniteLoading(
         @infinite="loadNew"
