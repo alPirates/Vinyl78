@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "fotorama": "^4.6.4",
     "material-design-icons-iconfont": "^3.0.3",
     "moment": "^2.22.2",
     "pug": "^2.0.3",

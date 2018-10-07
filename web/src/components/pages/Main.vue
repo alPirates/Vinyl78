@@ -1,5 +1,5 @@
 <template lang="pug">
-  div
+  v-container(grid-list-sm).fixed-container
     v-carousel(v-if="carouselImages.length > 0")
       v-carousel-item(v-for="(image, index) in carouselImages", :key="index")
         img(:src="getMedia(image.name)")
@@ -62,6 +62,9 @@ export default {
 </script>
 
 <style scoped>
+  .fixed-container {
+    width: 940px;
+  }
   .m-top {
     margin: 0 auto;
   }

@@ -34,7 +34,12 @@ const webpackConfig = merge(baseWebpackConfig, {
     }),
     new webpack.ProvidePlugin({
       moment: 'moment',
-      R: 'ramda'
+      R: 'ramda',
+      $: 'jquery',
+      $: 'jquery',
+      jquery: 'jquery',
+      'window.jQuery': 'jquery',
+      jQuery: 'jquery'
     }),
     new UglifyJsPlugin({
       uglifyOptions: {

@@ -149,3 +149,29 @@ func getSticker(context echo.Context) error {
 		"count":  count,
 	})
 }
+
+func getStickerById(context echo.Context) error {
+	uuid := context.Param("id")
+	if uuid == "" {
+		return sendError(context, "cant find sticker id", "")
+	}
+
+	if !database.CheckUUID(uuid) {
+		return sendError(context, "incorrect id", "не удалось удалить стикер")
+	}
+	sticker, err := database.GetSticker(uuid)
+	if err != nil {
+		return sendError(context, "can't get sticker from db", "")
+	}
+	// geting sticker images
+	images, err1 := database.GetImages(sticker.ID)
+	if err1 != nil {
+		return sendError(context, "can't get images", "")
+	}
+	sticker.Images = images
+
+	return context.JSON(http.StatusOK, map[string]interface{}{
+		"result": sticker,
+		"status": "success",
+	})
+}

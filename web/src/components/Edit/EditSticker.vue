@@ -11,16 +11,22 @@
             :rules="form.descriptionRules"
           )
       v-flex(xs12 v-if="form.images.length > 0")
-        h4 Картинка
-        v-list
-          div(v-for="(el, index) in form.images")
+        h4 Картинки
+        draggable(:list="form.images", element="v-list")
+          div(v-for="(image, index) in form.images", :key="image.id")
             v-list-tile(@click="")
               v-list-tile-avatar
-                img(:src="getMedia(el.name)")
-              v-list-tile-title {{el.name}}
+                img(:src="getMedia(image.name)")
+              v-list-tile-title
+                | Картинка:
+                |
+                strong {{image.name}}
               v-spacer
-              v-btn(color="error" icon @click="deleteSticker(el.id)")
-                v-icon remove
+              v-btn(color="error" icon @click="deleteSticker(image.id)")
+                v-icon delete
+        v-flex(xs12)
+          v-layout(justify-end)
+            v-btn(color="success", @click="updateCount") Обновить порядок
       v-flex(xs12)
         FileUpload(
           v-model="files"
@@ -57,11 +63,24 @@ export default {
     }
   },
   methods: {
+    async updateCount () {
+      this.loader(true)
+      let slides = R.clone(this.form.images)
+      let index = 0
+      let sending = R.map(el => {
+        index++
+        return {
+          id: el.id,
+          number: index
+        }
+      }, slides)
+      await this.$api.send('put', '/app/image', {
+        images: sending
+      })
+      this.loader(false)
+    },
     deleteSticker: async function (id) {
-      let result = await this.$api.send(
-        'delete',
-        `/app/sticker/${id}`
-      )
+      let result = await this.$api.send('delete', `/app/image/${id}`)
       if (result) {
         this.$emit('refresh')
       }

@@ -5,8 +5,6 @@
         h2 Добавить стикер
         v-btn(@click="category.show = true" v-if="isAdmin()") Радактировать категорию
           v-icon(right) edit
-      v-flex(xs12 v-else)
-        h3.display-2 Стикеры
       v-flex(xs12)
         v-layout(row,  justify-end, v-if="isAdmin()")
           v-flex(xs12)
@@ -19,8 +17,12 @@
               )
           v-btn(color="success" @click="addNewSticker") Добавить
             v-icon(right) add
-      v-flex(xs12, sm6, lg4, xl3, v-for="(el, index) in stickers", :key="index")
-        v-card.mb-2
+      v-flex(xs12, sm4, lg4, xl4, v-for="(el, index) in stickers", :key="index")
+        v-card(
+            v-on:mouseover="mouseOnSticker(index)"
+            v-on:mouseleave="mouseOutSticker(index)"
+            @click="gotoSticker(el.id)"
+        ).mb-2
           v-toolbar(v-if="isAdmin()" color="primary")
             v-toolbar-title.white--text Редактировать
             v-spacer
@@ -28,14 +30,16 @@
               v-icon edit
             v-btn(@click="remove(el.id)" icon).white--text
               v-icon remove
-          v-card-media(
-            height="200px"
-            :src="getMedia(getImagePath(el))"
-          )
-            v-container(fill-height fluid)
-              v-layout(fill-height)
-                v-flex(xs12 align-end flexbox)
-                  span.headline.white--text {{el.description}}
+          router-link(:to="'/sticker/' + el.id").link
+            v-card-media(
+              height="200px"
+              :src="getMedia(getImagePath(el))"
+            ).ccard-media
+              v-container(fill-height fluid).low-index
+                v-layout(fill-height)
+                  v-flex(xs12 align-end flexbox)
+                    span.headline.white--text.invisible {{el.description}}
+
       InfiniteLoading(
         @infinite="loadNew"
         v-if="disableScroll"
@@ -106,6 +110,18 @@ export default {
     }
   },
   methods: {
+    mouseOnSticker (index) {
+      let stickers = document.getElementsByClassName('invisible')
+      if (stickers) {
+        stickers[index].classList.add('visible')
+      }
+    },
+    mouseOutSticker (index) {
+      let stickers = document.getElementsByClassName('invisible')
+      if (stickers) {
+        stickers[index].classList.remove('visible')
+      }
+    },
     async loadNew ($state) {
       let result = await this.$api.send('get', '/sticker', null, {
         limit: '12',
@@ -187,4 +203,24 @@ export default {
   .infinite-loading-container {
     width: 100%
   }
-</style>
+  .ccard-media:hover:after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    box-shadow: 0 0 0 300px rgba(0,0,0,0.4);
+  }
+  .low-index {
+    z-index: 10;
+  }
+  .invisible {
+    visibility: hidden;
+  }
+  .visible {
+    visibility: visible !important;
+  }
+  .link {
+    text-decoration: none;
+  }
+ </style>
