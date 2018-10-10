@@ -77,18 +77,19 @@ func addSticker(context echo.Context) error {
 		return sendError(context, "not admin", "вы не администратор")
 	}
 
-	sticker := &database.Sticker{} // Use description, categoryUUID
+	sticker := &database.Sticker{} // Use description, categoryUUID, text
 	err := context.Bind(sticker)
 	if err != nil {
 		return sendError(context, "no sticker information in JSON", "не удалось создать стикер")
 	}
 
-	if sticker.Description == "" || sticker.CategoryID == "" {
+	if sticker.Description == "" || sticker.CategoryID == "" || sticker.Text == "" {
 		return sendError(context, "empty params", "не удалось создать стикер")
 	}
 
 	sticker, err = sticker.Create(
 		sticker.Description,
+		sticker.Text,
 		sticker.CategoryID,
 	)
 
