@@ -20,6 +20,7 @@ func setSticker(context echo.Context) error {
 
 	sticker := &database.Sticker{}
 	err := context.Bind(sticker)
+
 	if err != nil {
 		return sendError(context, "no sticker information in JSON", "не удалось изменить стикер")
 	}

@@ -10,6 +10,11 @@
             v-model="form.description"
             :rules="form.descriptionRules"
           )
+      v-flex(xs12)
+        v-text-field(
+          label="Второе описание"
+          v-model="form.text"
+        ) 
       v-flex(xs12 v-if="form.images.length > 0")
         h4 Картинки
         draggable(:list="form.images", element="v-list")
@@ -47,6 +52,7 @@ export default {
       files: [],
       valid: false,
       form: {
+        text: '',
         description: '',
         descriptionRules: [
           v => !!v || 'Не может быть пустым'
@@ -91,7 +97,7 @@ export default {
           'put',
           '/app/sticker',
           {
-            ...R.pick(['description'], this.form),
+            ...R.pick(['description', 'text'], this.form),
             id: this.sticker.id
           }
         )
@@ -101,10 +107,13 @@ export default {
       }
     },
     preLoadProps () {
-      const keys = ['description']
+      const keys = ['description', 'text']
       let needProps = R.pick(keys, this.sticker)
       R.forEach((el, val) => {
         if (!R.isEmpty(needProps[el])) { this.form[el] = needProps[el] }
+        else {
+          this.form[el] = ''
+        }
       }, keys)
       if (this.sticker.images) {
         this.$set(this.form, 'images', this.sticker.images)

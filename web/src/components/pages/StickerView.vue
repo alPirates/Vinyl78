@@ -23,6 +23,7 @@ export default {
     async update () {
       let result = await this.$api.send('get', `/sticker/${this.$route.params.id}`)
       if (result) {
+        console.log(result.data.resultd)
         this.sticker = result.data.result
       }
     }
