@@ -28,6 +28,7 @@ func SetRoutes(server *echo.Echo) {
 
 	api.POST("/application", addApplication)
 
+	api.GET("/carousel", getCarousel)
 	api.GET("/sticker", getSticker)
 	api.GET("/sticker/:id", getStickerById)
 	api.GET("/media/:name", getFileImage)
@@ -50,6 +51,10 @@ func SetRoutes(server *echo.Echo) {
 	authorization.PUT("/user", setUser)                     // user
 	authorization.DELETE("/user", deleteUser)               // user !!!!USE TOKEN TO GET ID!!!!
 	authorization.POST("/update", updateToken)              // user
+
+	authorization.PUT("/carousel", setСarousel)
+	authorization.DELETE("/carousel/:id", deleteCarousel)
+	authorization.POST("/carousel", addCarousel)
 
 	authorization.PUT("/application", setApplication)           // admin
 	authorization.GET("/application", getApplication)           // admin
