@@ -24,7 +24,7 @@ func OpenConnection(nameDB string) error {
 	var err error
 
 	if err != nil {
-		fmt.Println("config erro")
+		fmt.Println("config error")
 		return err
 	}
 
@@ -63,15 +63,15 @@ func OpenConnection(nameDB string) error {
 		}
 	}
 
-	// Create CaruselID if not existed
-	property := &Property{}
-	db.Where("key = ?", "carousel_id").First(property)
-	if property.Key == "" {
-		_, err = property.Create("carousel_id", generateUUID(), true)
-		if err != nil {
-			fmt.Println("property for carousel not created")
-		}
-	}
+	// // Create CaruselID if not existed
+	// property := &Property{}
+	// db.Where("key = ?", "carousel_id").First(property)
+	// if property.Key == "" {
+	// 	_, err = property.Create("carousel_id", generateUUID(), true)
+	// 	if err != nil {
+	// 		fmt.Println("property for carousel not created")
+	// 	}
+	// }
 
 	return err
 }

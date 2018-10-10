@@ -8,6 +8,7 @@ import "fmt"
 type Sticker struct {
 	ID          string   `json:"id" form:"id" query:"id"`
 	Description string   `json:"description" form:"description" query:"description"`
+	Text        string   `json:"text" form:"text" query:"text"`
 	Images      []*Image `json:"images" form:"images" query:"images" gorm:"-"`
 	CategoryID  string   `json:"category_id" form:"category_id" query:"category_id"`
 }
@@ -37,10 +38,11 @@ func (sticker *Sticker) Delete() error {
 // Create function
 // Add new sticker and add it in db
 // Return new sticker
-func (sticker *Sticker) Create(description, categoryID string) (*Sticker, error) {
+func (sticker *Sticker) Create(description, text, categoryID string) (*Sticker, error) {
 	sticker = &Sticker{
 		Description: description,
 		CategoryID:  categoryID,
+		Text:        text,
 		ID:          generateUUID(),
 	}
 	err := db.Create(sticker).Error
