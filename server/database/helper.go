@@ -63,6 +63,7 @@ func OpenConnection(nameDB string) error {
 
 	db.AutoMigrate(
 		&User{},
+		&Carousel{},
 		&Property{},
 		&Application{},
 		&Sticker{},
