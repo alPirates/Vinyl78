@@ -42,6 +42,7 @@ func OpenConnection(nameDB string) error {
 	db.AutoMigrate(
 		&User{},
 		&Property{},
+		&Carousel{},
 		&Application{},
 		&Sticker{},
 		&Category{},

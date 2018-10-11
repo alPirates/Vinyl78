@@ -14,7 +14,7 @@
         v-text-field(
           label="Второе описание"
           v-model="form.text"
-        ) 
+        )
       v-flex(xs12 v-if="form.images.length > 0")
         h4 Картинки
         draggable(:list="form.images", element="v-list")
@@ -110,8 +110,7 @@ export default {
       const keys = ['description', 'text']
       let needProps = R.pick(keys, this.sticker)
       R.forEach((el, val) => {
-        if (!R.isEmpty(needProps[el])) { this.form[el] = needProps[el] }
-        else {
+        if (!R.isEmpty(needProps[el])) { this.form[el] = needProps[el] } else {
           this.form[el] = ''
         }
       }, keys)
