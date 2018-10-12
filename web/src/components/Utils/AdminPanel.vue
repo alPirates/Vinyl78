@@ -64,6 +64,14 @@
                       :data="{linked_id: carousel_id}"
                     )
       v-flex(xs12)
+        v-card
+          v-toolbar(color="secondary")
+            v-toolbar-title.white--text Test carousel
+          v-container
+            v-layout(row, wrap)
+              v-flex(xs12)
+                AdminCarousel()
+      v-flex(xs12)
        v-card
           v-toolbar(color="secondary")
             v-toolbar-title.white--text Заявки
@@ -101,6 +109,7 @@
 import FileUpload from '@/components/Utils/FileUpload'
 import EditCategory from '@/components/Edit/EditCategory'
 import AdminNavigation from '@/components/Navigation/AdminNavigation'
+import AdminCarousel from '@/components/pages/admin/AdminCarousel'
 
 export default {
   name: 'AdminPanel',
@@ -229,7 +238,8 @@ export default {
   components: {
     FileUpload,
     EditCategory,
-    AdminNavigation
+    AdminNavigation,
+    AdminCarousel
   }
 }
 </script>
