@@ -35,11 +35,12 @@ func (carousel *Carousel) Delete() error {
 // Create function
 // Add new application and add it in db
 // Return new application
-func (carousel *Carousel) Create(name string, number uint) (*Carousel, error) {
+func (carousel *Carousel) Create(name string) (*Carousel, error) {
+	count, _ := GetCarouselCount()
 	carousel = &Carousel{
 		ID:     generateUUID(),
 		Name:   name,
-		Number: number,
+		Number: uint(count + 1),
 	}
 	return carousel, db.Create(carousel).Error
 }

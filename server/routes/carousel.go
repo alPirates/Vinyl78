@@ -24,13 +24,12 @@ func addCarousel(context echo.Context) error {
 		return sendError(context, "no carousel information in JSON", "не удалось создать карусель")
 	}
 
-	if carousel.Name == "" || carousel.Number == 0 {
+	if carousel.Name == "" {
 		return sendError(context, "empty params", "не удалось создать карусель")
 	}
 
 	carousel, err = carousel.Create(
 		carousel.Name,
-		carousel.Number,
 	)
 
 	if err != nil {
