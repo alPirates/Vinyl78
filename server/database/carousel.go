@@ -9,10 +9,10 @@ import (
 // Category - category of sticker
 // Number - number in show
 type Carousel struct {
-	ID     string `json:"id" form:"id" query:"id"`
-	Name   string `json:"name" form:"name" query:"name"`
-	Image  *Image `json:"image" form:"image" query:"-"`
-	Number uint   `json:"number" form:"number" query:"number"`
+	ID     string   `json:"id" form:"id" query:"id"`
+	Name   string   `json:"name" form:"name" query:"name"`
+	Images []*Image `json:"image" form:"image" query:"-"`
+	Number uint     `json:"number" form:"number" query:"number"`
 }
 
 func (carousel *Carousel) Update() error {
@@ -28,7 +28,7 @@ func (carousel *Carousel) UpdateNotAll() error {
 // Delete function
 // Delete your application
 func (carousel *Carousel) Delete() error {
-	carousel.Image.Delete()
+	(&Image{}).DeleteBySticker(carousel.ID)
 	return db.Delete(carousel).Error
 }
 
@@ -49,6 +49,10 @@ func (carousel *Carousel) Create(name string, number uint) (*Carousel, error) {
 func GetCarousel(skip, limit uint) ([]*Carousel, error) {
 	carousels := []*Carousel{}
 	err := db.Offset(skip).Limit(limit).Find(&carousels).Error
+	for _, carousel := range carousels {
+		images, _ := GetImages(carousel.ID)
+		carousel.Images = images
+	}
 	return carousels, err
 }
 
@@ -68,6 +72,6 @@ func (carousel *Carousel) String() string {
 // GetApplicationsCount function
 func GetCarouselCount() (int, error) {
 	count := 0
-	err := db.Table("carousel").Count(&count).Error
+	err := db.Table("carousels").Count(&count).Error
 	return count, err
 }
