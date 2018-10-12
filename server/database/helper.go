@@ -58,6 +58,7 @@ func OpenConnection(nameDB string) error {
 	)
 	if err != nil {
 		fmt.Println("db not opened")
+		fmt.Println(err)
 		return err
 	}
 

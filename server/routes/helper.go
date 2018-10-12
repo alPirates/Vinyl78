@@ -43,7 +43,7 @@ func SetRoutes(server *echo.Echo) {
 	authorization.Use(middleware.JWTWithConfig(
 		middleware.JWTConfig{
 			Claims:     &jwtUserClaims{},
-			ContextKey: "3888bb42-5f9d-4f25-af0c-10979f2b9d01",
+			ContextKey: "token",
 			SigningKey: []byte(SignedString),
 		}))
 
