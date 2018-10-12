@@ -45,6 +45,7 @@
 
 <script>
 import FileUpload from '@/components/Utils/FileUpload'
+
 export default {
   name: '',
   data: () => {
