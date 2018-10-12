@@ -3,15 +3,14 @@
     v-layout
       v-flex(xs12)
         h2 {{sticker.description}}
-        p Hello something ehre
         .fotorama(data-nav="thumbs")
           img(:src="getMedia(el.name)" v-for="(el, index) in sticker.images")
+        h2 {{sticker.description}}
+        p {{sticker.text}}
 
 </template>
 
 <script>
-import 'fotorama/fotorama.css'
-import 'fotorama/fotorama.js'
 
 export default {
   data () {
@@ -23,6 +22,7 @@ export default {
     async update () {
       let result = await this.$api.send('get', `/sticker/${this.$route.params.id}`)
       if (result) {
+        console.log(result.data.resultd)
         this.sticker = result.data.result
       }
     }

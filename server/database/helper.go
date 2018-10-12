@@ -66,6 +66,7 @@ func OpenConnection(nameDB string) error {
 		&User{},
 		&Carousel{},
 		&Property{},
+		&Carousel{},
 		&Application{},
 		&Sticker{},
 		&Category{},

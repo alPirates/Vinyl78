@@ -15,6 +15,9 @@ import Api from './plugins/api'
 import Filters from './plugins/filters'
 import State from './plugins/state'
 
+import 'fotorama/fotorama.css'
+import 'fotorama/fotorama.js'
+
 import Vuetify from 'vuetify'
 
 import 'vuetify/dist/vuetify.min.css'

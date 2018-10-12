@@ -30,7 +30,7 @@ func SetRoutes(server *echo.Echo) {
 
 	api.GET("/carousel", getCarousel)
 	api.GET("/sticker", getSticker)
-	api.GET("/sticker/:id", getStickerById)
+	api.GET("/sticker/:id", getStickerByID)
 	api.GET("/media/:name", getFileImage)
 
 	api.GET("/sidebar", getCategory)

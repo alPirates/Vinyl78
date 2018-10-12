@@ -20,6 +20,7 @@ func setSticker(context echo.Context) error {
 
 	sticker := &database.Sticker{}
 	err := context.Bind(sticker)
+
 	if err != nil {
 		return sendError(context, "no sticker information in JSON", "не удалось изменить стикер")
 	}
@@ -151,7 +152,7 @@ func getSticker(context echo.Context) error {
 	})
 }
 
-func getStickerById(context echo.Context) error {
+func getStickerByID(context echo.Context) error {
 	uuid := context.Param("id")
 	if uuid == "" {
 		return sendError(context, "cant find sticker id", "")
