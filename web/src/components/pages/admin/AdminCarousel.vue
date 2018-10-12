@@ -3,16 +3,17 @@
     v-layout(row, wrap)
       v-flex(xs12)
         v-list
-          span(v-for="(item, index) in carouselImages")
-            v-list-tile(avatar)
-              v-list-tile-avatar
-                img(:src="getMedia(item.image[0].name)" v-if="item.image.length > 0")
-              v-list-tile-title {{item.name}}
-              v-spacer
-                v-btn(@click="showAdding(item.id)" color="success") Добавить картинку
-              v-btn(icon @click="removeItem(item.id)" color="error")
-                v-icon remove
-            v-divider
+          draggable(v-model="carouselImages", element="v-list", :options="{group:'id'}").dragg
+            div(v-for="(item, index) in carouselImages")
+              v-list-tile(avatar @click="")
+                v-list-tile-avatar
+                  img(:src="getMedia(item.image[0].name)" v-if="item.image.length > 0")
+                v-list-tile-title {{item.name}}
+                v-spacer
+                  v-btn(@click="showAdding(item.id)" color="success") Добавить картинку
+                v-btn(icon @click="removeItem(item.id)" color="error")
+                  v-icon remove
+              v-divider
       v-flex(xs12)
         v-layout(justify-end)
           v-dialog(v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition")

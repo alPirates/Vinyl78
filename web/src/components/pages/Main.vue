@@ -1,9 +1,8 @@
 <template lang="pug">
   v-container(grid-list-sm).fixed-container
-    pre {{carouselImages}}
-    //- v-carousel(v-if="carouselImages.length > 0")
-    //-   v-carousel-item(v-for="(image, index) in carouselImages", :key="index")
-    //-     img(:src="getMedia(image.name)")
+    v-carousel(v-if="carouselImages.length > 0")
+      v-carousel-item(v-for="(image, index) in carouselImages", :key="index")
+        img(:src="getMedia(image.image[0].name)" v-if="image.image.length > 0")
     v-container(grid-list-lg)
       v-layout(row wrap)
         v-flex(xs12, sm6, md4 v-for="(el, index) in thumbnails", :key="index")
@@ -44,15 +43,15 @@ export default {
     let mainCategories = await this.$api.send('get', '/main_sidebar')
     this.$set(this, 'thumbnails', mainCategories.data.result)
 
-    let carousel = await this.$api.send('get', '/property', null, {
-      key: 'carousel_id'
+    let carouselImages = await this.$api.send('get', '/carousel', null, {
+      limit: 100,
+      skip: 0
     })
-    console.log('carousel is ', carousel)
-    let carouselImages = await this.$api.send('get', '/carousel')
 
     if (carouselImages) {
-      this.$set(this, 'carouselImages', carouselImages.data.images)
+      this.$set(this, 'carouselImages', carouselImages.data.result)
     }
+    console.log('images', carouselImages)
   },
   components: {
     Form
