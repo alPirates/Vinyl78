@@ -2,7 +2,7 @@
   v-container(grid-list-sm).fixed-container
     v-carousel(v-if="carouselImages.length > 0")
       v-carousel-item(v-for="(image, index) in carouselImages", :key="index")
-        img(:src="getMedia(image.image[0].name)" v-if="image.image.length > 0")
+        img(:src="getMedia(image.image[0].name)" v-if="image.image.length > 0" @click="gotoLink(image)")
     v-container(grid-list-lg)
       v-layout(row wrap)
         v-flex(xs12, sm6, md4 v-for="(el, index) in thumbnails", :key="index")
@@ -52,6 +52,11 @@ export default {
       this.$set(this, 'carouselImages', carouselImages.data.result)
     }
     console.log('images', carouselImages)
+  },
+  methods: {
+    gotoLink (link) {
+      console.log(link.name)
+    }
   },
   components: {
     Form

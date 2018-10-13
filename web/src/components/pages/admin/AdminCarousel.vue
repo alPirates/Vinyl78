@@ -10,7 +10,9 @@
                   img(:src="getMedia(item.image[0].name)" v-if="item.image.length > 0")
                 v-list-tile-title {{item.name}}
                 v-spacer
-                  v-btn(@click="showAdding(item.id)" color="success") Добавить картинку
+                v-btn(@click="showAdding(item.id)" color="success") Добавить картинку
+                v-btn(@click="showEditing(index)" icon)
+                  v-icon edit
                 v-btn(icon @click="removeItem(item.id)" color="error")
                   v-icon remove
               v-divider
@@ -31,6 +33,8 @@
                 v-layout(justify-end)
                   v-btn(color="success" @click="addNewImage") Добавить
           v-btn(color="error") Обновить
+
+        //- dialogs
         v-dialog(v-model="dialogImages.show" fullscreen hide-overlay transition="dialog-bottom-transition")
           v-card
             v-toolbar(color="primary")
@@ -41,11 +45,26 @@
             v-container
               v-layout(row)
                 v-flex(xs12)
-                  pre {{this.dialogImages}}
                   FileUpload(
                     v-model="form.file"
                     :data="{linked_id: this.dialogImages.data}"
                   )
+        v-dialog(v-model="dialogEdit.show" fullscreen hide-overlay transition="dialog-bottom-transition")
+          v-card
+            v-toolbar(color="primary")
+              v-toolbar-title.white--text Редактировать
+              v-spacer
+              v-btn(icon @click="dialogEdit.show = false").white--text
+                v-icon close
+            v-container
+              v-layout(row)
+                v-flex(xs12)
+                  v-text-field(
+                    v-model="dialogEdit.data.name"
+                  )
+                v-flex(xs12)
+                  v-layout(justify-end)
+                    v-btn(color="success" @click="updateEdit") Обновить
 </template>
 
 <script>
@@ -63,6 +82,12 @@ export default {
       form: {
         href: '',
         file: null
+      },
+      dialogEdit: {
+        show: false,
+        data: {
+          name: ''
+        }
       }
     }
   },
@@ -71,9 +96,22 @@ export default {
       this.dialogImages.data = id
       this.dialogImages.show = true
     },
+    showEditing (index) {
+      this.dialogEdit.data = this.carouselImages[index]
+      this.dialogEdit.show = true
+    },
+    async updateEdit () {
+      let result = await this.$api.send('put', `/app/carousel`, {
+        ...R.pick(['name', 'id'], this.dialogEdit.data)
+      })
+      if (result) {
+        this.update()
+      }
+      this.dialogEdit = false
+    },
     async removeItem (id) {
       await this.$api.send('delete', `/app/carousel/${id}`)
-      this.update()
+      await this.update()
     },
     async addNewImage () {
       if (R.isEmpty(this.form.href)) {
@@ -83,15 +121,16 @@ export default {
         name: this.form.href
       })
       this.form.href = ''
-      this.update()
+      await this.update()
     },
     async update () {
       let carouselImages = await this.$api.send('get', '/carousel', null, {
         limit: 100,
         skip: 0
       })
-
+      console.log('images is', carouselImages.data.result)
       if (carouselImages) {
+        console.log('setting')
         this.$set(this, 'carouselImages', carouselImages.data.result)
       }
     }
