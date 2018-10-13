@@ -18,6 +18,8 @@ import State from './plugins/state'
 import 'fotorama/fotorama.css'
 import 'fotorama/fotorama.js'
 
+import VueCarousel from 'vue-carousel'
+
 import Vuetify from 'vuetify'
 
 import 'vuetify/dist/vuetify.min.css'
@@ -42,6 +44,7 @@ Vue.use(Vuetify, {
   iconfont: 'fa'
 })
 
+Vue.use(VueCarousel)
 Vue.use(Api, { store, R })
 Vue.use(Filters, { moment })
 Vue.use(State, { store })

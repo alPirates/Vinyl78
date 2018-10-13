@@ -37,8 +37,8 @@
             ).ccard-media
               v-container(fill-height fluid).low-index
                 v-layout(fill-height)
-                  v-flex(xs12 align-end flexbox)
-                    span.headline.white--text.invisible {{el.description}}
+                  v-flex(xs12 align-end flexbox fill-height).centered
+                    div.center-block.white--text.invisible {{el.description}}
 
       InfiniteLoading(
         @infinite="loadNew"
@@ -222,5 +222,14 @@ export default {
   }
   .link {
     text-decoration: none;
+  }
+  .centered {
+    text-align: center !important;
+  }
+  .center-block {
+    width: 100%;
+    height: 100%;
+    line-height: 130px;
+    font-size: 1.8em;
   }
  </style>

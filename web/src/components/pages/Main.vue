@@ -1,9 +1,20 @@
 <template lang="pug">
-  v-container(grid-list-sm).fixed-container
-    v-carousel(v-if="carouselImages.length > 0")
-      v-carousel-item(v-for="(image, index) in carouselImages", :key="index")
+  v-container(grid-list-sm v-resize="getSize").fixed-container
+    //- v-carousel(v-if="carouselImages.length > 0" hide-delimiters)
+    //-   v-carousel-item(v-for="(image, index) in carouselImages", :key="index")
+    //-     a(:href="image.name")
+    //-       img(:src="getMedia(image.image[0].name)" v-if="image.image.length > 0")
+    div(ref="sl")
+    carousel(
+      v-if="carouselImages.length > 0",
+      :perPage="1",
+      :autoplay="true",
+      :autoplayTimeout="2000",
+    )
+      slide(v-for="(image, index) in carouselImages", :key="index")
         a(:href="image.name")
-          img(:src="getMedia(image.image[0].name)" v-if="image.image.length > 0")
+          img(:src="getMedia(image.image[0].name)" v-if="image.image.length > 0", :width="w", :height="h")
+
     v-container(grid-list-lg)
       v-layout(row wrap)
         v-flex(xs12, sm6, md4 v-for="(el, index) in thumbnails", :key="index")
@@ -37,10 +48,15 @@ export default {
   data: () => {
     return {
       carouselImages: [],
-      thumbnails: []
+      thumbnails: [],
+      w: 0,
+      h: 0
     }
   },
+  computed: {
+  },
   async mounted () {
+    console.log(this.$refs)
     let mainCategories = await this.$api.send('get', '/main_sidebar')
     this.$set(this, 'thumbnails', mainCategories.data.result)
 
@@ -55,6 +71,10 @@ export default {
     console.log('images', carouselImages)
   },
   methods: {
+    getSize () {
+      this.w = this.$refs.sl.clientWidth
+      this.h = this.$refs.sl.clientWidth / 16 * 9
+    }
   },
   components: {
     Form
@@ -64,7 +84,7 @@ export default {
 
 <style scoped>
   .fixed-container {
-    width: 940px;
+    /* width: 940px; */
   }
   .m-top {
     margin: 0 auto;

@@ -5,7 +5,6 @@
         h2 {{sticker.description}}
         .fotorama(data-nav="thumbs")
           img(:src="getMedia(el.name)" v-for="(el, index) in sticker.images")
-        h2 {{sticker.description}}
         p {{sticker.text}}
 
 </template>
