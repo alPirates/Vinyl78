@@ -2,7 +2,7 @@
   v-container(grid-list-lg)
     AdminNavigation()
     v-layout(row wrap)
-      v-flex(xs12 lg6)
+      v-flex(xs12)
         v-card
           v-toolbar(color="secondary")
             v-toolbar-title.white--text Разделы меню
@@ -30,43 +30,10 @@
                      v-icon edit
                     v-btn(icon color="grey lighter-3", @click="deleteCategory(el.id)")
                       v-icon delete
-      v-flex(xs12 lg6)
-       v-card
-          v-toolbar(color="secondary")
-            v-toolbar-title.white--text Карусель
-          v-container
-            v-layout(row, wrap)
-              v-flex(xs12)
-                v-layout(row)
-                  v-flex(xs12)
-                    v-carousel(id="preview-carousel" v-if="carouselImages.length > 0")
-                      v-carousel-item(v-for="(image, index) in carouselImages", :key="index")
-                        img(:src="getMedia(image.name)")
-                    h3.mt-2.mb-2 Укажите новую последовательность
-                    draggable(:list="carouselImages", element="v-list" @end="dropImage")
-                      div(v-for="(image, index) in carouselImages", :key="image.id")
-                        v-list-tile(@click="")
-                          v-list-tile-avatar
-                            img(:src="getMedia(image.name)")
-                          v-list-tile-title
-                            | Картинка:
-                            |
-                            strong {{image.name}}
-                          v-spacer
-                          v-btn(icon color="error" @click="removeImage(image.id)")
-                            v-icon delete
-                        v-divider
-                    v-layout(row, wrap)
-                      v-flex(xs12).text-xs-right
-                        v-btn(color="primary" @click="refreshCarouselSlides()") Обновить
-                          v-icon(right) refresh
-                    FileUpload(
-                      :data="{linked_id: carousel_id}"
-                    )
       v-flex(xs12)
         v-card
           v-toolbar(color="secondary")
-            v-toolbar-title.white--text Test carousel
+            v-toolbar-title.white--text Карусель
           v-container
             v-layout(row, wrap)
               v-flex(xs12)

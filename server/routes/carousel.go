@@ -75,6 +75,37 @@ func setСarousel(context echo.Context) error {
 
 }
 
+func updateNumber(context echo.Context) error {
+	token := context.Get("token").(*jwt.Token)
+	claims := token.Claims.(*jwtUserClaims)
+
+	if claims.Role == 0 {
+		return sendError(context, "not admin", "вы не администратор")
+	}
+
+	type PutForm struct {
+		Slides []*database.Carousel `json:"slides"`
+	}
+	var p PutForm
+	err := context.Bind(&p)
+
+	if err != nil {
+		return sendError(context, "no slides information in JSON "+err.Error(), "не удалось изменить слайды")
+	}
+
+	for _, slide := range p.Slides {
+		if !database.CheckUUID(slide.ID) {
+			return sendError(context, "incorrect id", "не удалось найти слайд")
+		}
+		slide.UpdateNumber()
+	}
+
+	return context.JSON(http.StatusOK, map[string]string{
+		"status":  "success",
+		"message": "карусель изменена",
+	})
+}
+
 func deleteCarousel(context echo.Context) error {
 
 	token := context.Get("token").(*jwt.Token)

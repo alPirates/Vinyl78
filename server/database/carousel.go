@@ -25,6 +25,12 @@ func (carousel *Carousel) UpdateNotAll() error {
 	return db.Model(carousel).Update(carousel).Error
 }
 
+// UpdateNumber function
+// Update value of the Property
+func (carousel *Carousel) UpdateNumber() error {
+	return db.Model(carousel).Update("Number", carousel.Number).Error
+}
+
 // Delete function
 // Delete your application
 func (carousel *Carousel) Delete() error {

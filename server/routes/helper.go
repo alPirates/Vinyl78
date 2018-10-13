@@ -53,6 +53,7 @@ func SetRoutes(server *echo.Echo) {
 	authorization.POST("/update", updateToken)              // user
 
 	authorization.PUT("/carousel", setСarousel)
+	authorization.PUT("/slides", updateNumber) // update slides position number
 	authorization.DELETE("/carousel/:id", deleteCarousel)
 	authorization.POST("/carousel", addCarousel)
 

@@ -32,7 +32,7 @@
                     v-text-field(v-model="form.href", label="ссылка")
                 v-layout(justify-end)
                   v-btn(color="success" @click="addNewImage") Добавить
-          v-btn(color="error") Обновить
+          v-btn(color="error" @click="updateNumber") Обновить
 
         //- dialogs
         v-dialog(v-model="dialogImages.show" fullscreen hide-overlay transition="dialog-bottom-transition")
@@ -57,7 +57,7 @@
               v-btn(icon @click="dialogEdit.show = false").white--text
                 v-icon close
             v-container
-              v-layout(row)
+              v-layout(row, wrap)
                 v-flex(xs12)
                   v-text-field(
                     v-model="dialogEdit.data.name"
@@ -100,6 +100,25 @@ export default {
       this.dialogEdit.data = this.carouselImages[index]
       this.dialogEdit.show = true
     },
+    async updateNumber () {
+      let elements = R.clone(this.carouselImages)
+      let index = 1
+      let data = R.reduce((acc, el) => {
+        acc.push({
+          id: el.id,
+          number: index
+        })
+        index++
+        return acc
+      }, [], elements)
+      console.log(data)
+      let result = await this.$api.send('put', '/app/slides', {
+        slides: data
+      })
+      if (result) {
+        await this.update()
+      }
+    },
     async updateEdit () {
       let result = await this.$api.send('put', `/app/carousel`, {
         ...R.pick(['name', 'id'], this.dialogEdit.data)
@@ -107,7 +126,7 @@ export default {
       if (result) {
         this.update()
       }
-      this.dialogEdit = false
+      this.dialogEdit.show = false
     },
     async removeItem (id) {
       await this.$api.send('delete', `/app/carousel/${id}`)
