@@ -189,6 +189,7 @@ export default {
     }
   },
   mounted () {
+    this.stickers = []
     // this.update()
   },
   components: {
