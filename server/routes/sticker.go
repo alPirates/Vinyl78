@@ -84,7 +84,7 @@ func addSticker(context echo.Context) error {
 		return sendError(context, "no sticker information in JSON", "не удалось создать стикер")
 	}
 
-	if sticker.Description == "" || sticker.CategoryID == "" || sticker.Text == "" {
+	if sticker.Description == "" || sticker.CategoryID == "" {
 		return sendError(context, "empty params", "не удалось создать стикер")
 	}
 
