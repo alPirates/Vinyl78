@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-container(grid-list-sm)
+  v-container(grid-list-sm v-scroll="onScroll")
     v-layout(row, wrap)
       v-flex(xs12 v-if="isAdmin()")
         h2 Добавить стикер
@@ -83,6 +83,13 @@ export default {
   name: 'Stickers',
   data: () => {
     return {
+      last: {
+        category: '',
+        pos: 0,
+        uploaded: 0
+      },
+      firstUpdate: true,
+      scroll: 0,
       dialog: {
         show: false,
         data: {}
@@ -107,9 +114,28 @@ export default {
   watch: {
     '$route.params.id': function (id) {
       this.update()
+    },
+    stickers: function (val) {
+      if (this.stickers.length > 0 && !this.firstUpdate) {
+        localStorage.setItem('uploaded', this.stickers.length + 12)
+      }
     }
   },
   methods: {
+    setup () {
+      this.last = {
+        category: localStorage.getItem('category'),
+        pos: localStorage.getItem('pos'),
+        uploaded: localStorage.getItem('uploaded')
+      }
+    },
+    onScroll () {
+      if (this.firstUpdate) {
+        return
+      }
+      let pos = this.offsetTop = window.pageYOffset || document.documentElement.scrollTop
+      localStorage.setItem('pos', pos)
+    },
     mouseOnSticker (index) {
       let stickers = document.getElementsByClassName('invisible')
       if (stickers) {
@@ -123,8 +149,13 @@ export default {
       }
     },
     async loadNew ($state) {
+      let count = '12'
+      if (this.last.category === this.$route.params.id) {
+        console.log(this.last.uploaded)
+        count = this.last.uploaded || '12'
+      }
       let result = await this.$api.send('get', '/sticker', null, {
-        limit: '12',
+        limit: count,
         skip: this.page * 12,
         category_id: this.$route.params.id
       })
@@ -137,6 +168,11 @@ export default {
         this.$set(this, 'stickers', data)
         $state.loaded()
       }
+      this.firstUpdate = false
+      let pos = this.last.pos
+      setTimeout(function () {
+        window.scrollTo(0, pos)
+      }, 1000)
     },
     refreshData () {
       this.update()
@@ -190,7 +226,8 @@ export default {
   },
   mounted () {
     this.stickers = []
-    // this.update()
+    this.setup()
+    localStorage.setItem('category', this.$route.params.id)
   },
   components: {
     FileUpload,
