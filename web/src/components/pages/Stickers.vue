@@ -172,7 +172,7 @@ export default {
       let pos = this.last.pos
       setTimeout(function () {
         window.scrollTo(0, pos)
-      }, 1000)
+      }, 500)
     },
     refreshData () {
       this.update()
