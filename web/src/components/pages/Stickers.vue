@@ -208,7 +208,6 @@ export default {
     }
   },
   async mounted () {
-
     let pos = await Number(localStorage.getItem('pos'))
     console.log('position is', pos)
     this.loading = true
@@ -223,11 +222,10 @@ export default {
     setTimeout(() => {
       window.scrollTo({
         top: pos,
-        behavior: "smooth"
+        behavior: 'smooth'
       })
       console.log('spacing')
-    }, 720)
-
+    }, 700)
   },
   components: {
     FileUpload,
