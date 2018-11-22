@@ -225,7 +225,8 @@ export default {
         behavior: 'smooth'
       })
       console.log('spacing')
-    }, 700)
+    }, 700
+    )
   },
   components: {
     FileUpload,
