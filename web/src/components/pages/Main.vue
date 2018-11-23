@@ -16,7 +16,10 @@
           img(:src="getMedia(image.image[0].name)" v-if="image.image.length > 0", :width="w", :height="h")
 
     v-container(grid-list-lg)
-      Icons
+      Icons(
+        v-if="!R.isEmpty(thumbnails)"
+        :links="getLinks(thumbnails)"
+      )
       v-divider.mt-3.mb-2
       Form
       v-layout(row, wrap, justify-center)#links
@@ -59,6 +62,12 @@ export default {
     console.log('images', carouselImages)
   },
   methods: {
+    getLinks () {
+      if (R.isEmpty(this.thumbnails)) {
+        return []
+      }
+      return R.map(el => el.id, this.thumbnails)
+    },
     getSize () {
       this.w = this.$refs.sl.clientWidth
       this.h = this.$refs.sl.clientWidth / 16 * 9
