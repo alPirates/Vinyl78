@@ -9,7 +9,8 @@
       v-if="carouselImages.length > 0",
       :perPage="1",
       :autoplay="true",
-      :autoplayTimeout="2000",
+      :autoplayTimeout="4000",
+      :loop="true"
     )
       slide(v-for="(image, index) in carouselImages", :key="index")
         a(:href="image.name")

@@ -74,15 +74,15 @@
         v-flex(xs4)
           .thumb
             img(src="@/assets/startup.svg" width="64").svg-icon
-            h2.thumb-text.text-xs-center СКОРОСТЬ
+            h2.thumb-text.text-xs-center Скорость
         v-flex(xs4)
           .thumb
             img(src="@/assets/handshake.svg" width="64").svg-icon
-            h2.thumb-text.text-xs-center ИНДИВИДУАЛЬНЫЙ ПОДХОД
+            h2.thumb-text.text-xs-center Индивидуальный подход
         v-flex(xs4)
           .thumb
             img(src="@/assets/qual.svg" width="64").svg-icon
-            h2.thumb-text.text-xs-center КАЧЕСТВО
+            h2.thumb-text.text-xs-center Качество
 </template>
 
 <script>
@@ -169,6 +169,14 @@ export default {
     -ms-transform: translateX(-50%);
     transform: translateX(-50%);
   }
+  .subthumb {
+    .header-thumbs {
+      font-size: 1.6em;
+    }
+    .thumb {
+      cursor: default
+    }
+  }
   @media (min-width: 600px) {
     .subthumb {
       padding-left: 80px;
@@ -180,9 +188,16 @@ export default {
       display: none !important;
       visibility: hidden !important;
     }
+    .subthumb {
+      .header-thumbs {
+        font-size: 1.1em;
+      }
+      .thumb h2 {
+        font-size: 0.9em;
+      }
+    }
     .thumb-text {
       margin-top: 7px;
-      font-size: .7em;
     }
   }
 </style>
