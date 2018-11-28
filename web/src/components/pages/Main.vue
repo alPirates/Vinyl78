@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-container(grid-list-sm).fixed-container
+  v-container(grid-list-sm v-resize="getSize").fixed-container
     //- v-carousel(v-if="carouselImages.length > 0" hide-delimiters)
     //-   v-carousel-item(v-for="(image, index) in carouselImages", :key="index")
     //-     a(:href="image.name")
@@ -10,7 +10,6 @@
       :perPage="1",
       :autoplay="true",
       :autoplayTimeout="4000",
-      :loop="true"
     )
       slide(v-for="(image, index) in carouselImages", :key="index")
         a(:href="image.name")
