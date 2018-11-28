@@ -118,6 +118,11 @@ export default {
   watch: {
     '$route.params.id': function (id) {
       this.update()
+    },
+    stickers: function (val) {
+      if (this.stickers.length > 0 && !this.firstUpdate) {
+        localStorage.setItem('uploaded', this.stickers.length + 12)
+      }
     }
   },
   methods: {
@@ -127,7 +132,6 @@ export default {
       }
       let pos = this.offsetTop = window.pageYOffset || document.documentElement.scrollTop
       localStorage.setItem('pos', pos)
-      console.log('setting', pos)
     },
     mouseOnSticker (index) {
       let stickers = document.getElementsByClassName('invisible')
@@ -142,8 +146,13 @@ export default {
       }
     },
     async loadNew ($state) {
+      let count = '12'
+      if (this.last.category === this.$route.params.id) {
+        console.log(this.last.uploaded)
+        count = this.last.uploaded || '12'
+      }
       let result = await this.$api.send('get', '/sticker', null, {
-        limit: '12',
+        limit: count,
         skip: this.page * 12,
         category_id: this.$route.params.id
       })
@@ -156,6 +165,11 @@ export default {
         this.$set(this, 'stickers', data)
         $state.loaded()
       }
+      this.firstUpdate = false
+      let pos = this.last.pos
+      setTimeout(function () {
+        window.scrollTo(0, pos)
+      }, 500)
     },
     refreshData () {
       this.update()

@@ -12,6 +12,7 @@ import (
 // Port - number of a port use 80 port on proxy
 const (
 	Port = 3000
+	// Port = 80
 )
 
 // SetRoutes function
