@@ -21,6 +21,7 @@ import 'fotorama/fotorama.js'
 import VueCarousel from 'vue-carousel'
 
 import Vuetify from 'vuetify'
+import SvgFiller from 'vue-svg-filler'
 
 import 'vuetify/dist/vuetify.min.css'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
@@ -50,6 +51,7 @@ Vue.use(Filters, { moment })
 Vue.use(State, { store })
 Vue.component('draggable', draggable)
 Vue.component('InfiniteLoading', InfiniteLoading)
+Vue.component('svg-filler', SvgFiller)
 
 /* eslint-disable no-new */
 new Vue({

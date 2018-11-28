@@ -9,27 +9,18 @@
       v-if="carouselImages.length > 0",
       :perPage="1",
       :autoplay="true",
-      :autoplayTimeout="2000",
+      :autoplayTimeout="4000",
+      :loop="true"
     )
       slide(v-for="(image, index) in carouselImages", :key="index")
         a(:href="image.name")
           img(:src="getMedia(image.image[0].name)" v-if="image.image.length > 0", :width="w", :height="h")
 
     v-container(grid-list-lg)
-      v-layout(row wrap)
-        v-flex(xs12, sm6, md4 v-for="(el, index) in thumbnails", :key="index")
-          v-card
-            v-layout(row, justify-center, align-center)
-              v-avatar(size="128").text-xs-center
-                img(:src="getImage(el)")
-            v-card-title
-              div.text-xs-center.m-top
-                h3.headline.mb-0.text-xs-center {{el.name}}
-                p {{el.description}}
-                v-btn(color="danger", :to="'/category/' + el.id")
-                  | Больше
-                v-btn(color="success", to="/form")
-                  | Купить
+      Icons(
+        v-if="!R.isEmpty(thumbnails)"
+        :links="getLinks(thumbnails)"
+      )
       v-divider.mt-3.mb-2
       Form
       v-layout(row, wrap, justify-center)#links
@@ -42,6 +33,7 @@
 
 <script>
 import Form from '@/components/pages/Form'
+import Icons from '@/components/pages/Icons'
 
 export default {
   name: 'Main',
@@ -71,13 +63,19 @@ export default {
     console.log('images', carouselImages)
   },
   methods: {
+    getLinks () {
+      if (R.isEmpty(this.thumbnails)) {
+        return []
+      }
+      return R.map(el => el.id, this.thumbnails)
+    },
     getSize () {
       this.w = this.$refs.sl.clientWidth
       this.h = this.$refs.sl.clientWidth / 16 * 9
     }
   },
   components: {
-    Form
+    Form, Icons
   }
 }
 </script>

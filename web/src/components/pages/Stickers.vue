@@ -17,7 +17,7 @@
               )
           v-btn(color="success" @click="addNewSticker") Добавить
             v-icon(right) add
-      v-flex(xs12, sm4, lg4, xl4, v-for="(el, index) in stickers", :key="index")
+      v-flex(xs12, sm4, lg4, xl4, v-for="(el, index) in stickers", :key="index" v-if="!loading")
         v-card(
             v-on:mouseover="mouseOnSticker(index)"
             v-on:mouseleave="mouseOutSticker(index)"
@@ -39,13 +39,22 @@
                 v-layout(fill-height)
                   v-flex(xs12 align-end flexbox fill-height).centered
                     div.center-block.white--text.invisible {{el.description}}
+      v-flex(xs12 v-if="loading")
+        br
+        v-layout(justify-center)
+          v-progress-circular(
+            :size="70",
+            :width="7",
+            color="primary",
+            indeterminate
+          )
 
-      InfiniteLoading(
-        @infinite="loadNew"
-        v-if="disableScroll"
-      )
-        v-layout(row, justify-center, slot="spinner")
-          v-progress-circular(size="50" indeterminate color="primary").mt-2
+      //- InfiniteLoading(
+      //-   @infinite="loadNew"
+      //-   v-if="disableScroll"
+      //- )
+      //-   v-layout(row, justify-center, slot="spinner")
+      //-     v-progress-circular(size="50" indeterminate color="primary").mt-2
 
     // edit sticker dialog
     v-dialog(v-model="dialog.show" fullscreen hide-overlay transition="dialog-bottom-transition")
@@ -83,13 +92,8 @@ export default {
   name: 'Stickers',
   data: () => {
     return {
-      last: {
-        category: '',
-        pos: 0,
-        uploaded: 0
-      },
-      firstUpdate: true,
-      scroll: 0,
+      firstTime: true,
+      loading: true,
       dialog: {
         show: false,
         data: {}
@@ -122,13 +126,6 @@ export default {
     }
   },
   methods: {
-    setup () {
-      this.last = {
-        category: localStorage.getItem('category'),
-        pos: localStorage.getItem('pos'),
-        uploaded: localStorage.getItem('uploaded')
-      }
-    },
     onScroll () {
       if (this.firstUpdate) {
         return
@@ -214,20 +211,36 @@ export default {
     },
     async update () {
       let result = await this.$api.send('get', '/sticker', null, {
-        limit: '12',
+        limit: '512',
         skip: 0,
         category_id: this.$route.params.id
       })
-      this.page++
+      this.firstTime = false
       if (result.data.status === 'success') {
         this.$set(this, 'stickers', result.data.result)
       }
     }
   },
-  mounted () {
+  async mounted () {
+    let pos = await Number(localStorage.getItem('pos'))
+    console.log('position is', pos)
+    this.loading = true
+
     this.stickers = []
-    this.setup()
-    localStorage.setItem('category', this.$route.params.id)
+    await this.update()
+
+    setTimeout(() => {
+      this.loading = false
+    }, 700)
+
+    setTimeout(() => {
+      window.scrollTo({
+        top: pos,
+        behavior: 'smooth'
+      })
+      console.log('spacing')
+    }, 700
+    )
   },
   components: {
     FileUpload,

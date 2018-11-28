@@ -11,6 +11,7 @@ type Sticker struct {
 	Text        string   `json:"text" form:"text" query:"text"`
 	Images      []*Image `json:"images" form:"images" query:"images" gorm:"-"`
 	CategoryID  string   `json:"category_id" form:"category_id" query:"category_id"`
+	Position    int      `json:"position" form:"position" query:"position"`
 }
 
 // Update function
@@ -54,7 +55,7 @@ func (sticker *Sticker) Create(description, text, categoryID string) (*Sticker, 
 // skip and limit
 func GetStickers(skip, limit uint, categoryUUID string) ([]*Sticker, error) {
 	sticker := []*Sticker{}
-	err := db.Offset(skip).Limit(limit).Where("category_id = ?", categoryUUID).Find(&sticker).Error
+	err := db.Order("position").Offset(skip).Limit(limit).Where("category_id = ?", categoryUUID).Find(&sticker).Error
 	return sticker, err
 }
 
@@ -96,7 +97,7 @@ func DeleteByCategory(categoryUUID string) error {
 // Return all stickers
 func GetAllStickers() ([]*Sticker, error) {
 	sticker := []*Sticker{}
-	err := db.Find(&sticker).Error
+	err := db.Order("position").Find(&sticker).Error
 	return sticker, err
 }
 

@@ -32,6 +32,15 @@
                       v-list-tile-content
                         v-list-tile-title.text-xs-center В этой группе ничего нету
                         v-list-tile-sub-title.text-xs-center Перетащи сюда для добавления
+            v-layout(row, wrap)
+              v-flex(xs12)
+                small * Примечание: ссылки используются для перехода по меню:
+                br
+                small 1 - Брендирование автомобилей
+                br
+                small 2 - Декорирование витрин
+                br
+                small 3 - Виниловые наклейки
             v-layout(row, justify-end)
               v-btn(color="success" @click="send") Обновить
                 v-icon(right) update
