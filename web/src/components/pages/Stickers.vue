@@ -17,6 +17,9 @@
               )
           v-btn(color="success" @click="addNewSticker") Добавить
             v-icon(right) add
+        v-layout(row, v-if="isAdmin()")
+          v-btn(color="error", @click="updatePosition") Обновить порядок
+            v-icon(right) update
       v-flex(xs12, sm4, lg4, xl4, v-for="(el, index) in stickers", :key="index" v-if="!loading")
         v-card(
             v-on:mouseover="mouseOnSticker(index)"
@@ -145,6 +148,19 @@ export default {
         stickers[index].classList.remove('visible')
       }
     },
+    async updatePosition () {
+      let stickers = R.clone(this.stickers)
+      let index = 1
+      stickers = R.map((el) => {
+        el.position = index
+        index++
+        el = R.pick(['id', 'position'], el)
+        return el
+      }, stickers)
+      await this.$api.send('put', '/app/updateStickersPosition', {
+        stickers
+      })
+    },
     async loadNew ($state) {
       let count = '12'
       if (this.last.category === this.$route.params.id) {
@@ -223,7 +239,6 @@ export default {
   },
   async mounted () {
     let pos = await Number(localStorage.getItem('pos'))
-    console.log('position is', pos)
     this.loading = true
 
     this.stickers = []
