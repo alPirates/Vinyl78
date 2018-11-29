@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -8,6 +9,32 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 )
+
+func updateStickersPosition(context echo.Context) error {
+	token := context.Get("token").(*jwt.Token)
+	claims := token.Claims.(*jwtUserClaims)
+
+	if claims.Role == 0 {
+		return sendError(context, "not admin", "вы не администратор")
+	}
+	type Req struct {
+		Stickers []database.Sticker `json:"stickers" form:"stickers" query:"stickers"`
+	}
+	req := Req{}
+	err := context.Bind(&req)
+
+	if err != nil {
+		return sendError(context, "Cant unmarshall stickers array", "Не удается обновить")
+	}
+
+	fmt.Println(req)
+	// TODO: обновить позиции в бд
+
+	return context.JSON(http.StatusOK, map[string]string{
+		"status":  "success",
+		"message": "Порядок изменен",
+	})
+}
 
 func setSticker(context echo.Context) error {
 

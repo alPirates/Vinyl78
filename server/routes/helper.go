@@ -63,16 +63,19 @@ func SetRoutes(server *echo.Echo) {
 	authorization.DELETE("/application/:id", deleteApplication) // admin
 	authorization.GET("/property", getPrivateProperty)          // admin
 	authorization.GET("/admin", getAdminInfo)                   // admin
-	authorization.PUT("/sticker", setSticker)                   // admin
-	authorization.DELETE("/sticker/:id", deleteSticker)         // admin
-	authorization.POST("/sticker", addSticker)                  // admin
-	authorization.DELETE("/category/:id", deleteCategory)       // admin
-	authorization.PUT("/category", setCategory)                 // admin
-	authorization.PUT("/categories", setCategories)             // admin
-	authorization.POST("/category", addCategory)                // admin
-	authorization.POST("/image", addImage)                      // admin
-	authorization.PUT("/image", setImage)                       // admin
-	authorization.DELETE("/image/:id", deleteImage)             // admin
+
+	authorization.PUT("/sticker", setSticker)                            // admin
+	authorization.DELETE("/sticker/:id", deleteSticker)                  // admin
+	authorization.POST("/sticker", addSticker)                           // admin
+	authorization.PUT("/updateStickersPosition", updateStickersPosition) // admin
+
+	authorization.DELETE("/category/:id", deleteCategory) // admin
+	authorization.PUT("/category", setCategory)           // admin
+	authorization.PUT("/categories", setCategories)       // admin
+	authorization.POST("/category", addCategory)          // admin
+	authorization.POST("/image", addImage)                // admin
+	authorization.PUT("/image", setImage)                 // admin
+	authorization.DELETE("/image/:id", deleteImage)       // admin
 
 	err := server.Start(":" + fmt.Sprint(Port))
 	if err != nil {
