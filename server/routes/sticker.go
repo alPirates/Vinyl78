@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -27,8 +26,12 @@ func updateStickersPosition(context echo.Context) error {
 		return sendError(context, "Cant unmarshall stickers array", "Не удается обновить")
 	}
 
-	fmt.Println(req)
-	// TODO: обновить позиции в бд
+	for _, sticker := range req.Stickers {
+		err := sticker.UpdatePosition()
+		if err != nil {
+			sendError(context, "Cant update", err.Error())
+		}
+	}
 
 	return context.JSON(http.StatusOK, map[string]string{
 		"status":  "success",

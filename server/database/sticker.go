@@ -26,6 +26,11 @@ func (sticker *Sticker) UpdateNotAll() error {
 	return db.Model(sticker).Update(sticker).Error
 }
 
+// UpdatePosition carousel position
+func (s *Sticker) UpdatePosition() error {
+	return db.Model(s).Update("Position", s.Position).Error
+}
+
 // Delete function
 // Delete property
 func (sticker *Sticker) Delete() error {

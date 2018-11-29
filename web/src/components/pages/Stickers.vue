@@ -150,17 +150,16 @@ export default {
     },
     async updatePosition () {
       let stickers = R.clone(this.stickers)
-      let index = 1;
+      let index = 1
       stickers = R.map((el) => {
         el.position = index
         index++
         el = R.pick(['id', 'position'], el)
         return el
       }, stickers)
-      let result = await this.$api.send('put', '/app/updateStickersPosition', {
+      await this.$api.send('put', '/app/updateStickersPosition', {
         stickers
       })
-      console.log(stickers)
     },
     async loadNew ($state) {
       let count = '12'
