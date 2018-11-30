@@ -20,28 +20,29 @@
         v-layout(row, v-if="isAdmin()")
           v-btn(color="error", @click="updatePosition") Обновить порядок
             v-icon(right) update
-      v-flex(xs12, sm4, lg4, xl4, v-for="(el, index) in stickers", :key="index" v-if="!loading")
-        v-card(
-            v-on:mouseover="mouseOnSticker(index)"
-            v-on:mouseleave="mouseOutSticker(index)"
-            @click="gotoSticker(el.id)"
-        ).mb-2
-          v-toolbar(v-if="isAdmin()" color="primary")
-            v-toolbar-title.white--text Редактировать
-            v-spacer
-            v-btn(@click="edit(index)" icon).white--text
-              v-icon edit
-            v-btn(@click="remove(el.id)" icon).white--text
-              v-icon remove
-          router-link(:to="'/sticker/' + el.id").link
-            v-card-media(
-              height="200px"
-              :src="getMedia(getImagePath(el))"
-            ).ccard-media
-              v-container(fill-height fluid).low-index
-                v-layout(fill-height)
-                  v-flex(xs12 align-end flexbox fill-height).centered
-                    div.center-block.white--text.invisible {{el.description}}
+      draggable(v-model="stickers", element="v-layout", :options="{group:'id', disabled: !isAdmin()}").dragg.row.wrap
+          v-flex(xs12, sm4, lg4, xl4, v-for="(el, index) in stickers", :key="index" v-if="!loading")
+            v-card(
+                v-on:mouseover="mouseOnSticker(index)"
+                v-on:mouseleave="mouseOutSticker(index)"
+                @click="gotoSticker(el.id)"
+            ).mb-2
+              v-toolbar(v-if="isAdmin()" color="primary")
+                v-toolbar-title.white--text Редактировать
+                v-spacer
+                v-btn(@click="edit(index)" icon).white--text
+                  v-icon edit
+                v-btn(@click="remove(el.id)" icon).white--text
+                  v-icon remove
+              router-link(:to="'/sticker/' + el.id").link
+                v-card-media(
+                  height="200px"
+                  :src="getMedia(getImagePath(el))"
+                ).ccard-media
+                  v-container(fill-height fluid).low-index
+                    v-layout(fill-height)
+                      v-flex(xs12 align-end flexbox fill-height).centered
+                        div.center-block.white--text.invisible {{el.description}}
       v-flex(xs12 v-if="loading")
         br
         v-layout(justify-center)
