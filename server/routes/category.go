@@ -8,6 +8,37 @@ import (
 	"github.com/labstack/echo"
 )
 
+func updateCategoryNumber(context echo.Context) error {
+	token := context.Get("token").(*jwt.Token)
+	claims := token.Claims.(*jwtUserClaims)
+
+	if claims.Role == 0 {
+		return sendError(context, "not admin", "вы не администратор")
+	}
+
+	type PutForm struct {
+		Categories []*database.Category `json:"categories"`
+	}
+	var p PutForm
+	err := context.Bind(&p)
+
+	if err != nil {
+		return sendError(context, "no categories information in JSON "+err.Error(), "не удалось изменить категории")
+	}
+
+	for _, cat := range p.Categories {
+		if !database.CheckUUID(cat.ID) {
+			return sendError(context, "incorrect id", "не удалось найти слайд")
+		}
+		cat.UpdateNumber()
+	}
+
+	return context.JSON(http.StatusOK, map[string]string{
+		"status":  "success",
+		"message": "Порядок категорий изменен",
+	})
+}
+
 func getCategory(context echo.Context) error {
 
 	categories, err := database.GetCategories()

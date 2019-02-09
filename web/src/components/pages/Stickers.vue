@@ -10,43 +10,47 @@
           v-flex(xs12)
             v-form(v-model="valid")
               v-text-field(
-                label="Описание"
-                v-model="sticker.description"
-                :rules="sticker.descriptionRules"
-                @key.enter="addNewSticker"
+              label="Описание"
+              v-model="sticker.description"
+              :rules="sticker.descriptionRules"
+              @key.enter="addNewSticker"
               )
           v-btn(color="success" @click="addNewSticker") Добавить
             v-icon(right) add
-      v-flex(xs12, sm4, lg4, xl4, v-for="(el, index) in stickers", :key="index" v-if="!loading")
-        v-card(
-            v-on:mouseover="mouseOnSticker(index)"
-            v-on:mouseleave="mouseOutSticker(index)"
-            @click="gotoSticker(el.id)"
-        ).mb-2
-          v-toolbar(v-if="isAdmin()" color="primary")
-            v-toolbar-title.white--text Редактировать
-            v-spacer
-            v-btn(@click="edit(index)" icon).white--text
-              v-icon edit
-            v-btn(@click="remove(el.id)" icon).white--text
-              v-icon remove
-          router-link(:to="'/sticker/' + el.id").link
-            v-card-media(
+        v-layout(row, v-if="isAdmin()")
+          v-btn(color="error", @click="updatePosition") Обновить порядок
+            v-icon(right) update
+      draggable(v-model="stickers", element="v-layout", :options="{group:'id', disabled: !isAdmin()}").dragg.row.wrap
+        v-flex(xs12, sm4, lg4, xl4, v-for="(el, index) in stickers", :key="index" v-if="!loading")
+          v-card(
+          v-on:mouseover="mouseOnSticker(index)"
+          v-on:mouseleave="mouseOutSticker(index)"
+          @click="gotoSticker(el.id)"
+          ).mb-2
+            v-toolbar(v-if="isAdmin()" color="primary")
+              v-toolbar-title.white--text Редактировать
+              v-spacer
+              v-btn(@click="edit(index)" icon).white--text
+                v-icon edit
+              v-btn(@click="remove(el.id)" icon).white--text
+                v-icon remove
+            router-link(:to="'/sticker/' + el.id").link
+              v-card-media(
               height="200px"
               :src="getMedia(getImagePath(el))"
-            ).ccard-media
-              v-container(fill-height fluid).low-index
-                v-layout(fill-height)
-                  v-flex(xs12 align-end flexbox fill-height).centered
-                    div.center-block.white--text.invisible {{el.description}}
+              ).ccard-media
+                v-container(fill-height fluid).low-index
+                  v-layout(fill-height)
+                    v-flex(xs12 align-end flexbox fill-height).centered
+                      div.center-block.white--text.invisible {{el.description}}
       v-flex(xs12 v-if="loading")
         br
         v-layout(justify-center)
           v-progress-circular(
-            :size="70",
-            :width="7",
-            color="primary",
-            indeterminate
+          :size="70",
+          :width="7",
+          color="primary",
+          indeterminate
           )
 
       //- InfiniteLoading(
@@ -65,8 +69,8 @@
           v-btn(icon).white--text
             v-icon(@click="dialog.show = false") close
         EditSticker(
-          :sticker="dialog.data"
-          @refresh="refreshData"
+        :sticker="dialog.data"
+        @refresh="refreshData"
         )
     // edit category
     v-dialog(v-model="category.show" fullscreen hide-overlay transition="dialog-bottom-transition")
@@ -77,8 +81,8 @@
           v-btn(icon).white--text
             v-icon(@click="category.show = false") close
         EditCategory(
-          :id="$route.params.id"
-          @refresh="changeData"
+        :id="$route.params.id"
+        @refresh="changeData"
         )
 
 </template>
@@ -87,7 +91,6 @@
 import FileUpload from '@/components/Utils/FileUpload'
 import EditSticker from '@/components/Edit/EditSticker'
 import EditCategory from '@/components/Edit/EditCategory'
-
 export default {
   name: 'Stickers',
   data: () => {
@@ -144,6 +147,19 @@ export default {
       if (stickers) {
         stickers[index].classList.remove('visible')
       }
+    },
+    async updatePosition () {
+      let stickers = R.clone(this.stickers)
+      let index = 1
+      stickers = R.map((el) => {
+        el.position = index
+        index++
+        el = R.pick(['id', 'position'], el)
+        return el
+      }, stickers)
+      await this.$api.send('put', '/app/updateStickersPosition', {
+        stickers
+      })
     },
     async loadNew ($state) {
       let count = '12'
@@ -223,24 +239,19 @@ export default {
   },
   async mounted () {
     let pos = await Number(localStorage.getItem('pos'))
-    console.log('position is', pos)
     this.loading = true
-
     this.stickers = []
     await this.update()
-
     setTimeout(() => {
       this.loading = false
     }, 700)
-
     setTimeout(() => {
       window.scrollTo({
         top: pos,
         behavior: 'smooth'
       })
       console.log('spacing')
-    }, 700
-    )
+    }, 700)
   },
   components: {
     FileUpload,
@@ -283,4 +294,4 @@ export default {
     line-height: 130px;
     font-size: 1.8em;
   }
- </style>
+</style>

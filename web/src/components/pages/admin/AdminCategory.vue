@@ -38,13 +38,30 @@
                 br
                 small 1 - Брендирование автомобилей
                 br
-                small 2 - Декорирование витрин
+                small 2 - Виниловые наклейки
                 br
-                small 3 - Виниловые наклейки
+                small 3 - Декорирование витрин
             v-layout(row, justify-end)
               v-btn(color="success" @click="send") Обновить
                 v-icon(right) update
-
+      br
+      v-flex(xs12)
+        v-card()
+          v-toolbar(color="primary").white--text
+            v-toolbar-title Настройка меню
+          v-card-text
+            v-layout(row, wrap)
+              v-flex(xs12)
+                draggable(v-model="categories", element="v-list", :options="{group:'id'}").dragg
+                  div(v-for="(cat, index) in categories", :key="index")
+                    v-list-tile(@click="")
+                      v-list-tile-title {{cat.name}}
+                    v-divider(v-if="index + 1 !== categories.length")
+              v-flex(xs12)
+                v-layout(row, justify-end)
+                  v-btn(color="error" @click="updateCategoryPositions()").white--text Обновить порядок
+              v-flex(xs12)
+                small * Примечание: После обновление порядка для отображения изменений в меню необходимо перезагрузить страницу
 </template>
 
 <script>
@@ -54,6 +71,7 @@ export default {
   name: 'AdminCategory',
   data: () => {
     return {
+      categories: [],
       home: [],
       free: []
     }
@@ -62,6 +80,13 @@ export default {
     AdminNavigation
   },
   methods: {
+    async updateCategoryPositions () {
+      await this.$api.send('put', '/app/categories_number', {
+        categories: R.map(el => {
+          return R.pick(['id', 'number'], el)
+        }, this.categories)
+      })
+    },
     async send () {
       let index = 1
       let home = R.map(el => {
@@ -87,6 +112,7 @@ export default {
     async update () {
       let result = await this.$api.send('get', '/sidebar')
       let categories = result.data.result
+      this.$set(this, 'categories', categories)
       let inHome = R.reduce((acc, el) => {
         if (el.number === 0) {
           acc.free.push(el)

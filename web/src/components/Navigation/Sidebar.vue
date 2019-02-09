@@ -8,19 +8,6 @@
     app
   )
     v-list(dense subheader)#side-list
-      //- v-subheader Меню
-      //- v-list-tile(:to="'/'" @click="")
-      //-   v-list-tile-avatar
-      //-     v-icon home
-      //-   v-list-tile-content
-      //-   v-list-tile-title
-      //-       | Главная
-      //- v-list-tile(:to="'/form'" @click="")
-      //-   v-list-tile-avatar
-      //-     v-icon turned_in
-      //-   v-list-tile-content
-      //-   v-list-tile-title
-      //-       | Заказать стикер
       span(v-for="(el, index) in categories")
         v-list-tile(:to="'/category/'+el.id" @click="")
             //- v-list-tile-avatar
@@ -46,7 +33,7 @@
         v-list-tile()
           v-layout(row, wrap, justify-center)#links
             v-flex(xs12)
-            a.links.big-icon.mr-4(target="_blank" href="https://www.instagram.com/vinyl_78")
+            a.links.big-icon.mr-4(target="_blank" href="https://www.instagram.com/vinyl_78").custom--text
               v-icon fab fa-instagram
             a.links.big-icon(target="_blank" href="https://vk.com/vinyl_78")
               v-icon fab fa-vk
@@ -96,9 +83,25 @@ export default {
 </script>
 
 <style>
+  .v-navigation-drawer .v-list {
+    background: none !important;
+  }
+
+  .theme--light .v-navigation-drawer {
+    background-color: rgba(33, 33, 33, .96) !important;
+    z-index: 1000;
+  }
   .v-navigation-drawer {
     max-height: calc(100% - 10px) !important;
     font-size: 1.2em !important;
+  }
+
+  .tile-title-custom,
+  .tile-title-contact,
+  .tile-email,
+  .tile-phone,
+  .theme--light .v-icon {
+    color: #e9e9e9 !important;
   }
 
   #side-list span div a{
@@ -118,7 +121,7 @@ export default {
   }
   .big-icon i {
     font-size: 32px !important;
-    color: #000 !important;
+    color: #e9e9e9 !important;
   }
 
   .v-navigation-drawer--is-mobile {
@@ -211,7 +214,8 @@ export default {
     }
     .big-icon i {
       font-size: 40px !important;
-      color: #000 !important;
+      color: #e9e9e9 !important;
+      /*color: #000 !important;*/
     }
   }
 </style>

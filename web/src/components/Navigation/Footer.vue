@@ -16,7 +16,7 @@
     //-   flex
     //-   color="success"
     //- )
-    v-flex.white--text.text-xs-center
+    v-flex.custom--text.text-xs-center
       | &copy;2018 —
       strong Vinyl78
 </template>

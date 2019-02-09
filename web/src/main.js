@@ -34,16 +34,20 @@ Vue.prototype.R = R
 
 Vue.use(Vuetify, {
   theme: {
-    primary: '#212121',
+    primary: '#2a2a2a',
     secondary: '#424242',
     accent: '#C62828',
     error: '#B71C1C',
     warning: '#FDD835',
     info: '#80CBC4',
-    success: '#7CB342'
+    success: '#5f6574',
+    custom: '#e9e9e9'
   },
   iconfont: 'fa'
 })
+
+// eslint-disable-next-line
+import '@/assets/main.scss'
 
 Vue.use(VueCarousel)
 Vue.use(Api, { store, R })
