@@ -17,8 +17,8 @@
     //-   color="success"
     //- )
     v-flex.custom--text.text-xs-center
-      | &copy;2018 —
-      strong Vinyl78
+      | &copy;2018 — 2019
+      strong  Vinyl78
 </template>
 
 <script>

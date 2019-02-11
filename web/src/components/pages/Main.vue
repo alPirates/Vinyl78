@@ -96,6 +96,6 @@ export default {
   }
   .big-icon i {
     font-size: 70px !important;
-    color: black;
+    color: black !important;
   }
 </style>

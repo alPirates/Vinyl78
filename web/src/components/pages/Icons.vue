@@ -117,7 +117,8 @@ export default {
   },
   mounted () {
     if (R.path(['length'], this.links) >= 3) {
-      let [brand, decor, vinyl] = this.links
+      console.table(this.links)
+      let [brand, vinyl, decor] = this.links
       this.$set(this, 'thumbLinks', {brand, decor, vinyl})
     }
   },

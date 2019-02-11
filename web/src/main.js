@@ -40,7 +40,7 @@ Vue.use(Vuetify, {
     error: '#B71C1C',
     warning: '#FDD835',
     info: '#80CBC4',
-    success: '#5f6574',
+    success: '#777c89',
     custom: '#e9e9e9'
   },
   iconfont: 'fa'
