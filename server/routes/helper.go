@@ -11,8 +11,8 @@ import (
 
 // Port - number of a port use 80 port on proxy
 const (
-	Port = 3000
-	// Port = 80
+	// Port = 3000
+	Port = 80
 )
 
 // SetRoutes function
@@ -38,6 +38,7 @@ func SetRoutes(server *echo.Echo) {
 	api.GET("/image", getImage)
 	api.GET("/property", getProperty)
 	api.GET("/category/:id", getCategoryByID)
+	api.PUT("/inc_seo", incrementSeoLink)
 
 	authorization := api.Group("/app")
 	authorization.Use(middleware.JWTWithConfig(
@@ -61,6 +62,7 @@ func SetRoutes(server *echo.Echo) {
 	authorization.GET("/application", getApplication)                    // admin
 	authorization.DELETE("/application/:id", deleteApplication)          // admin
 	authorization.GET("/property", getPrivateProperty)                   // admin
+	authorization.PUT("/property", setProperty)                          // admin
 	authorization.GET("/admin", getAdminInfo)                            // admin
 	authorization.PUT("/sticker", setSticker)                            // admin
 	authorization.DELETE("/sticker/:id", deleteSticker)                  // admin

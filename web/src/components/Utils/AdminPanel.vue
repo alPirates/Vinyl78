@@ -50,9 +50,9 @@
                     v-data-table(:headers="headers", :items="info.applications").elevation-1
                       template(slot="items" slot-scope="el")
                         td {{el.item.name}}
-                        td {{el.item.phone}}
-                        td {{el.item.email}}
-                        td {{el.item.message}}
+                        td {{el.item.phone | checkEmpty}}
+                        td {{el.item.email | checkEmpty}}
+                        td {{el.item.message | checkEmpty}}
                         td {{el.item.time | date}}
                         td {{el.item.status | status}}
                         td
@@ -105,6 +105,14 @@ export default {
       categories: [],
       info: {},
       carouselImages: []
+    }
+  },
+  filters: {
+    checkEmpty (value) {
+      if (R.isEmpty(value)) {
+        return '-'
+      }
+      return value
     }
   },
   methods: {
@@ -188,7 +196,6 @@ export default {
       let carousel = await this.$api.send('get', '/app/property', null, {
         key: 'carousel_id'
       })
-      console.log('value is ', carousel.data.value)
       this.carousel_id = carousel.data.value
       let carouselImages = await this.$api.send('get', '/image', null, {
         linked_id: carousel.data.value

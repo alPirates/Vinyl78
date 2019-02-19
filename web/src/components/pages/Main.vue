@@ -48,6 +48,7 @@ export default {
   computed: {
   },
   async mounted () {
+    this.checkLinkSeo()
     console.log(this.$refs)
     let mainCategories = await this.$api.send('get', '/main_sidebar')
     this.$set(this, 'thumbnails', mainCategories.data.result)
@@ -63,6 +64,25 @@ export default {
     console.log('images', carouselImages)
   },
   methods: {
+    async checkLinkSeo () {
+      let urlStr = window.location.href
+      console.log(urlStr)
+      let finded = urlStr.match(/target=(\w+)/)
+      if (finded.length >= 2) {
+        let target = finded[1]
+        console.log(target)
+        if (target === 'vk') {
+          await this.$api.send('put', '/inc_seo', {
+            key: 'vk'
+          })
+        }
+        if (target === 'inst') {
+          await this.$api.send('put', '/inc_seo', {
+            key: 'inst'
+          })
+        }
+      }
+    },
     getLinks () {
       if (R.isEmpty(this.thumbnails)) {
         return []

@@ -25,7 +25,7 @@
       v-btn(
         icond
         v-if="isAdmin()"
-        to="/admin"
+        to="/nXnA1E1jzYzSDfqvWDkez0DDlxg52QYD"
       ).custom--text
         v-icon verified_user
       v-btn(

@@ -1,6 +1,9 @@
 package database
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 // Property structure
 // Key - name of this property
@@ -29,6 +32,10 @@ func (property *Property) UpdateNotAll() error {
 // Delete property
 func (property *Property) Delete() error {
 	return db.Delete(property).Error
+}
+
+func (p *Property) Save() error {
+	return db.Save(&p).Error
 }
 
 // DeleteKV function
@@ -78,6 +85,22 @@ func CheckProperty(key, value string) bool {
 	if property.ID == "" {
 		return false
 	}
+	return true
+}
+
+func IncrementSeoLink(key string) bool {
+	property, err := GetPropertyPrivateAndPublic(key)
+	if err != nil {
+		return false
+	}
+	i, err := strconv.Atoi(property.Value)
+	if err != nil {
+		return false
+	}
+	i++
+	property.Value = fmt.Sprintf("%d", i)
+	fmt.Println("Test", property.Value)
+	db.Save(property)
 	return true
 }
 

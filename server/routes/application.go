@@ -18,8 +18,8 @@ func addApplication(context echo.Context) error {
 		return sendError(context, "no application information in JSON", "не удалось создать заявку")
 	}
 
-	if application.Name == "" || application.Phone == "" ||
-		application.Email == "" || application.Message == "" {
+	if application.Name == "" || (application.Phone == "" &&
+		application.Email == "") {
 		return sendError(context, "empty params", "не удалось создать заявку")
 	}
 

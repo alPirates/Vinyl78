@@ -13,29 +13,34 @@
               ref="form"
             )
               v-text-field(
-                label="Имя"
+                label="* Имя"
                 v-model="form.name"
+                validate-on-blur
                 :rules="form.nameRules"
               )
               v-text-field(
+                @click.native="addFirstPhoneLetter()"
                 label="Телефон"
                 v-model="form.phone"
                 :rules="form.phoneRules"
                 mask="+7(###)-###-##-##"
+                validate-on-blur
               )
               v-text-field(
                 label="E-mail"
                 v-model="form.email"
                 :rules="form.emailRules"
+                validate-on-blur
               )
               v-textarea(
-                label="Сообщение"
+                label="* Сообщение"
                 v-model="form.message"
                 :rules="form.messageRules"
+                validate-on-blur
               )
             v-flex(xs12)
+              p.error--text(v-show="formEmailError") Необходимо ввести телефон или E-mail
               v-layout(justify-end)
-                <!--v-btn(color="success" @click="sendForm").custom-btn Отправить-->
                 .my-btn(@click="sendForm") Отправить
 </template>
 
@@ -45,6 +50,7 @@ export default {
   data: () => {
     return {
       valid: false,
+      formEmailError: false,
       form: {
         name: '',
         nameRules: [
@@ -52,14 +58,16 @@ export default {
         ],
         phone: '',
         phoneRules: [
-          v => v.length === 11 || 'Введите все цифры номера'
+          v => (!v || v.length === 11) || 'Введите все цифры номера'
         ],
         email: '',
         emailRules: [
-          v => !!v || 'Введите E-mail',
-          v => /.+@.+/.test(v) || 'Введите коректный email'
+          v => (!v || /.+@.+/.test(v)) || 'Введите коректный email'
         ],
-        message: ''
+        message: '',
+        messageRules: [
+          v => !!v || 'Поле не может быть пустым'
+        ]
       }
     }
   },
@@ -68,7 +76,14 @@ export default {
   },
   methods: {
     async sendForm () {
+      this.$refs.form.validate()
       if (this.valid) {
+        // exit if email and phone not setting up
+        if (this.R.isEmpty(this.form.email) && this.R.isEmpty(this.form.phone)) {
+          this.formEmailError = true
+          return
+        }
+        console.log('sending')
         let result = await this.$api.send(
           'post',
           '/application',
@@ -78,6 +93,15 @@ export default {
           this.form = this.baseForm
           this.$refs.form.reset()
         }
+      } else {
+        if (this.R.isEmpty(this.form.email) && this.R.isEmpty(this.form.phone)) {
+          this.formEmailError = true
+        }
+      }
+    },
+    addFirstPhoneLetter () {
+      if (R.isEmpty(this.form.phone)) {
+        this.form.phone = '7'
       }
     }
   }

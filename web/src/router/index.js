@@ -5,21 +5,16 @@ import Main from '@/components/pages/Main'
 import Form from '@/components/pages/Form'
 import Admin from '@/components/pages/Admin'
 import AdminCategory from '@/components/pages/admin/AdminCategory'
+import AdminSeo from '@/components/pages/admin/AdminSeo'
 import Stickers from '@/components/pages/Stickers'
 import StickerView from '@/components/pages/StickerView'
 import Settings from '@/components/pages/Settings'
 
 Vue.use(Router)
 
+const ADMIN_SECURE_LINK = 'nXnA1E1jzYzSDfqvWDkez0DDlxg52QYD'
+
 export default new Router({
-  // mode: 'history',
-  // scrollBehavior (to, from, savedPosition) {
-  //   if (savedPosition) {
-  //     return savedPosition
-  //   } else {
-  //     return { x: 0, y: 0 }
-  //   }
-  // },
   routes: [
     {
       path: '/',
@@ -32,7 +27,7 @@ export default new Router({
       component: Form
     },
     {
-      path: '/admin',
+      path: `/${ADMIN_SECURE_LINK}`,
       name: 'Admin',
       component: Admin
     },
@@ -40,6 +35,11 @@ export default new Router({
       path: '/admin/category',
       name: 'Admin category',
       component: AdminCategory
+    },
+    {
+      path: '/admin/seo',
+      name: 'Admin seo',
+      component: AdminSeo
     },
     {
       path: '/sticker/:id',

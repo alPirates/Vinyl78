@@ -53,8 +53,8 @@ func OpenConnection(nameDB string) error {
 	// for production build use user=root and password='test' credentials
 	db, err = gorm.Open(
 		"postgres",
-		"password='postgres' dbname="+nameDB+" sslmode=disable",
-		// "user=root password='test' dbname="+nameDB+" sslmode=disable",
+		// "password='postgres' dbname="+nameDB+" sslmode=disable",
+		"user=root password='test' dbname="+nameDB+" sslmode=disable",
 	)
 	if err != nil {
 		fmt.Println("db not opened")
@@ -85,6 +85,24 @@ func OpenConnection(nameDB string) error {
 		err = user.Update()
 		if err != nil {
 			fmt.Println("admin not created")
+		}
+	}
+
+	property := &Property{}
+	db.Where("key = ?", "vk").First(property)
+	if property.Key == "" {
+		_, err = property.Create("vk", "0", true)
+		if err != nil {
+			fmt.Println("property for vk SEO link not created")
+		}
+	}
+
+	property = &Property{}
+	db.Where("key = ?", "inst").First(property)
+	if property.Key == "" {
+		_, err = property.Create("inst", "0", true)
+		if err != nil {
+			fmt.Println("property for inst SEO link not created")
 		}
 	}
 
