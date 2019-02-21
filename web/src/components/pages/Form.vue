@@ -18,26 +18,37 @@
                 validate-on-blur
                 :rules="form.nameRules"
               )
+                template(slot="label").ml-1
+                  span.smaller *
+                  |
+                  | Имя
               v-text-field(
                 @click.native="addFirstPhoneLetter()"
-                label="Телефон"
                 v-model="form.phone"
                 :rules="form.phoneRules"
                 mask="+7(###)-###-##-##"
                 validate-on-blur
               )
+                template(slot="label")
+                  span.lefted-label
+                    | Телефон
               v-text-field(
-                label="E-mail"
                 v-model="form.email"
                 :rules="form.emailRules"
                 validate-on-blur
               )
+                template(slot="label")
+                  span.lefted-label
+                    | E-mail
               v-textarea(
-                label="* Сообщение"
                 v-model="form.message"
                 :rules="form.messageRules"
                 validate-on-blur
               )
+                template(slot="label").ml-1
+                  small.smaller *
+                  |
+                  | Сообщение
             v-flex(xs12)
               p.error--text(v-show="formEmailError") Необходимо ввести телефон или E-mail
               v-layout(justify-end)
@@ -109,6 +120,16 @@ export default {
 </script>
 
 <style scoped>
+  .lefted-label {
+    margin-left: 7px;
+  }
+  .smaller {
+    display: block;
+    font-size: 0.7em;
+    margin-top: -2px;
+    padding-right: 3px;
+    float: left;
+  }
   .wrapper {
     display: block;
     max-width: 600px;
